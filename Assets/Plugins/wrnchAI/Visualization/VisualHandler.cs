@@ -123,7 +123,9 @@ namespace wrnchAI.Visualization
             {
                 if (m_knownPersons[i].Key.IdState == IdState.Mature)
                 {
-                    visualizer.AddNewPerson(m_knownPersons[i].Key, m_knownPersons[i].Color);
+
+                    //// Add white color to all skeletons
+                    visualizer.AddNewPerson(m_knownPersons[i].Key, Color.white);
                 }
             }
         }
@@ -218,7 +220,8 @@ namespace wrnchAI.Visualization
                 }
                 foreach (var bv in m_visualizers)
                 {
-                    bv.AddNewPerson(p, chosenColor);
+                    //// Add white color to all skeletons
+                    bv.AddNewPerson(p, Color.white);
                 }
                 m_knownPersons.Add(new Triple<Person, float, Color>(p, 0.0f, chosenColor));
             }
