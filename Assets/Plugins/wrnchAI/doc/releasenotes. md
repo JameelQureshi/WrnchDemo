@@ -1,0 +1,20 @@
+=============
+Release Notes
+=============
+
+--------------------------
+Release v1.14.0 2019-MM-DD
+--------------------------
+
+New features
+------------
+- The Unity plugin has been updated to support 2018.4 LTS.
+- Facial landmarks are now exposed in the Unity plugin.
+- CPU-only version of wrnchAI is now compatible with Unity on windows.
+
+Breaking changes
+----------------
+
+- The Unity plugin is not compatible with 2017.4 anymore.
+
+--------------------------
