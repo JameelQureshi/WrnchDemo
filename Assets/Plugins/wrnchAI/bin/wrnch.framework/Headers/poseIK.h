@@ -169,6 +169,21 @@ extern "C"
     /// @param handle to the solver.
     WRNCH_DLL_INTERFACE wrPose3dHandleConst wrPoseIK_GetTPose(wrPoseIKHandleConst handle);
 
+    /// @brief Toggles the solving of foot contact in IK
+    /// @param handle to the solver.
+    /// @param contact 0 - off : 1 - on
+    WRNCH_DLL_INTERFACE void wrPoseIK_SetFloorContact(wrPoseIKHandle handle, int contact);
+
+    /// @brief Set the transform of the floor plane used when solving foot contact in IK.
+    ///        This transform is applied to a plane with a normal pointing up in the Y direction 
+    ///        and containing the world origin.
+    /// @param handle to the solver.
+    /// @param transform The translation of the floor plane (x, y, z, w)
+    /// @param rotation A quaternion expressing the rotation of the floor plane.
+    WRNCH_DLL_INTERFACE void wrPoseIK_SetFloorTransform(wrPoseIKHandle handle,
+                                                        const float* transform,
+                                                        const float* rotation);
+
 #ifdef __cplusplus
 }
 #endif

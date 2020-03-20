@@ -31,9 +31,13 @@ namespace wrnchAI.wrAPI
     /// </summary>
     public class JointsFilter
     {
-        private wrTransform[] m_previousTransforms;
+        private OneEuroFilter<Quaternion>[] m_rotationFilters;
+        private OneEuroFilter<Vector3> m_rootPositionFilter;
 
-        private Vector3 m_prevPelvisLocation = Vector3.negativeInfinity;
+        public float filterFrequency = 60.0f;
+        public float filterMinCutoff = 5.0f;
+        public float filterBeta = 0.01f;
+        public float filterDcutoff = 1.0f;
 
         private Quaternion[] m_worldTPose;
 
@@ -79,16 +83,24 @@ namespace wrnchAI.wrAPI
         public void Init(GameObject[] initialPose)
         {
             m_numJoints = initialPose.Length;
+            m_rotationFilters = new OneEuroFilter<Quaternion>[m_numJoints];
+            for (int i = 0; i < m_numJoints; i++)
+            {
+                m_rotationFilters[i] = new OneEuroFilter<Quaternion>(filterFrequency, filterMinCutoff, filterBeta, filterDcutoff);
+                m_rotationFilters[i].Filter(Quaternion.identity);
+            }
 
-            m_previousTransforms = Enumerable.Range(0, initialPose.Length).Select(i => new wrTransform(Quaternion.identity, Vector3.zero)).ToArray();
+            m_rootPositionFilter =
+                new OneEuroFilter<Vector3>(filterFrequency, filterMinCutoff, filterBeta, filterDcutoff);
+
+            m_rootPositionFilter.Filter(new Vector3());
+
             m_worldTPose = new Quaternion[m_numJoints];
 
             for (int i = 0; i < m_numJoints; i++)
             {
                 m_worldTPose[i] = initialPose[i] == null ? Quaternion.identity : initialPose[i].transform.rotation;
             }
-
-            m_prevPelvisLocation = Vector3.one * -1.0f;
         }
         private Quaternion FilterRotation(Quaternion previousRotation, Quaternion newRotation)
         {
@@ -109,8 +121,20 @@ namespace wrnchAI.wrAPI
 
         private Quaternion ApplyRotation(int idx, Quaternion newRotation)
         {
-            m_previousTransforms[idx].q = FilterRotation(m_previousTransforms[idx].q, newRotation);
-            return m_previousTransforms[idx].q * m_worldTPose[idx];
+            var previousRotation = m_rotationFilters[idx].currValue;
+            if (ContainsNaN(newRotation))
+            {
+                // If we don't have a valid new rotation, reuse the previous rotation
+                newRotation = previousRotation;
+            }
+
+            var filteredRotation = m_rotationFilters[idx].Filter(newRotation);
+            return filteredRotation * m_worldTPose[idx];
+        }
+
+        public Vector3 FilterPosition(Vector3 pos)
+        {
+            return m_rootPositionFilter.Filter(pos);
         }
 
         public wrTransform[] JointsToTransform(Person person)
@@ -129,33 +153,18 @@ namespace wrnchAI.wrAPI
 
             for (int i = 0; i < person.Pose3D.NumJoints; ++i)
             {
-                if(headLess && (i == m_neckIdx || i == m_headIdx))
+                if (headLess && (i == m_neckIdx || i == m_headIdx))
                     continue;
 
                 transforms[i] = new wrTransform(ApplyRotation(i, QuatFromWrnchAI(rotations, i)), Vector3.zero);
             }
 
-            if(headLess)
+            if (headLess)
             {
                 var spineQuat = QuatFromWrnchAI(rotations, wrExtended.GetIdByName("SPINE2"));
                 transforms[m_headIdx] = new wrTransform(ApplyRotation(m_headIdx, spineQuat), Vector3.zero);
                 transforms[m_neckIdx] = new wrTransform(ApplyRotation(m_neckIdx, spineQuat), Vector3.zero);
             }
-
-            var positions = person.Pose3D.Positions;
-            var scaleHints = person.Pose3D.ScaleHint;
-
-            var pelvLocation = new Vector3(
-                positions[3 * m_pelvIdx] * scaleHints[0],
-                positions[3 * m_pelvIdx + 1] * scaleHints[1],
-                positions[3 * m_pelvIdx + 2] * scaleHints[2]);
-
-            if(m_prevPelvisLocation.z < 0)
-            {
-                m_prevPelvisLocation = pelvLocation;
-            }
-
-            transforms[m_pelvIdx].p = m_prevPelvisLocation = Vector3.Lerp(m_prevPelvisLocation, pelvLocation, m_filterAlpha);
 
             return transforms;
         }

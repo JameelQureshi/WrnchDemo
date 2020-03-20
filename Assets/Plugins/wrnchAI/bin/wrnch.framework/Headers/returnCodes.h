@@ -18,6 +18,7 @@ typedef enum
     wrReturnCode_LICENSE_EXPIRED,
     wrReturnCode_LICENSE_REVOKED,
     wrReturnCode_LICENSE_SUSPENDED,
+    wrReturnCode_LICENSE_ERROR_IO,
     wrReturnCode_LICENSE_ERROR_MALFORMED,
     wrReturnCode_LICENSE_ERROR_INVALID_KEY,
     wrReturnCode_LICENSE_ERROR_INVALID_OFFLINE,

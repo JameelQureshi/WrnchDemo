@@ -137,7 +137,6 @@ namespace wrnchAI.Core
             else
                 onFlip = (Color32[] in_array) =>    // No mirroring
                 {
-
                     int in_array_idx = 0;
                     for (int j = 0; j < m_height; j += 1)
                     {
@@ -206,10 +205,7 @@ namespace wrnchAI.Core
         /// <param name="config"></param>
         protected override void UpdateConfig(VideoControllerConfig config)
         {
-            
             m_config = config;
-           
-
             //Ensure we don't lock the video device in editor.
             if (Application.isPlaying)
             {
@@ -223,7 +219,6 @@ namespace wrnchAI.Core
                         videoDevice.Stop();
                         videoDevice = null;
                     }
-
                 }
                 //Initialize (new) video device
                 if (videoDevice == null)
@@ -237,10 +232,7 @@ namespace wrnchAI.Core
                     {
                         videoDevice = new WebCamTexture(config.DeviceName == "Auto" ? "" : config.DeviceName, config.DesiredWidth, config.DesiredHeight);
                     }
-
-                    ///  Get All the attached cameras as devices and cheack if the camera is frontfacing than assign to videoDevice
-
-
+                   
                     UnityEngine.Debug.Log(videoDevice.name);
                     videoDevice.Play();
                     videoDevice.Stop();

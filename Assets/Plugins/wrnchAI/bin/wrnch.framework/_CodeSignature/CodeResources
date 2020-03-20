@@ -66,7 +66,7 @@
 		</data>
 		<key>Headers/poseEstimator.hpp</key>
 		<data>
-		CSLOOUGggiE6VvU5A9d4dPwhYZQ=
+		4tQWBYPgt5QHv5uaaNn4x1EX/mM=
 		</data>
 		<key>Headers/poseEstimatorOptions.h</key>
 		<data>
@@ -78,19 +78,19 @@
 		</data>
 		<key>Headers/poseIK.h</key>
 		<data>
-		ZCMpm6r2hQAaoeO6vgOY2OlMDPE=
+		wpDSoR5EspT0ds3PpEvweZs/7TQ=
 		</data>
 		<key>Headers/poseIK.hpp</key>
 		<data>
-		fQuLAkN5O+Oxh2c4USKFdNYLp44=
+		1sqckgiV+w/ssnEecdZxcySz0lo=
 		</data>
 		<key>Headers/poseParams.h</key>
 		<data>
-		KKTAlO8Oiu+UhXBrQzRml6qevTM=
+		RmrjYNboGMjlPpZLsGGe6U4+6K0=
 		</data>
 		<key>Headers/poseParams.hpp</key>
 		<data>
-		UlUr92Xhb2VbakD5P+pRCD4HY3k=
+		Uv84+2wuszZvollDhiYleAgpfMo=
 		</data>
 		<key>Headers/poseTypeTraits.hpp</key>
 		<data>
@@ -106,7 +106,7 @@
 		</data>
 		<key>Headers/returnCodes.h</key>
 		<data>
-		hgxHP6TdgvS/bXZueIRKGCz1h58=
+		K1MtUW90+WrWgEQoqQRkpc/RTKo=
 		</data>
 		<key>Headers/utils.hpp</key>
 		<data>
@@ -114,11 +114,11 @@
 		</data>
 		<key>Headers/version.h</key>
 		<data>
-		E0a01dlE8/Od28YsDYlhRiP9uXo=
+		qoEoYkscbZOL/Ni0Hyh0btMwGLA=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		IHC6N2r7ephHVZGXrQkZLdHm+aE=
+		q1disf5Cy1VM7APC5YjZXWul/H4=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -232,7 +232,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0qwtpQUg06pAuACDRmJIuOckJMdsTAjau9Jwvit5de4=
+			9zSHkW70TORtGzD+py1gBP0psLHJafhrLDPEElkBXAc=
 			</data>
 		</dict>
 		<key>Headers/poseEstimatorOptions.h</key>
@@ -253,28 +253,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9QG+AVQDDSAP0njYR+MBfQ+SrMKqRPQHinu+YEcuqF4=
+			27uGnyx4T9dm3rBLaRaDv8RNLBy+ErhIA9A4QSVoEWY=
 			</data>
 		</dict>
 		<key>Headers/poseIK.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			HUe7E4AX0ZGc2eDZkN8kaooAmgJ1q3ngdsT3MGf2Zis=
+			GcFtebXTmgG0Ign8nFYi/aotejYajD+SyOIkLiL/KAw=
 			</data>
 		</dict>
 		<key>Headers/poseParams.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			xPna8LULOtNJScWBbar9bVsXNb9h7iRiIcuNtoXfzyQ=
+			I2hG2Zz5XX1d4hm63WQ2JBLydgnAS4a0tij4bxBPiuQ=
 			</data>
 		</dict>
 		<key>Headers/poseParams.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			i+NirMloA6g6Q7GRi3k0kT3eopNIpdROIqhXg+3iGUM=
+			3FeeZsaGZwKVecZzpFq+LoOgC0extiIdX28BAh8bl20=
 			</data>
 		</dict>
 		<key>Headers/poseTypeTraits.hpp</key>
@@ -302,7 +302,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+Wu+sJ6R4Rlv6wdTc7g7cmVBB7v3oNrGi6JPfS+wxDM=
+			Skyv3Tf6/Si7YyF54eGzs1CLToRwbPyyWlUHp8d18gs=
 			</data>
 		</dict>
 		<key>Headers/utils.hpp</key>
@@ -316,7 +316,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Srjy+ZUkmn3qrdpXwFsFGlYteBns8WMVBz0vdbQanXo=
+			Tvo07RaIBY/aBwAwStH2xUyrCUYUVkDp8wfFhk0mRTQ=
 			</data>
 		</dict>
 	</dict>

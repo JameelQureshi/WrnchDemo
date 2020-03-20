@@ -170,6 +170,20 @@ class PoseIK
     ///        Pose3dView, containing positions only. We assume unit quaternions when in TPose.
     Pose3dView GetTPose() const { return Pose3dView(wrPoseIK_GetTPose(m_impl.get())); }
 
+    /// @brief Toggles the solving of foot contact in IK
+    /// @param contact
+    void SetFloorContact(bool contact) { wrPoseIK_SetFloorContact(m_impl.get(), contact); }
+
+    /// @brief Set the transform of the floor plane used when solving foot contact in IK.
+    ///        This transform is applied to a plane with a normal pointing up in the Y direction 
+    ///        and containing the world origin.
+    /// @param transform The translation of the floor plane (x, y, z, w)
+    /// @param rotation A quaternion expressing the rotation of the floor plane.
+    void SetFloorTransform(const float* const transform, const float* const rotation)
+    {
+        wrPoseIK_SetFloorTransform(m_impl.get(), transform, rotation);
+    }
+
     wrPoseIKHandle Get() const { return m_impl.get(); }
 
   private:

@@ -1335,6 +1335,7 @@ class PoseEstimator
             case wrReturnCode_LICENSE_ERROR_ACTIVATION:
             case wrReturnCode_LICENSE_EXPIRED:
             case wrReturnCode_LICENSE_REVOKED:
+            case wrReturnCode_LICENSE_ERROR_IO:
             case wrReturnCode_LICENSE_ERROR_MALFORMED:
             case wrReturnCode_LICENSE_ERROR_INVALID_OFFLINE:
             case wrReturnCode_LICENSE_ERROR_INVALID_TYPE:

@@ -164,6 +164,7 @@ extern "C"
     WRNCH_DLL_INTERFACE void wrIKParams_SetFPS(wrIKParamsHandle, float fps);
     WRNCH_DLL_INTERFACE void wrIKParams_SetJointVisibilityThresh(wrIKParamsHandle, float thresh);
     WRNCH_DLL_INTERFACE void wrIKParams_SetOptimizeForMonocular(wrIKParamsHandle, int isMono);
+    WRNCH_DLL_INTERFACE void wrIKParams_SetUpDirection(wrIKParamsHandle, float x, float y, float z);
     WRNCH_DLL_INTERFACE float wrIKParams_GetTransReach(wrIKParamsHandleConst);
     WRNCH_DLL_INTERFACE float wrIKParams_GetRotReach(wrIKParamsHandleConst);
     WRNCH_DLL_INTERFACE float wrIKParams_GetPull(wrIKParamsHandleConst);

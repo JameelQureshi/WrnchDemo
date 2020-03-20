@@ -3,7 +3,29 @@ Release Notes
 =============
 
 --------------------------
-Release v1.14.0 2019-MM-DD
+Release v1.16.0 2020-02-27
+--------------------------
+
+New features
+------------
+- Added fingerprint detection for iOS to identify devices
+
+Enhancements
+------------
+- Added "One Euro" filtering for joints.
+
+Bug Fixes
+------------
+- None
+
+Breaking changes
+------------
+- Head rotations now being done with quaternions.
+
+--------------------------
+
+--------------------------
+Release v1.14.0 2019-10-08
 --------------------------
 
 New features

@@ -81,6 +81,7 @@ class BasicIKParams
     float GetFPS() const { return wrIKParams_GetFPS(m_impl); }
     bool GetOptimizeForMonocular() const { return wrIKParams_GetOptimizeForMonocular(m_impl); }
     float GetJointVisibilityThresh() const { return wrIKParams_GetJointVisibilityThresh(m_impl); }
+    float* GetUpDirection() const { return wrIKParams_GetUpDirection(m_impl); }
 
     bool operator==(const BasicIKParams& r) const
     {
@@ -279,6 +280,8 @@ class MutableIKParams : public detail::BasicIKParams<wrIKParams*>
     {
         wrIKParams_SetJointVisibilityThresh(m_impl, thresh);
     }
+
+    void SetUpDirection(float x, float y, float z) { wrIKParams_SetUpDirection(m_impl, x, y, z); }
 
     using Base::Get;
     wrIKParams* Get() { return this->m_impl; }

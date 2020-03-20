@@ -16,19 +16,18 @@ A license is required to run the pose estimator, please contact license@wrnch.ai
 
 ### Prerequisites
 
-For both the CPU ang GPU version, wrDemo.exe will be located in `Assets/Plugins/wrnchAI/bin` and should be running.
+For both the CPU and GPU version, wrDemo.exe will be located in `Assets/Plugins/wrnchAI/bin`. Run this program from outside Unity after installing the prerequisites to make sure everything is working correctly.
 
 #### GPU:
  The GPU version requires to have CUDA 10.1 installed and configured in the `%PATH%` environment variable. See https://developer.nvidia.com/cuda-downloads for downloads and installation steps.
 
 #### CPU:
- The CPU version comes with all the dependencies included. In order to run the plugin in editor, the folder `Assets/Plugins/wrnchAI/bin/` must be added to the `%PATH%` environment variable. The `%PATH%` being reloaded at every loggin, logging out and back in will be required. 
+ The CPU version comes with all the dependencies included. 
 
 ### Running an application
 For Windows, before running this scene, make sure you setup your video source at least once in the PoseManager inspector.
 
 ### Standalone game
-
 The provided desktopScene can run either in editor or standalone mode. For standalone mode, you will have to copy the content of `Assets/Plugins/wrnchAI/bin` from the wrnchAI package into \<appname\>_Data/Plugins. 
 For the CPU version, if the dlls are located next to the game executable there is no need to modify the `%PATH%`.
 
@@ -46,7 +45,9 @@ Note: You will need to run the demo app on a connected iOS device. We do not sup
 
 ## License
 
- This plugin is compatible with both licensing styles used by the wrnchAI-engine. If using the old file based licensing on desktop, please  make sure `wrnch.lic` is present in the `%USERPROFILE%` folder. For iOS and key based license on desktop, the license string can be entered in the 
+In the PoseManager inspector, enter your license key into the "License string" field.
+
+![License Photo](./license.png)
  
 ## High level description
 
@@ -101,3 +102,18 @@ If wrDemo works and the message still appears, we recommend updating windows. Ru
 ### Failed to find wrAPI.bundle. 
 
 We do not provide support for MacOS, if this error appears you are probably trying to run an application targeting iOS with the wrong build settings. Go into File->Build Settings and specify iOS as target platform.
+
+### Exception: License file not found in home directory, license string not provided, and no valid key found in the environment variable WRNCH_LICENSE. See the user guide for instructions on providing a license.
+
+You need to fix how you are providing the license file to Unity. You have one of 3 options:
+
+Option 1: You can input the License string into the Pose Manager in the "License String" field. Refer to the section above called "License"
+
+Option 2: You can change your WRNCH_LICENSE environment variable and set it to the key in the format: 
+
+XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+
+Option 3: If you have an old style license, you can put the wrnch.lic file in the home directory of the user
+
+    Windows: C:\Users\user_name
+    iOS: /Users/user_name

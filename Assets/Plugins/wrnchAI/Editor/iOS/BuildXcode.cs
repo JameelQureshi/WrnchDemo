@@ -13,10 +13,11 @@ public class BuildPlayeriOS : MonoBehaviour
             buildPlayerOptions.locationPathName = "iOSBuild";
             buildPlayerOptions.target = BuildTarget.iOS;
             buildPlayerOptions.options = BuildOptions.None;
-            PlayerSettings.iOS.targetOSVersionString = "12.0";
-            PlayerSettings.iOS.appleEnableAutomaticSigning = false;
+
+            PlayerSettings.iOS.appleEnableAutomaticSigning = true;
+            PlayerSettings.iOS.appleDeveloperTeamID = "EZ45QVXFSL";
             Debug.Log(BuildPipeline.BuildPlayer(buildPlayerOptions));
-            PlayerSettings.SetArchitecture(BuildTargetGroup.iOS, 1);
+
             // Magic string to communicate to Teamcity that the build is successful.
             Debug.Log("Successful build ~0xDEADBEEF");
         }

@@ -20,6 +20,7 @@ namespace wrnchAI.Core
     {
 
         private JointsFilter m_jointFilter;
+        private OneEuroFilter<Vector3> m_rootPositionFilter;
         public static List<Quaternion> WorldTPose;
 
         protected float m_tPoseAnkleY;
@@ -27,7 +28,6 @@ namespace wrnchAI.Core
 
         protected float m_floorY = 0.0F;
         protected float m_scale3DtoMesh = 0.006F;
-        protected Vector3 m_previousPosition;
 
         private float m_spawnTimer;
         private Dissolving m_dissolver;
@@ -35,6 +35,9 @@ namespace wrnchAI.Core
 
         private float m_halfVideoScale = 1.0f;
 
+        private wrTransform[] m_filteredTransforms;
+        private Vector3 m_rootPosition;
+        private Vector3 m_filteredRootPosition;
         public Action JointsUpdateFinished;
 
         private Color m_characterColor;
@@ -59,19 +62,25 @@ namespace wrnchAI.Core
         private int m_id;
         public int Id { get { return m_id; } set { m_id = value; } }
 
+        private List<int> m_chain;
+
         /// <summary>
         /// Adjusts horizontal placement of the avatar in the scene based on position of the pelvis in 2D estimation.
         /// </summary>
         protected virtual void TranslateX(Person p)
         {
-            var pos = gameObject.transform.position;
+            if (p.Pose2d == null)
+            {
+                return;
+            }
+            var pos = m_rootPosition;
             var joints = p.Pose2d.Joints;
             float jointValue = joints[2 * PoseManager.Instance.JointDefinition2D.GetJointIndex("PELV")];
             // Valid pelvis position found
             if (jointValue > 0)
             {
                 pos.x = m_halfVideoScale * (1.0f - 2.0f * jointValue);
-                gameObject.transform.position = pos;
+                m_rootPosition = pos;
                 foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 {
                     r.enabled = true;
@@ -107,7 +116,7 @@ namespace wrnchAI.Core
         /// </summary>
         protected virtual void TranslateY(Person p)
         {
-            var pos = gameObject.transform.position;
+            var pos = m_rootPosition;
             pos.y = m_floorY;//+ m_tPoseAnkleY; // Initial position
 
             if (p.Pose3D != null)
@@ -125,9 +134,7 @@ namespace wrnchAI.Core
             }
             if (!float.IsNaN(pos.x) && !float.IsNaN(pos.y) && !float.IsNaN(pos.z))
             {
-                pos = Vector3.Lerp(m_previousPosition, pos, 0.85F);
-                m_previousPosition = pos;
-                gameObject.transform.position = pos;
+                m_rootPosition = pos;
             }
         }
 
@@ -140,13 +147,17 @@ namespace wrnchAI.Core
                 r.enabled = false;
             }
             List<Quaternion> initialPose = new List<Quaternion>();
-            foreach (GameObject o in JointsToRig)
+            Dictionary<GameObject, int> reverseJointMap = new Dictionary<GameObject, int>();
+            for (int i = 0; i < JointsToRig.Length; i++)
             {
-                initialPose.Add(o == null ? Quaternion.identity : o.transform.rotation);
+                var jointObj = JointsToRig[i];
+                initialPose.Add(jointObj == null ? Quaternion.identity : jointObj.transform.rotation);
+                reverseJointMap[jointObj] = i;
             }
 
+            var pelvisTransform = JointsToRig[wrExtended.GetIdByName("PELV")].transform;
             m_tPoseAnkleY = JointsToRig[wrExtended.GetIdByName("LANKLE")].transform.position.y;
-            m_tPosePelvisY = JointsToRig[wrExtended.GetIdByName("PELV")].transform.position.y;
+            m_tPosePelvisY = pelvisTransform.position.y;
 
             Pose3D ikTPose = PoseManager.Instance.GetDefaultTPose3D();
             if (ikTPose != null)
@@ -164,6 +175,18 @@ namespace wrnchAI.Core
             m_jointFilter.Init(JointsToRig);
 
             UpdateVideoQuadScale(PoseManager.Instance.VisualizerConfig.Visualizer.transform.localScale);
+
+            // GetComponentsInChildren does a depth-first traversal of the hierarchy
+            // We can use this to determine the kinematic chain
+            m_chain = new List<int>();
+            foreach (var joint in pelvisTransform.GetComponentsInChildren<Transform>())
+            {
+                if (reverseJointMap.ContainsKey(joint.gameObject))
+                {
+                    var jointIdx = reverseJointMap[joint.gameObject];
+                    m_chain.Add(jointIdx);
+                }
+            }
         }
 
         public void Appear(bool fromStart = true)
@@ -227,23 +250,30 @@ namespace wrnchAI.Core
                 return;
 
             TranslateX(person);
+            TranslateY(person);
 
-            var filteredTransforms = m_jointFilter.JointsToTransform(person);
-            if (filteredTransforms == null)
-                return;
+            m_filteredTransforms = m_jointFilter.JointsToTransform(person);
+            m_filteredRootPosition = m_jointFilter.FilterPosition(m_rootPosition);
+        }
 
-            for (int i = 0; i < JointsToRig.Length; i++)
+        void LateUpdate()
+        {
+            if (m_filteredTransforms != null)
             {
-                if (JointsToRig[i] != null && filteredTransforms[i] != null)
+                foreach (int jointIdx in m_chain)
                 {
-                    JointsToRig[i].transform.rotation = filteredTransforms[i].q;
+                    if (JointsToRig[jointIdx] != null && m_filteredTransforms[jointIdx] != null)
+                    {
+                        JointsToRig[jointIdx].transform.rotation = m_filteredTransforms[jointIdx].q;
+                    }
+                }
+
+                if (JointsUpdateFinished != null)
+                {
+                    JointsUpdateFinished();
                 }
             }
-            TranslateY(person);
-            if (JointsUpdateFinished != null)
-            {
-                JointsUpdateFinished();
-            }
+            transform.position = m_filteredRootPosition;
         }
     }
 }
