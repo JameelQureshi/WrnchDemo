@@ -29,6 +29,9 @@ namespace wrnchAI.Core
     [Serializable]
     public class PoseManager : MonoBehaviour
     {
+
+
+
         public VideoClip m_videoClip;
         private Pose3D defaultIkTPose;
 

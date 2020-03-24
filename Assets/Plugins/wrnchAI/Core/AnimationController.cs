@@ -18,6 +18,8 @@ namespace wrnchAI.Core
     [Serializable]
     public class AnimationController : MonoBehaviour
     {
+        public static bool showAvatar = true;
+
 
         private JointsFilter m_jointFilter;
         private OneEuroFilter<Vector3> m_rootPositionFilter;
@@ -83,7 +85,8 @@ namespace wrnchAI.Core
                 m_rootPosition = pos;
                 foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 {
-                    r.enabled = true;
+                    if (showAvatar)
+                        r.enabled = true;
                 }
             }
             else
@@ -193,21 +196,27 @@ namespace wrnchAI.Core
         {
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
             {
+                if(showAvatar)
                 r.enabled = true;
             }
-            if (m_dissolver != null)
-            {
-                m_dissolver.SetAppears(true);
-                m_dissolver.StartAppearing();
-            }
+           // if (m_dissolver != null)
+            //{
+              //  m_dissolver.SetAppears(true);
+               // m_dissolver.StartAppearing();
+            //}
         }
 
         public void Disappear()
         {
-            if (m_dissolver != null)
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
             {
-                m_dissolver.StartDisappearing();
+                r.enabled = false;
             }
+
+            //if (m_dissolver != null)
+            //{
+            //    m_dissolver.StartDisappearing();
+            //}
         }
 
         public void StartDeleting()
