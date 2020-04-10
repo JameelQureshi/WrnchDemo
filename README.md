@@ -1,2 +1,0 @@
-# WrnchDemo
- Body Tracking demo
