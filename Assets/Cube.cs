@@ -45,6 +45,7 @@ public class Cube : MonoBehaviour
 
         #if UNITY_IOS || UNITY_TVOS
                 NativeAPI.showHostMainWindow(lastStringColor);
+        Debug.Log("This function runing");
         #endif
     }
 

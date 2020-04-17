@@ -58,6 +58,10 @@ namespace wrnchAI.Visualization
                 m_jointScaleOffset = value;
             }
         }
+        /// <summary>
+        /// JointData Use to store Joint Data for individaul joint; name and position
+        /// </summary>
+        public static JointData[] jointData;
 
         //Last update time for tracking timeout
         private float m_lastUpdate;
@@ -104,10 +108,14 @@ namespace wrnchAI.Visualization
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
+            jointData = new JointData[PoseManager.Instance.JointDefinition2D.NumJoints];
+
             //Spawn all joints 
             foreach (string name in m_jointsToDisplay)
             {
                 var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
+
+                Debug.Log("JointName: " + name + " JointIndex: " + jointIdx);
                 var go = Instantiate(m_jointPrefab);
                 go.transform.SetParent(transform, false);
 
@@ -148,6 +156,9 @@ namespace wrnchAI.Visualization
         {
             var joints = person.Pose2d.Joints;
 
+            //Debug.Log("Total Joints: "+joints);
+
+
             for (int i = 0; i < joints.Length / 2; i++)
             {
                 if (m_debugJoints[i] != null)
@@ -187,7 +198,20 @@ namespace wrnchAI.Visualization
                     }
                 }
             }
+
+            //Debug.Log("Here is code Crashing!");
+            //// write code for joint position
+            //foreach (string jointName in m_jointsToDisplay)
+            //{
+              //  int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(jointName);
+                //jointData[jointIdx].jointname = jointName;
+                //jointData[jointIdx].jointposition = m_debugJoints[jointIdx].GetPosition();
+                //jointData[jointIdx].index = jointIdx;
+            //}
+        
         }
+
+
 
         private void OnDestroy()
         {
@@ -202,5 +226,12 @@ namespace wrnchAI.Visualization
                     Destroy(b);
             }
         }
+    }
+
+    public class JointData
+    {
+        public string jointname;
+        public Vector3 jointposition;
+        public int index;
     }
 }

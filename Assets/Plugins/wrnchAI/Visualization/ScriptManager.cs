@@ -1,5 +1,8 @@
 ﻿
 using UnityEngine;
+using UnityEngine.UI;
+using wrnchAI.Visualization;
+
 namespace wrnchAI.Core
 {
     public class ScriptManager : MonoBehaviour
@@ -7,18 +10,21 @@ namespace wrnchAI.Core
 
         public bool showAvatar = true;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
         // Update is called once per frame
         void Update()
         {
 
         }
+       public void ShowJointdata()
+        {
 
+
+            foreach (JointData joint in Skeleton.jointData)
+            {
+                Debug.Log("JointName: " + joint.jointname + "JointPosition: " + joint.jointposition);
+            }
+
+        }
 
 
         public void CharacterState(bool state)
@@ -43,4 +49,6 @@ namespace wrnchAI.Core
         }
 
     }
+
+
 }

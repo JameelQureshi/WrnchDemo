@@ -77,6 +77,8 @@ namespace wrnchAI.Core
             }
             var pos = m_rootPosition;
             var joints = p.Pose2d.Joints;
+
+
             float jointValue = joints[2 * PoseManager.Instance.JointDefinition2D.GetJointIndex("PELV")];
             // Valid pelvis position found
             if (jointValue > 0)
