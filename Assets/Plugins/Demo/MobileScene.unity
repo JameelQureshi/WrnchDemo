@@ -175,7 +175,7 @@ MonoBehaviour:
     m_netRes: {x: 456, y: 256}
   m_visualizerConfig:
     m_visualizer: {fileID: 668126071}
-    m_mirrorX: 1
+    m_mirrorX: 0
     m_mirrorY: 0
     m_rotationMultipleOf90: 1
     m_displaySkeletons: 1
@@ -302,6 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d50f67f823db64dbd967225e91a8c98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CamerProjection: {x: -1, y: 1, z: 1}
 --- !u!1 &577943846
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,7 +385,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1669654689}
+      - m_Target: {fileID: 1131420106}
         m_MethodName: ShowJointdata
         m_Mode: 1
         m_Arguments:
@@ -736,6 +737,125 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 974951811}
   m_CullTransparentMesh: 0
+--- !u!1 &1131420104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1131420105}
+  - component: {fileID: 1131420106}
+  m_Layer: 0
+  m_Name: JointDataDisplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1131420105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131420104}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1131420106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131420104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690916b9f4035437f817b5a22ef36f73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointData:
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
+  - jointname: 
+    jointposition: {x: 0, y: 0, z: 0}
+    index: 0
 --- !u!1 &1310476066
 GameObject:
   m_ObjectHideFlags: 0

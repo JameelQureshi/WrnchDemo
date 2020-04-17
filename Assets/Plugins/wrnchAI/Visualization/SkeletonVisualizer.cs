@@ -87,7 +87,7 @@ namespace wrnchAI.Visualization
 
             skeleton.color = visualColor;
             skeleton.JointToVideoQuad = m_jointToVideoQuad;
-            Debug.Log("Testing Skeleton: "+ m_jointToVideoQuad);
+
 
             skeleton.Id = personToAdd.Id;
 

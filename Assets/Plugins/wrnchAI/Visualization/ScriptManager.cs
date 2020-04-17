@@ -10,22 +10,6 @@ namespace wrnchAI.Core
 
         public bool showAvatar = true;
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-       public void ShowJointdata()
-        {
-
-
-            foreach (JointData joint in Skeleton.jointData)
-            {
-                Debug.Log("JointName: " + joint.jointname + "JointPosition: " + joint.jointposition);
-            }
-
-        }
-
 
         public void CharacterState(bool state)
         {

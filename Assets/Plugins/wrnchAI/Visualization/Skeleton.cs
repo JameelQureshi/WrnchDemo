@@ -58,10 +58,7 @@ namespace wrnchAI.Visualization
                 m_jointScaleOffset = value;
             }
         }
-        /// <summary>
-        /// JointData Use to store Joint Data for individaul joint; name and position
-        /// </summary>
-        public static JointData[] jointData;
+
 
         //Last update time for tracking timeout
         private float m_lastUpdate;
@@ -102,20 +99,53 @@ namespace wrnchAI.Visualization
             "LTOE",
             };
 
+        private static readonly List<string> m_jointsToExtract = new List<string> {
+            "RANKLE",
+            "RKNEE",
+            "RHIP",
+            "LHIP",
+            "LKNEE",
+            "LANKLE",
+            "PELV",
+            "THRX",
+            "NECK",
+            "HEAD",
+            "RWRIST",
+            "RELBOW",
+            "RSHOULDER",
+            "LSHOULDER",
+            "LELBOW",
+            "LWRIST",
+            "NOSE",
+            "REYE",
+            "REAR",
+            "LEYE",
+            "LEAR",
+            "RTOE",
+            "LTOE",
+            "RHEEL",
+            "LHEEL"
+            };
+
+
+
+
+
         public void Init(List<int[]> boneMap)
         {
             m_debugBones = new List<LineRenderer>();
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
-            jointData = new JointData[PoseManager.Instance.JointDefinition2D.NumJoints];
-
+            //foreach (string name in m_jointsToExtract)
+            //{
+            //    var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
+            //    Debug.Log("JointName: " + name + " JointIndex: " + jointIdx);
+            //}
             //Spawn all joints 
             foreach (string name in m_jointsToDisplay)
             {
                 var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
-
-                Debug.Log("JointName: " + name + " JointIndex: " + jointIdx);
                 var go = Instantiate(m_jointPrefab);
                 go.transform.SetParent(transform, false);
 
@@ -199,16 +229,20 @@ namespace wrnchAI.Visualization
                 }
             }
 
-            //Debug.Log("Here is code Crashing!");
-            //// write code for joint position
-            //foreach (string jointName in m_jointsToDisplay)
-            //{
-              //  int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(jointName);
-                //jointData[jointIdx].jointname = jointName;
-                //jointData[jointIdx].jointposition = m_debugJoints[jointIdx].GetPosition();
-                //jointData[jointIdx].index = jointIdx;
-            //}
-        
+
+            foreach (string jointName in m_jointsToExtract)
+            {
+                int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(jointName);
+
+                if (m_debugJoints[jointIdx] != null)
+                {
+                    JointDataDisplay.instance.jointData[jointIdx].jointname = jointName;
+                    JointDataDisplay.instance.jointData[jointIdx].jointposition = m_debugJoints[jointIdx].GetPosition();
+                    JointDataDisplay.instance.jointData[jointIdx].index = jointIdx;
+                }         
+            }
+
+
         }
 
 
@@ -228,10 +262,5 @@ namespace wrnchAI.Visualization
         }
     }
 
-    public class JointData
-    {
-        public string jointname;
-        public Vector3 jointposition;
-        public int index;
-    }
+   
 }
