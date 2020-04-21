@@ -99,33 +99,7 @@ namespace wrnchAI.Visualization
             "LTOE",
             };
 
-        private static readonly List<string> m_jointsToExtract = new List<string> {
-            "RANKLE",
-            "RKNEE",
-            "RHIP",
-            "LHIP",
-            "LKNEE",
-            "LANKLE",
-            "PELV",
-            "THRX",
-            "NECK",
-            "HEAD",
-            "RWRIST",
-            "RELBOW",
-            "RSHOULDER",
-            "LSHOULDER",
-            "LELBOW",
-            "LWRIST",
-            "NOSE",
-            "REYE",
-            "REAR",
-            "LEYE",
-            "LEAR",
-            "RTOE",
-            "LTOE",
-            "RHEEL",
-            "LHEEL"
-            };
+      
 
 
 
@@ -137,11 +111,8 @@ namespace wrnchAI.Visualization
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
-            //foreach (string name in m_jointsToExtract)
-            //{
-            //    var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
-            //    Debug.Log("JointName: " + name + " JointIndex: " + jointIdx);
-            //}
+
+
             //Spawn all joints 
             foreach (string name in m_jointsToDisplay)
             {
@@ -186,7 +157,8 @@ namespace wrnchAI.Visualization
         {
             var joints = person.Pose2d.Joints;
 
-            //Debug.Log("Total Joints: "+joints);
+            // Send The Person to JointDataDisplay So we can use it for further calculations ;
+            JointDataDisplay.instance.person = person;
 
 
             for (int i = 0; i < joints.Length / 2; i++)
@@ -227,19 +199,6 @@ namespace wrnchAI.Visualization
                         m_debugBones[i].gameObject.SetActive(false);
                     }
                 }
-            }
-
-
-            foreach (string jointName in m_jointsToExtract)
-            {
-                int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(jointName);
-
-                if (m_debugJoints[jointIdx] != null)
-                {
-                    JointDataDisplay.instance.jointData[jointIdx].jointname = jointName;
-                    JointDataDisplay.instance.jointData[jointIdx].jointposition = m_debugJoints[jointIdx].GetPosition();
-                    JointDataDisplay.instance.jointData[jointIdx].index = jointIdx;
-                }         
             }
 
 
