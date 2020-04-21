@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using wrnchAI.Core;
 using wrnchAI.wrAPI;
 namespace wrnchAI.Visualization
 {
@@ -73,23 +74,56 @@ namespace wrnchAI.Visualization
         }
        
 
+
         public void ShowJointdata()
         {
             if (person.RawPose3D!=null)
             {
                 totalRawPose3DPointsText.text = "" + person.RawPose3D.NumJoints;
+                int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex("RKNEE");
+                totalRawPose3DPointsText.text = totalRawPose3DPointsText.text + jointIdx;
 
-                positions = person.RawPose3D.Positions;
 
-                foreach (float f in positions)
+                int index = 0;
+                foreach (JointData jd in jointData)
                 {
-                    positionsText.text = positionsText.text + " " + f;
+                    positionsText.text = positionsText.text + " " + jointData[index].jointname + ":"+ jointData[index].jointposition.x+","+ jointData[index].jointposition.y;
+                    index++;
                 }
             }
 
-
-
         }
+
+
+        private void Update()
+        {
+            if (person.RawPose3D != null)
+            {
+                UpdateJointData();
+            }
+        }
+
+        private void UpdateJointData()
+        {
+
+            positions = person.RawPose3D.Positions;
+
+            int positionIndexX = 0;
+            int positionIndexY = 1;
+            int positionIndexZ = 2;
+
+            for (int i = 0 ; i<25 ; i++)
+            {
+                jointData[i].jointname = m_jointsToExtract[i];
+                jointData[i].jointposition = new Vector3(positions[positionIndexX], positions[positionIndexY], positions[positionIndexZ]);
+                positionIndexX = positionIndexX + 3;
+                positionIndexY = positionIndexY + 3;
+                positionIndexZ = positionIndexZ + 3;
+                jointData[i].index =i;
+            }
+        }
+
+
     }
 
     [System.Serializable]
