@@ -7,10 +7,10 @@ using wrnchAI.wrAPI;
 namespace wrnchAI.Visualization
 {
 
-    public class JointDataDisplay : MonoBehaviour
+    public class JointDataManager : MonoBehaviour
     {
 
-        public static JointDataDisplay instance;
+        public static JointDataManager instance;
         /// <summary>
         /// JointData Use to store Joint Data for individaul joint; name and position
         /// </summary>
@@ -58,6 +58,10 @@ namespace wrnchAI.Visualization
             "RHEEL",
             "LHEEL"
             };
+        private static readonly List<BonePairs> bonePairs = new List<BonePairs>
+        {
+
+        };
 
         public void Awake()
         {
@@ -132,5 +136,11 @@ namespace wrnchAI.Visualization
         public string jointname;
         public Vector3 jointposition;
         public int index;
+    }
+
+    public class BonePairs
+    {
+        public string bone1;
+        public string bone2;
     }
 }

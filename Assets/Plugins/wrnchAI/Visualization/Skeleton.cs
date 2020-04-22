@@ -158,7 +158,7 @@ namespace wrnchAI.Visualization
             var joints = person.Pose2d.Joints;
 
             // Send The Person to JointDataDisplay So we can use it for further calculations ;
-            JointDataDisplay.instance.person = person;
+            JointDataManager.instance.person = person;
 
 
             for (int i = 0; i < joints.Length / 2; i++)
