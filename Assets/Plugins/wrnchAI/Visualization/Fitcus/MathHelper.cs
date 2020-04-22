@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+
 public class MathHelper : MonoBehaviour
 {
     public static MathHelper instance;
@@ -22,8 +22,8 @@ public class MathHelper : MonoBehaviour
     //Convert Radian Angle to Degree
     public float ToDegree(float x)
     {
-        double pi = Math.PI;
-        float degree = (float)((x * 180) / pi);
+        float pi = Mathf.PI;
+        float degree = (x * 180) / pi;
         return degree;
     }
 
@@ -36,11 +36,11 @@ public class MathHelper : MonoBehaviour
     public float GetUserOrientation(Vector3 rightHip, Vector3 leftHip)
     {
         float slope = CalculateSlope2D(rightHip.x, rightHip.z, leftHip.x, leftHip.z);
-        float angle = ToDegree((float)Math.Atan(slope));
+        float angle = ToDegree(Mathf.Atan(slope));
         return angle;
     }
 
-    public float GetMean(float[] lst)
+    public float GetMean(List<float> lst)
     {
         float sum = 0;
         foreach (float item in lst)
@@ -48,14 +48,14 @@ public class MathHelper : MonoBehaviour
             sum += item;
         }
 
-        return sum / lst.Length;
+        return sum / lst.Count;
     }
 
-    public float GetPositiveMean(float[] lst)
+    public float GetPositiveMean(List<float> lst)
     {
-        for (int i = 0; i < lst.Length; i++)
+        for (int i = 0; i < lst.Count; i++)
         {
-            lst[i] = Math.Abs(lst[i]);
+            lst[i] = Mathf.Abs(lst[i]);
         }
 
         return GetMean(lst);
@@ -63,7 +63,7 @@ public class MathHelper : MonoBehaviour
 
     public float GetEuclideanDistance(Vector3 point1, Vector3 point2)
     {
-        return (float)Math.Sqrt(Math.Pow(point2.x - point1.x, 2) + Math.Pow(point2.y - point1.y, 2) + Math.Pow(point2.z - point1.z, 2));
+        return (float)Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2) + Mathf.Pow(point2.z - point1.z, 2));
     }
 
 
@@ -96,12 +96,12 @@ public class MathHelper : MonoBehaviour
         float b = GetEuclideanDistance(joint2, joint3);
         float c = GetEuclideanDistance(joint1, joint3);
 
-        float aSqaured = (float)Math.Pow(a, 2);
-        float bSqaured = (float)Math.Pow(b, 2);
-        float cSqaured = (float)Math.Pow(c, 2);
+        float aSqaured = Mathf.Pow(a, 2);
+        float bSqaured = Mathf.Pow(b, 2);
+        float cSqaured = Mathf.Pow(c, 2);
 
         float C = (aSqaured + bSqaured - cSqaured) / (2 * a * b);
-        float angle = ToDegree((float)Math.Acos(C));
+        float angle = ToDegree(Mathf.Acos(C));
 
         return angle;
     }
@@ -115,12 +115,12 @@ public class MathHelper : MonoBehaviour
         float b = GetEuclideanDistance(hip, straightLeg);
         float c = GetEuclideanDistance(straightLeg, shoulder);
 
-        float aSqaured = (float)Math.Pow(a, 2);
-        float bSqaured = (float)Math.Pow(b, 2);
-        float cSqaured = (float)Math.Pow(c, 2);
+        float aSqaured = Mathf.Pow(a, 2);
+        float bSqaured = Mathf.Pow(b, 2);
+        float cSqaured = Mathf.Pow(c, 2);
 
         float C = (aSqaured + bSqaured - cSqaured) / (2 * a * b);
-        float angle = ToDegree((float)Math.Acos(C));
+        float angle = ToDegree(Mathf.Acos(C));
 
         return angle;
     }
@@ -135,12 +135,12 @@ public class MathHelper : MonoBehaviour
         float b = GetEuclideanDistance(knee, straightShinAnkle);
         float c = GetEuclideanDistance(hip, straightShinAnkle);
 
-        float aSqaured = (float)Math.Pow(a, 2);
-        float bSqaured = (float)Math.Pow(b, 2);
-        float cSqaured = (float)Math.Pow(c, 2);
+        float aSqaured = Mathf.Pow(a, 2);
+        float bSqaured = Mathf.Pow(b, 2);
+        float cSqaured = Mathf.Pow(c, 2);
 
         float C = (aSqaured + bSqaured - cSqaured) / (2 * a * b);
-        float angle = ToDegree((float)Math.Acos(C));
+        float angle = ToDegree(Mathf.Acos(C));
 
         return angle;
     }

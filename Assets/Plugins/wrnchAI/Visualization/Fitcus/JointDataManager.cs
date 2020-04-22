@@ -58,9 +58,25 @@ namespace wrnchAI.Visualization
             "RHEEL",
             "LHEEL"
             };
-        private static readonly List<BonePairs> bonePairs = new List<BonePairs>
+        private static readonly List<BonePair> bonePairs = new List<BonePair>
         {
 
+            new BonePair("RANKLE","RKNEE"),
+            new BonePair("RKNEE", "RHIP"),
+            new BonePair("LANKLE", "LKNEE"),
+            new BonePair("LKNEE", "LHIP"),
+            new BonePair("RHIP", "PELV"),
+            new BonePair("LHIP", "PELV"),
+            new BonePair("PELV", "NECK"),
+            new BonePair("RSHOULDER", "LSHOULDER"),
+            new BonePair("LSHOULDER", "LELBOW"),
+            new BonePair("LELBOW", "LWRIST"),
+            new BonePair("RSHOULDER", "RELBOW"),
+            new BonePair("RELBOW", "RWRIST"),
+            new BonePair("LANKLE", "LTOE"),
+            new BonePair("RANKLE", "RTOE"),
+            new BonePair("LANKLE", "LHEEL"),
+            new BonePair("RANKLE", "RHEEL")
         };
 
         public void Awake()
@@ -81,19 +97,21 @@ namespace wrnchAI.Visualization
 
         public void ShowJointdata()
         {
+
             if (person.RawPose3D!=null)
             {
-                totalRawPose3DPointsText.text = "" + person.RawPose3D.NumJoints;
-                int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex("RKNEE");
-                totalRawPose3DPointsText.text = totalRawPose3DPointsText.text + jointIdx;
+
+                //totalRawPose3DPointsText.text = "" + person.RawPose3D.NumJoints;
+                //int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex("RKNEE");
+                //totalRawPose3DPointsText.text = totalRawPose3DPointsText.text + jointIdx;
 
 
-                int index = 0;
-                foreach (JointData jd in jointData)
-                {
-                    positionsText.text = positionsText.text + " " + jointData[index].jointname + ":"+ jointData[index].jointposition.x+","+ jointData[index].jointposition.y;
-                    index++;
-                }
+                //int index = 0;
+                //foreach (JointData jd in jointData)
+                //{
+                //    positionsText.text = positionsText.text + " " + jointData[index].jointname + ":"+ jointData[index].jointposition.x+","+ jointData[index].jointposition.y;
+                //    index++;
+                //}
             }
 
         }
@@ -104,7 +122,9 @@ namespace wrnchAI.Visualization
             if (person.RawPose3D != null)
             {
                 UpdateJointData();
+                Squat.instance.AnalyseFrame(jointData);
             }
+            totalRawPose3DPointsText.text = "" + Squat.instance.reps;
         }
 
         private void UpdateJointData()
@@ -138,9 +158,15 @@ namespace wrnchAI.Visualization
         public int index;
     }
 
-    public class BonePairs
+    public class BonePair
     {
         public string bone1;
         public string bone2;
+
+        public BonePair(string b1, string b2)
+        {
+            bone1 = b1;
+            bone2 = b2;
+        }
     }
 }
