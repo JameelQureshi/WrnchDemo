@@ -17,8 +17,6 @@ namespace wrnchAI.Visualization
         [SerializeField]
         public JointData[] jointData;
 
-        public Text positionsText;
-
         public Text totalRawPose3DPointsText;
 
         // Person Recived from Skeleton for calculations
@@ -124,7 +122,7 @@ namespace wrnchAI.Visualization
                 UpdateJointData();
                 Squat.instance.AnalyseFrame(jointData);
             }
-            totalRawPose3DPointsText.text = "" + Squat.instance.reps;
+            totalRawPose3DPointsText.text = "Squats: " + Squat.instance.reps;
         }
 
         private void UpdateJointData()

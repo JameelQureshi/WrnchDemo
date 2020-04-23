@@ -145,16 +145,16 @@ public class Squat : MonoBehaviour
             }
 
 
-
+            //// Empt All the list for new data
             for (int i = 0; i < torso_angles_of_current_rep.Count; i++)
             {
                 torso_angles_of_current_rep.RemoveAt(i);
             }
-            for (int i = 0; i < torso_angles_of_current_rep.Count; i++)
+            for (int i = 0; i < knee_angles_of_current_rep.Count; i++)
             {
                 knee_angles_of_current_rep.RemoveAt(i);
             }
-            for (int i = 0; i < torso_angles_of_current_rep.Count; i++)
+            for (int i = 0; i < user_rotations_of_current_rep.Count; i++)
             {
                 user_rotations_of_current_rep.RemoveAt(i);
             }
@@ -217,16 +217,4 @@ public class Squat : MonoBehaviour
 
      }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

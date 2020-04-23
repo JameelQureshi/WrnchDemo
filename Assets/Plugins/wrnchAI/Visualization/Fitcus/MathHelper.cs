@@ -292,6 +292,18 @@ public class MathHelper : MonoBehaviour
         }
     }
 
+    public float SumOfAbsoluteDifferences(List<float> A, List<float> B)
+    {
+        float SAD = 0;
+        for (int i=0; i<A.Count;i++)
+        {
+            SAD += Mathf.Abs(A[i] - B[i]);
+        }
+
+        return SAD;
+    }
+
+
 
 
 }
