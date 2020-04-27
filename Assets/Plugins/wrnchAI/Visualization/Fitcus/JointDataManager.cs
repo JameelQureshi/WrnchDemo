@@ -16,14 +16,20 @@ namespace wrnchAI.Visualization
         /// </summary>
         [SerializeField]
         public JointData[] jointData;
+        public JointData[] jointData2D;
 
         public Text totalRawPose3DPointsText;
+
+
+        public Text All2DJointsValues;
+        public Text All3DRawValues;
 
         // Person Recived from Skeleton for calculations
         public Person person;
 
         // Raw Point from RawPose3D
         public float[] positions;
+        public float[] positions2D;
 
 
         /// <summary>
@@ -90,30 +96,33 @@ namespace wrnchAI.Visualization
             }
 
         }
-       
 
+       
 
         public void ShowJointdata()
         {
 
-            if (person.RawPose3D!=null)
-            {
+            //All3DRawValues.text = "";
+            //for (int i=0;i<15;i++)
+            //{
+            //    All3DRawValues.text = All3DRawValues.text+" " + positions[i];
+            //}
 
-                //totalRawPose3DPointsText.text = "" + person.RawPose3D.NumJoints;
-                //int jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex("RKNEE");
-                //totalRawPose3DPointsText.text = totalRawPose3DPointsText.text + jointIdx;
+            //All2DJointsValues.text = "";
 
+            //if (person!=null)
+            //{
+            //    positions2D = person.Pose2d.Joints;
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        All2DJointsValues.text = All2DJointsValues.text + " " + positions2D[i];
+            //    }
 
-                //int index = 0;
-                //foreach (JointData jd in jointData)
-                //{
-                //    positionsText.text = positionsText.text + " " + jointData[index].jointname + ":"+ jointData[index].jointposition.x+","+ jointData[index].jointposition.y;
-                //    index++;
-                //}
-            }
+            //}
 
         }
 
+      
 
         private void Update()
         {
@@ -122,13 +131,17 @@ namespace wrnchAI.Visualization
                 UpdateJointData();
                 Squat.instance.AnalyseFrame(jointData);
             }
+
             totalRawPose3DPointsText.text = "Squats: " + Squat.instance.reps;
+            ShowJointdata();
         }
+
 
         private void UpdateJointData()
         {
 
             positions = person.RawPose3D.Positions;
+            positions2D = person.Pose2d.Joints;
 
             int positionIndexX = 0;
             int positionIndexY = 1;
@@ -136,14 +149,23 @@ namespace wrnchAI.Visualization
 
             for (int i = 0 ; i<25 ; i++)
             {
+                /// Fill name of the joint
                 jointData[i].jointname = m_jointsToExtract[i];
+                jointData2D[i].jointname = m_jointsToExtract[i];
+
+                //fill joint positions
                 jointData[i].jointposition = new Vector3(positions[positionIndexX], positions[positionIndexY], positions[positionIndexZ]);
+                jointData2D[i].jointposition = new Vector3(positions2D[positionIndexX], positions2D[positionIndexY], 0);
                 positionIndexX = positionIndexX + 3;
                 positionIndexY = positionIndexY + 3;
                 positionIndexZ = positionIndexZ + 3;
+
+                //fill index of the joint
                 jointData[i].index =i;
+                jointData2D[i].index = i;
             }
         }
+       
 
 
     }
