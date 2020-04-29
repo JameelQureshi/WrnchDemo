@@ -303,7 +303,7 @@ public class MathHelper : MonoBehaviour
         return SAD;
     }
 
-    public bool CheckForNegative(List<Vector3> joints){
+    public bool CheckForNegative(Vector3 r_heel, List<Vector3> joints){
 
         foreach (Vector3 joint in joints)
         {

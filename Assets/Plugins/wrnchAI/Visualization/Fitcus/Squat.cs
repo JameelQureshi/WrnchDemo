@@ -108,21 +108,20 @@ public class Squat : MonoBehaviour
         knee_angles_of_current_rep.Add(knee_angle);
         user_rotations_of_current_rep.Add(userRotation);
 
-
+         bool audioPlayed = false;
         if (RepCounter(knee_angle,depth1, depth2))
         {
             Debug.Log("Rep on frame: " + frame_no);
 
             reps += 1;
-            // Play Audio Count
-            VoiceManager.instance.PlayCountingSound(reps-1); 
-            //Debug.Log("Rep " + reps);
+
 
 
             if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
                 //Debug.Log("Sound on: Try to get a bit lower!");
                 VoiceManager.instance.PlayInstructionSound(7);
+                audioPlayed = true;
             }
 
 
@@ -138,7 +137,12 @@ public class Squat : MonoBehaviour
                 else
                 {
                     //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
-                    VoiceManager.instance.PlayInstructionSound(9);
+                    if (!audioPlayed)
+                    {
+                        VoiceManager.instance.PlayInstructionSound(9);
+                        audioPlayed = true;
+                    }
+
                 }
 
             }
@@ -148,12 +152,26 @@ public class Squat : MonoBehaviour
             if ( torso_angles_of_current_rep.Min() <   torsoAngleCutoff)
             {
                 //Debug.Log("Sound on: Keep your chest up!");
-                VoiceManager.instance.PlayInstructionSound(10);
+                if (!audioPlayed)
+                {
+                    VoiceManager.instance.PlayInstructionSound(10);
+                    audioPlayed = true;
+                }
+               
             }
             else
             {
                 Debug.Log("Torso is correct");
             }
+
+            // Play Audio Count
+            if (!audioPlayed)
+            {
+                VoiceManager.instance.PlayCountingSound(reps - 1);
+                audioPlayed = true;
+            }
+                
+            //Debug.Log("Rep " + reps);
 
 
             //// Empty All the list for new data
