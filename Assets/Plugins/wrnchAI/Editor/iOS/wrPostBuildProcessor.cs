@@ -30,7 +30,7 @@ namespace wrnchAI.Editor
                 PBXProject proj = new PBXProject();
                 proj.ReadFromString(File.ReadAllText(projPath));
 
-                string target = proj.TargetGuidByName("Unity-iPhone");
+                string target = proj.GetUnityMainTargetGuid();
 
                 // Add frameworks that we need
                 proj.AddFrameworkToProject(target, "CoreML.framework", true);
