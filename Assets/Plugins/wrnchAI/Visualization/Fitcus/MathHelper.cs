@@ -69,7 +69,7 @@ public class MathHelper : MonoBehaviour
 
     public bool CheckForNegative(Vector3 listOfTuples)
     {
-        if (listOfTuples.x <0)
+        if (listOfTuples.x < 0)
         {
             return true;
         }
@@ -111,7 +111,7 @@ public class MathHelper : MonoBehaviour
         // This only works for movements where the user is standing upright
 
         float a = GetEuclideanDistance(shoulder, hip);
-        Vector3 straightLeg = new Vector3 (hip.x, ankle.y, hip.z);
+        Vector3 straightLeg = new Vector3(hip.x, ankle.y, hip.z);
         float b = GetEuclideanDistance(hip, straightLeg);
         float c = GetEuclideanDistance(straightLeg, shoulder);
 
@@ -222,7 +222,7 @@ public class MathHelper : MonoBehaviour
             feetdata.rightFoot = rightFoot;
             return feetdata;
         }
-        
+
     }
 
     public Feetdata FeetAreHipWidth(Vector3 rightHip, Vector3 leftHip, Vector3 rightHeel, Vector3 leftHeel)
@@ -236,7 +236,7 @@ public class MathHelper : MonoBehaviour
         int rightFoot = 0;
         int leftFoot = 0;
 
-    
+
         if (rightHeel.x < rightLowerBoundary)
         {
             // Right foot too wide
@@ -295,7 +295,7 @@ public class MathHelper : MonoBehaviour
     public float SumOfAbsoluteDifferences(List<float> A, List<float> B)
     {
         float SAD = 0;
-        for (int i=0; i<A.Count;i++)
+        for (int i = 0; i < A.Count; i++)
         {
             SAD += Mathf.Abs(A[i] - B[i]);
         }
@@ -303,6 +303,17 @@ public class MathHelper : MonoBehaviour
         return SAD;
     }
 
+    public bool CheckForNegative(List<Vector3> joints){
+
+        foreach (Vector3 joint in joints)
+        {
+            if (joint.x<0 || joint.y<0 || joint.z<0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 
