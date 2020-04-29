@@ -134,13 +134,15 @@ using wrnchAI.wrAPI;
                 positions[i] = -0.2f;
             }
 
-            Debug.Log("Before Update Joint Data");
+
+
             UpdateJointData();
-            Debug.Log("After Update Joint Data");
+
+           
 
             Squat.instance.AnalyseFrame(jointData);
 
-            Debug.Log("After Squat Analyse");
+            
             UpdateJointData2D();
             
 
@@ -151,9 +153,12 @@ using wrnchAI.wrAPI;
 
         private void UpdateJointData()
         {
-            if (person.RawPose3D != null)
+            if (person!=null)
             {
-                positions = person.RawPose3D.Positions;
+                if (person.RawPose3D != null)
+                {
+                    positions = person.RawPose3D.Positions;
+                }
             }
 
 
