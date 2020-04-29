@@ -283,24 +283,28 @@ namespace wrnchAI.Core
             //Those configurations should be stored somewhere else.
             switch (DeviceChange.deviceOrientation)
             {
+
+
+
                 case ScreenOrientation.LandscapeLeft:
                     m_videoControllerConfig.RotationMultipleOf90 = 0;
                     m_visualizerConfig.RotationMultipleOf90 = 0;
-                    m_videoControllerConfig.MirrorX = false;
-                    m_videoControllerConfig.MirrorY = true;
-
-                    m_visualizerConfig.MirrorX = false;
-                    m_visualizerConfig.MirrorY = false;
-                    break;
-                case ScreenOrientation.LandscapeRight:
-                    m_videoControllerConfig.RotationMultipleOf90 = 0;
                     m_videoControllerConfig.MirrorX = true;
                     m_videoControllerConfig.MirrorY = false;
 
-                    m_visualizerConfig.RotationMultipleOf90 = 0;
                     m_visualizerConfig.MirrorX = true;
                     m_visualizerConfig.MirrorY = true;
                     break;
+                case ScreenOrientation.LandscapeRight:
+                    m_videoControllerConfig.RotationMultipleOf90 = 0;
+                    m_videoControllerConfig.MirrorX = false;
+                    m_videoControllerConfig.MirrorY = true;
+
+                    m_visualizerConfig.RotationMultipleOf90 = 0;
+                    m_visualizerConfig.MirrorX = false;
+                    m_visualizerConfig.MirrorY = false;
+                    break;
+
                 case ScreenOrientation.Portrait:
                     m_videoControllerConfig.RotationMultipleOf90 = 3;
                     m_videoControllerConfig.MirrorX = true;
