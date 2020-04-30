@@ -52,7 +52,7 @@ public class Squat : MonoBehaviour
     public float depth1 = 130f;
     public float depth2 = 140f;
     public float kneeAngleCutoff = 110f;
-    public float torsoAngleCutoff = 130f;
+    public float torsoAngleCutoff = 115f;
 
 
     /// Used for rep counting
@@ -108,11 +108,11 @@ public class Squat : MonoBehaviour
         knee_angles_of_current_rep.Add(knee_angle);
         user_rotations_of_current_rep.Add(userRotation);
 
-         bool audioPlayed = false;
+        bool audioPlayed = false;
         if (RepCounter(knee_angle,depth1, depth2))
         {
             Debug.Log("Rep on frame: " + frame_no);
-
+            
             reps += 1;
 
 
@@ -124,10 +124,11 @@ public class Squat : MonoBehaviour
                 audioPlayed = true;
             }
 
-
             float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
+            print("Depth: " + knee_angles_of_current_rep.Min() + " TorsoAngle: " + torso_angles_of_current_rep.Min());
 
-            if (Mathf.Abs(avgUserRoation) <= 45) {
+
+            if (Mathf.Abs(userRotation) <= 45) {
                 // If the user is facing the screen, check feet
                 Feetdata feetdata = MathHelper.instance.FeetAreShoulderWidth(r_shoulder, l_shoulder, r_heel, l_heel);
                 if (feetdata.state)
@@ -145,23 +146,24 @@ public class Squat : MonoBehaviour
 
                 }
 
-            }
+            } else {
+                // If the user is facing the side
 
-
-
-            if ( torso_angles_of_current_rep.Min() <   torsoAngleCutoff)
-            {
-                //Debug.Log("Sound on: Keep your chest up!");
-                if (!audioPlayed)
+                // Check Torso angle
+                if ( torso_angles_of_current_rep.Min() <   torsoAngleCutoff)
                 {
-                    VoiceManager.instance.PlayInstructionSound(10);
-                    audioPlayed = true;
+                    //Debug.Log("Sound on: Keep your chest up!");
+                    if (!audioPlayed)
+                    {
+                        VoiceManager.instance.PlayInstructionSound(10);
+                        audioPlayed = true;
+                    }
+                
                 }
-               
-            }
-            else
-            {
-                Debug.Log("Torso is correct");
+                else
+                {
+                    Debug.Log("Torso is correct");
+                }
             }
 
             // Play Audio Count
@@ -187,6 +189,12 @@ public class Squat : MonoBehaviour
             {
                 user_rotations_of_current_rep.RemoveAt(i);
             }
+
+            print("Array Size: " 
+            + knee_angles_of_current_rep.Count
+            + torso_angles_of_current_rep.Count
+            + user_rotations_of_current_rep.Count
+            );
 
         }
         frame_no += 1;
