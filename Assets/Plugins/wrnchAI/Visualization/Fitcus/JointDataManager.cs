@@ -16,7 +16,7 @@ using wrnchAI.wrAPI;
         public JointData[] jointData;
         public JointData[] jointData2D;
 
-        public Text totalRawPose3DPointsText;
+        public Text totalRepsText;
 
 
         public Text All2DJointsValues;
@@ -145,9 +145,9 @@ using wrnchAI.wrAPI;
 
             
             UpdateJointData2D();
-            
 
-            totalRawPose3DPointsText.text = "Squats: " + Squat.instance.reps;
+
+            totalRepsText.text = "" + Squat.instance.reps;
             ShowJointdata();
         }
 

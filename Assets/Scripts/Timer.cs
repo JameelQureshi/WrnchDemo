@@ -51,8 +51,6 @@ public class Timer : MonoBehaviour {
 
 		secondsSpent = difference.Seconds;
         milisecondsSpent = (secondsSpent*1000)+difference.Milliseconds;
-        Debug.Log("Time spent in miliseconds: "+milisecondsSpent);
-        Debug.Log("Time spent in seconds: " + secondsSpent);
 
         currentTime = currentMaxTime - secondsSpent;
 		if (currentTime <= 0)
