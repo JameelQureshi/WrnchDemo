@@ -177,18 +177,11 @@ public class Squat : MonoBehaviour
 
 
             //// Empty All the list for new data
-            for (int i = 0; i < torso_angles_of_current_rep.Count; i++)
-            {
-                torso_angles_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < knee_angles_of_current_rep.Count; i++)
-            {
-                knee_angles_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < user_rotations_of_current_rep.Count; i++)
-            {
-                user_rotations_of_current_rep.RemoveAt(i);
-            }
+
+            torso_angles_of_current_rep.Clear();
+            knee_angles_of_current_rep.Clear();
+            user_rotations_of_current_rep.Clear();
+
 
             print("Array Size: " 
             + knee_angles_of_current_rep.Count

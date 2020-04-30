@@ -36,10 +36,18 @@ namespace wrnchAI.Editor
                 proj.AddFrameworkToProject(target, "CoreML.framework", true);
                 proj.AddFrameworkToProject(target, "Accelerate.framework", true);
 
-                // Disable bitcode
+                // Disable bitcode 
+                // Enable c and objective c
                 proj.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+                proj.AddBuildProperty(target, "CLANG_ENABLE_MODULES", "YES");
 
+               
                 File.WriteAllText(projPath, proj.WriteToString());
+
+
+
+
+
 
                 // Add plist entries
                 string plistPath = path + "/Info.plist";
@@ -54,6 +62,17 @@ namespace wrnchAI.Editor
 
                 AddFramework("wrnch.framework", proj, target, projPath);
                 AddFramework("opencv2.framework", proj, target, projPath);
+
+
+                PBXProject pbxProject1 = new PBXProject();
+                pbxProject1.ReadFromFile(projPath);
+
+                // Disable bitcode 
+                // Enable c and objective c for unity Framework
+                string target1 = pbxProject1.GetUnityFrameworkTargetGuid();
+                pbxProject1.SetBuildProperty(target1, "ENABLE_BITCODE", "NO");
+                pbxProject1.AddBuildProperty(target1, "CLANG_ENABLE_MODULES", "YES");
+                pbxProject1.WriteToFile(projPath);
             }
         }
 
