@@ -111,7 +111,7 @@ namespace wrnchAI.Visualization
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
-
+            Debug.Log("Total Joints: "+ m_debugJoints.Length);
 
             //Spawn all joints 
             foreach (string name in m_jointsToDisplay)
@@ -127,6 +127,8 @@ namespace wrnchAI.Visualization
 
                 m_debugJoints[jointIdx] = visualJoint;
             }
+
+            Debug.Log("Total Bones: " + boneMap.Count);
 
             //Spawn all bones
             for (int i = 0; i < boneMap.Count; i++)
@@ -181,6 +183,7 @@ namespace wrnchAI.Visualization
                     }
                 }
             }
+            Debug.Log("Total Bones: " + m_boneMap.Count);
 
             for (int i = 0; i < m_boneMap.Count; ++i)
             {

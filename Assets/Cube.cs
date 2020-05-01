@@ -20,6 +20,8 @@ public class Cube : MonoBehaviour
 
     void Update()
     {
+
+
         transform.Rotate(0, Time.deltaTime*10, 0);
 		
 		if (Application.platform == RuntimePlatform.Android)
