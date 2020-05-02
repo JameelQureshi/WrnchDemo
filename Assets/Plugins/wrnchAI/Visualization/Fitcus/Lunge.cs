@@ -45,8 +45,6 @@ public class Lunge : MonoBehaviour
     public List<float> torso_angle_list = new List<float>();
     public List<float> l_knee_list = new List<float>();
     public List<float> r_knee_list = new List<float>();
-    public List<float> rep_list = new List<float>();
-
 
     //def __init__(self, depth1= 120, depth2= 140, kneeAngleCutoff= 120, torsoAngleCutoff= 130):
 
@@ -101,6 +99,10 @@ public class Lunge : MonoBehaviour
         Vector3 l_hip = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LHIP")].jointposition;
         Vector3 l_shoulder = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LSHOULDER")].jointposition;
 
+        if ( r_heel.x <0 || r_ankle.x < 0 || r_knee.x < 0 || r_hip.x < 0 || r_shoulder.x < 0 || l_heel.x < 0 || l_ankle.x < 0 || l_knee.x < 0 || l_hip.x < 0 || l_shoulder.x < 0)
+        {
+            return;
+        }
         float torso_angle  = MathHelper.instance.GetTorsoAngleWithStraightLeg(r_shoulder, r_hip, r_ankle);
         float r_knee_angle = MathHelper.instance.GetAngle(r_hip, r_knee, r_ankle);
         float l_knee_angle = MathHelper.instance.GetAngle(l_hip, l_knee, l_ankle);
@@ -152,18 +154,21 @@ public class Lunge : MonoBehaviour
         r_knee_y_coord_of_current_rep.Add(r_knee.y);
         user_rotations_of_current_rep.Add(userRotation);
 
+        bool audioPlayed = false;
+
         if (RepCounter(knee_angle, depth1, depth2))
         {
 
             Debug.Log("Rep on frame: " + frame_no);
-            rep_list.Add(frame_no);
             reps += 1;
             Debug.Log("Rep " + reps);
 
             if( r_knee_angles_of_current_rep.Min() > kneeAngleCutoff && l_knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
                 Debug.Log(r_knee_angles_of_current_rep.Min() + l_knee_angles_of_current_rep.Min());
-                Debug.Log("Sound on: Try to get a bit lower!");
+                // Debug.Log("Sound on: Try to get a bit lower!");
+                VoiceManager.instance.PlayInstructionSound(7);
+                audioPlayed = true;
             }
 
             float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
@@ -180,14 +185,24 @@ public class Lunge : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Sound On: Make sure your feet are hip width apart");
+                    //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
+                    if (!audioPlayed)
+                    {
+                        VoiceManager.instance.PlayInstructionSound(9);
+                        audioPlayed = true;
+                    }
                 }
 
             }
 
             if ( torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
             {
-                Debug.Log("Sound on: Keep your chest up! on frame: ");
+                //Debug.Log("Sound on: Keep your chest up!");
+                if (!audioPlayed)
+                {
+                    VoiceManager.instance.PlayInstructionSound(10);
+                    audioPlayed = true;
+                }
             }
 
             else
@@ -195,31 +210,18 @@ public class Lunge : MonoBehaviour
                 Debug.Log("Torso is correct");
             }
 
-
-
-            //// Empt All the list for new data
-            for (int i = 0; i < torso_angles_of_current_rep.Count; i++)
+            // Play Audio Count
+            if (!audioPlayed)
             {
-                torso_angles_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < l_knee_y_coord_of_current_rep.Count; i++)
-            {
-                l_knee_y_coord_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < r_knee_y_coord_of_current_rep.Count; i++)
-            {
-                r_knee_y_coord_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < l_knee_angles_of_current_rep.Count; i++)
-            {
-                l_knee_angles_of_current_rep.RemoveAt(i);
-            }
-            for (int i = 0; i < r_knee_angles_of_current_rep.Count; i++)
-            {
-                r_knee_angles_of_current_rep.RemoveAt(i);
+                VoiceManager.instance.PlayCountingSound(reps - 1);
+                audioPlayed = true;
             }
 
-
+            torso_angles_of_current_rep.Clear();
+            l_knee_y_coord_of_current_rep.Clear();
+            r_knee_y_coord_of_current_rep.Clear();
+            l_knee_angles_of_current_rep.Clear();
+            r_knee_angles_of_current_rep.Clear();
         }
 
        frame_no += 1;
