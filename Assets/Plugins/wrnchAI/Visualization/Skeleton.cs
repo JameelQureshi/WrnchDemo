@@ -47,7 +47,7 @@ namespace wrnchAI.Visualization
                 {
                     foreach (var j in m_debugJoints)
                     {
-                        if(j == null)
+                        if (j == null)
                             continue;
                         var localScale = j.transform.localScale;
                         localScale.x *= value.x / m_jointScaleOffset.x;
@@ -89,6 +89,9 @@ namespace wrnchAI.Visualization
             "LHIP",
             "LKNEE",
             "LANKLE",
+            "PELV",  //6
+            "NECK", //8
+            "HEAD", //9
             "RWRIST",
             "RELBOW",
             "RSHOULDER",
@@ -99,8 +102,25 @@ namespace wrnchAI.Visualization
             "LTOE",
             };
 
-      
 
+        private static readonly List<Color> m_colorsToDisplay = new List<Color> {
+            new Color(0.1f,0.8f,0.1f), //0
+            new Color(0.2f,0.7f,0.1f),//1
+            new Color(0.3f,0.6f,0.1f),//2
+            new Color(0.4f,0.5f,0.1f),//3
+            new Color(0.5f,0.4f,0.1f),//4
+            new Color(0.6f,0.3f,0.1f),//5
+            new Color(0.7f,0.2f,0.1f),//6
+            new Color(0.8f,0.1f,0.1f),//7
+            Color.white, //8
+            Color.blue,//9
+            Color.yellow,//10
+            Color.black,//11
+            Color.magenta,//12
+            Color.green,//13
+            Color.grey,//14
+            Color.cyan//15
+            };
 
 
 
@@ -111,7 +131,6 @@ namespace wrnchAI.Visualization
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
-            Debug.Log("Total Joints: "+ m_debugJoints.Length);
 
             //Spawn all joints 
             foreach (string name in m_jointsToDisplay)
@@ -124,8 +143,8 @@ namespace wrnchAI.Visualization
                 visualJoint.JointId = jointIdx;
                 visualJoint.Color = m_color;
                 visualJoint.ScaleJoint(m_jointScaleOffset);
-
                 m_debugJoints[jointIdx] = visualJoint;
+
             }
 
             Debug.Log("Total Bones: " + boneMap.Count);
@@ -136,7 +155,7 @@ namespace wrnchAI.Visualization
                 var bone = Instantiate(m_bonePrefab);
                 var boneRenderer = bone.GetComponent<LineRenderer>();
                 bone.transform.SetParent(transform, false);
-                boneRenderer.startColor = boneRenderer.endColor = boneRenderer.material.color = m_color;
+                boneRenderer.startColor = boneRenderer.endColor = boneRenderer.material.color = m_colorsToDisplay[i];
                 var ar = m_jointScaleOffset.y / m_jointScaleOffset.x;
                 boneRenderer.endWidth = boneRenderer.startWidth *= ar;
                 m_debugBones.Add(boneRenderer);
@@ -164,7 +183,7 @@ namespace wrnchAI.Visualization
             JointDataManager.instance.person = person;
 
 
-            for (int i = 0; i < joints.Length / 2; i++)
+            for (int i = 0; i < m_jointsToDisplay.Count; i++)
             {
                 if (m_debugJoints[i] != null)
                 {
@@ -183,7 +202,6 @@ namespace wrnchAI.Visualization
                     }
                 }
             }
-            Debug.Log("Total Bones: " + m_boneMap.Count);
 
             for (int i = 0; i < m_boneMap.Count; ++i)
             {
@@ -197,6 +215,33 @@ namespace wrnchAI.Visualization
                         m_debugBones[i].gameObject.SetActive(true);
                         m_debugBones[i].SetPosition(0, j0.GetPosition());
                         m_debugBones[i].SetPosition(1, j1.GetPosition());
+
+                        if (i == 6 || i == 5 || i == 12 || i == 13)
+                        {
+                            m_debugBones[i].gameObject.SetActive(false);
+                        }
+
+
+                        if (i == 6)
+                        {
+                            var j2 = m_debugJoints[6];
+                            var j3 = m_debugJoints[8];
+
+                            if (j2 != null && j3 != null)
+                            {
+                                if (j2.gameObject.activeSelf && j3.gameObject.activeSelf)
+                                {
+                                    m_debugBones[i].gameObject.SetActive(true);
+                                    m_debugBones[i].SetPosition(0, j2.GetPosition());
+                                    m_debugBones[i].SetPosition(1, j3.GetPosition());
+
+                                }
+                                else
+                                {
+                                    m_debugBones[i].gameObject.SetActive(false);
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -225,5 +270,5 @@ namespace wrnchAI.Visualization
         }
     }
 
-   
+
 }

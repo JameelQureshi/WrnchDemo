@@ -62,7 +62,11 @@ using wrnchAI.wrAPI;
             "RHEEL", //23
             "LHEEL" //24
             };
-        private static readonly List<BonePair> bonePairs = new List<BonePair>
+
+
+   
+
+    private static readonly List<BonePair> bonePairs = new List<BonePair>
         {
 
             new BonePair("RANKLE","RKNEE"),
@@ -84,7 +88,29 @@ using wrnchAI.wrAPI;
             new BonePair("RANKLE", "RHEEL")
         };
 
-        public void Awake()
+
+    private static readonly List<string> m_jointsToDisplay = new List<string> {
+            "RANKLE",
+            "RKNEE",
+            "RHIP",
+            "LHIP",
+            "LKNEE",
+            "LANKLE",
+            "PELV",
+            "NECK",
+            "RWRIST",
+            "RELBOW",
+            "RSHOULDER",
+            "LSHOULDER",
+            "LELBOW",
+            "LWRIST",
+            "RTOE",
+            "LTOE",
+            "RHEEL",
+            "LHEEL"
+        };
+
+    public void Awake()
         {
             if (instance == null)
             {
