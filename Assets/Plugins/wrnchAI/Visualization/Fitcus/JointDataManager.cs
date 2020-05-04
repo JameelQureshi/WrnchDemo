@@ -166,14 +166,13 @@ using wrnchAI.wrAPI;
             UpdateJointData();
 
            
-
-            // Squat.instance.AnalyseFrame(jointData);
-            Lunge.instance.AnalyseFrame(jointData);
+            Squat.instance.AnalyseFrame(jointData);
+            //Lunge.instance.AnalyseFrame(jointData);
             
             UpdateJointData2D();
 
 
-            totalRepsText.text = "" + Lunge.instance.reps;
+            totalRepsText.text = "" + Squat.instance.reps;
             ShowJointdata();
         }
 

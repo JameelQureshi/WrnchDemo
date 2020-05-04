@@ -103,27 +103,6 @@ namespace wrnchAI.Visualization
             };
 
 
-        private static readonly List<Color> m_colorsToDisplay = new List<Color> {
-            new Color(0.1f,0.8f,0.1f), //0
-            new Color(0.2f,0.7f,0.1f),//1
-            new Color(0.3f,0.6f,0.1f),//2
-            new Color(0.4f,0.5f,0.1f),//3
-            new Color(0.5f,0.4f,0.1f),//4
-            new Color(0.6f,0.3f,0.1f),//5
-            new Color(0.7f,0.2f,0.1f),//6
-            new Color(0.8f,0.1f,0.1f),//7
-            Color.white, //8
-            Color.blue,//9
-            Color.yellow,//10
-            Color.black,//11
-            Color.magenta,//12
-            Color.green,//13
-            Color.grey,//14
-            Color.cyan//15
-            };
-
-
-
 
         public void Init(List<int[]> boneMap)
         {
@@ -155,7 +134,7 @@ namespace wrnchAI.Visualization
                 var bone = Instantiate(m_bonePrefab);
                 var boneRenderer = bone.GetComponent<LineRenderer>();
                 bone.transform.SetParent(transform, false);
-                boneRenderer.startColor = boneRenderer.endColor = boneRenderer.material.color = m_colorsToDisplay[i];
+                boneRenderer.startColor = boneRenderer.endColor = boneRenderer.material.color = m_color;
                 var ar = m_jointScaleOffset.y / m_jointScaleOffset.x;
                 boneRenderer.endWidth = boneRenderer.startWidth *= ar;
                 m_debugBones.Add(boneRenderer);
