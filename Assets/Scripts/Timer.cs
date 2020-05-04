@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Timers;
 using System;
 using UnityEngine.Events;
 
@@ -11,7 +9,7 @@ public class Timer : MonoBehaviour {
 	public Text timerText;
     public Image timerFill;
 
-
+    public float startingTime;
 	public UnityEvent onTimeEnd;
 
 	private float currentMaxTime;
@@ -31,21 +29,21 @@ public class Timer : MonoBehaviour {
 
 	public void StartTimer(float time)
 	{
-		startTime=System.DateTime.Now;
+		startTime = DateTime.Now;
 		currentTime = time;
 		currentMaxTime = time;
 		isCountingDown = true;
 
 	}
-
-    private void Start()
+    private void OnEnable()
     {
-        StartTimer(30.0f);
+        StartTimer(startingTime);
     }
-
 
     void UpdateCounter()
 	{
+        Debug.Log(secondsSpent);
+
 		DateTime newTime = System.DateTime.Now;
 		TimeSpan difference = newTime.Subtract(startTime);
 
@@ -87,7 +85,11 @@ public class Timer : MonoBehaviour {
 		isCountingDown = false;
 
 	}
-	public void Resume(){
+    public void Stop()
+    {
+        isCountingDown = false;
+    }
+    public void Resume(){
 		isCountingDown = true;
 		startTime=System.DateTime.Now;
 	}
