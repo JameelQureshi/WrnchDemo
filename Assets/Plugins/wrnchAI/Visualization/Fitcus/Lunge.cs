@@ -56,7 +56,7 @@ public class Lunge : MonoBehaviour
     public List<float> user_rotations_of_current_rep = new List<float>();
 
 
-    public float depth1 = 129;
+    public float depth1 = 129f;
     public float depth2 = 140f;
     public float kneeAngleCutoff = 120f;
     public float torsoAngleCutoff = 130f;
@@ -87,17 +87,18 @@ public class Lunge : MonoBehaviour
 
     public void AnalyseFrame(JointData[] frame)
     {
-        Vector3 r_heel = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RHEEL")].jointposition;
-        Vector3 r_ankle = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RANKLE")].jointposition;
-        Vector3 r_knee = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RKNEE")].jointposition;
-        Vector3 r_hip = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RHIP")].jointposition;
-        Vector3 r_shoulder = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RSHOULDER")].jointposition;
 
-        Vector3 l_heel = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LHEEL")].jointposition;
-        Vector3 l_ankle = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LANKLE")].jointposition;
-        Vector3 l_knee = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LKNEE")].jointposition;
-        Vector3 l_hip = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LHIP")].jointposition;
-        Vector3 l_shoulder = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LSHOULDER")].jointposition;
+        Vector3 r_heel = frame[23].jointposition;
+        Vector3 r_ankle = frame[0].jointposition;
+        Vector3 r_knee = frame[1].jointposition;
+        Vector3 r_hip = frame[2].jointposition;
+        Vector3 r_shoulder = frame[12].jointposition;
+
+        Vector3 l_heel = frame[24].jointposition;
+        Vector3 l_ankle = frame[5].jointposition;
+        Vector3 l_knee = frame[4].jointposition;
+        Vector3 l_hip = frame[3].jointposition;
+        Vector3 l_shoulder = frame[13].jointposition;
 
         if ( r_heel.x <0 || r_ankle.x < 0 || r_knee.x < 0 || r_hip.x < 0 || r_shoulder.x < 0 || l_heel.x < 0 || l_ankle.x < 0 || l_knee.x < 0 || l_hip.x < 0 || l_shoulder.x < 0)
         {
@@ -200,7 +201,7 @@ public class Lunge : MonoBehaviour
                 //Debug.Log("Sound on: Keep your chest up!");
                 if (!audioPlayed)
                 {
-                    VoiceManager.instance.PlayInstructionSound(10);
+                    VoiceManager.instance.PlayInstructionSound(9);
                     audioPlayed = true;
                 }
             }
