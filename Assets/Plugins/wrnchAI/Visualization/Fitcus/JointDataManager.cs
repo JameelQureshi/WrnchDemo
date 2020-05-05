@@ -30,7 +30,7 @@ using wrnchAI.wrAPI;
         public float[] positions2D;
 
 
-      
+        public bool canDoCoaching = false;
 
         /// <summary>
         /// The name of joints to extract from raw position.
@@ -165,9 +165,13 @@ using wrnchAI.wrAPI;
 
             UpdateJointData();
 
-           
+
+        if (canDoCoaching)
+        {
             //Squat.instance.AnalyseFrame(jointData);
             Lunge.instance.AnalyseFrame(jointData);
+        }
+
             
             UpdateJointData2D();
 

@@ -675,7 +675,7 @@ MonoBehaviour:
     m_overrideModelPath: 
     m_deviceId: 0
     m_serializedModelPath: 
-    m_licenseString: 0708A9-2345BE-49B2BE-E5521D-0E58AA-EBF7EE
+    m_licenseString: 1A6CD8-5081E9-428BA0-8A5BD3-17779D-C04F42
     m_trackerKind: 1
     m_netRes: {x: 456, y: 256}
   m_visualizerConfig:
@@ -2248,6 +2248,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  canDoCoaching: 0
 --- !u!82 &1131420107
 AudioSource:
   m_ObjectHideFlags: 0

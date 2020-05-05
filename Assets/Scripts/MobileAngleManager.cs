@@ -106,6 +106,7 @@ public class MobileAngleManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         canCalculate = false;
         coachingTimer.enabled = true;
+        JointDataManager.instance.canDoCoaching=true;
         Destroy(gameObject);
         message.text = "Next Screen Loaded!";
     }
