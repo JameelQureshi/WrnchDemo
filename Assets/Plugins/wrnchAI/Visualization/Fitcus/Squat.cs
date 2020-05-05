@@ -49,10 +49,10 @@ public class Squat : MonoBehaviour
     public List<float> knee_angles_of_current_rep = new List<float>();
     public List<float> user_rotations_of_current_rep = new List<float>();
 
-    public float depth1 = 130f;
-    public float depth2 = 140f;
-    public float kneeAngleCutoff = 110f;
-    public float torsoAngleCutoff = 115f;
+    private float depth1 = 130f;
+    private float depth2 = 140f;
+    private float kneeAngleCutoff = 110f;
+    private float torsoAngleCutoff = 115f;
 
 
     /// Used for rep counting

@@ -56,10 +56,10 @@ public class Lunge : MonoBehaviour
     public List<float> user_rotations_of_current_rep = new List<float>();
 
 
-    public float depth1 = 129f;
-    public float depth2 = 140f;
-    public float kneeAngleCutoff = 120f;
-    public float torsoAngleCutoff = 130f;
+    private float depth1 = 140;
+    private float depth2 = 150;
+    private float kneeAngleCutoff = 120f;
+    private float torsoAngleCutoff = 130f;
 
     /// Used for rep counting
     public bool trackingBegan = false;
@@ -155,6 +155,10 @@ public class Lunge : MonoBehaviour
         r_knee_y_coord_of_current_rep.Add(r_knee.y);
         user_rotations_of_current_rep.Add(userRotation);
 
+        // print("----------- Knee Angle Left: " + l_knee_angle);
+        // print("----------- Knee Angle Right: " + r_knee_angle);
+        // print("----------- Knee Angle: " + knee_angle);
+        // print("----------- Depth: " + depth1);
         bool audioPlayed = false;
 
         if (RepCounter(knee_angle, depth1, depth2))
@@ -164,20 +168,12 @@ public class Lunge : MonoBehaviour
             reps += 1;
             Debug.Log("Rep " + reps);
 
-            if( r_knee_angles_of_current_rep.Min() > kneeAngleCutoff && l_knee_angles_of_current_rep.Min() > kneeAngleCutoff)
-            {
-                Debug.Log(r_knee_angles_of_current_rep.Min() + l_knee_angles_of_current_rep.Min());
-                // Debug.Log("Sound on: Try to get a bit lower!");
-                VoiceManager.instance.PlayInstructionSound(7);
-                audioPlayed = true;
-            }
-
             float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
 
 
 
             if (Mathf.Abs(avgUserRoation) <= 45) {
-                // If the user is facing the screen, check feet
+                // // If the user is facing the screen, check feet
                 Feetdata feetdata = MathHelper.instance.FeetAreHipWidth(r_hip, l_hip, r_heel, l_heel);
 
                 if (feetdata.state)
@@ -189,11 +185,22 @@ public class Lunge : MonoBehaviour
                     //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
                     if (!audioPlayed)
                     {
+                        Debug.Log("Feet are incorrect -------- ");
                         VoiceManager.instance.PlayInstructionSound(9);
                         audioPlayed = true;
                     }
                 }
 
+            } else {
+                    if( r_knee_angles_of_current_rep.Min() > kneeAngleCutoff && l_knee_angles_of_current_rep.Min() > kneeAngleCutoff)
+                    {
+                        Debug.Log(r_knee_angles_of_current_rep.Min() + l_knee_angles_of_current_rep.Min());
+                        // Debug.Log("Sound on: Try to get a bit lower!");
+                        VoiceManager.instance.PlayInstructionSound(7);
+                        audioPlayed = true;
+                        // print("Right Knee angle: " + r_knee_angles_of_current_rep.Min() + "Left Knee angle: " + r_knee_angles_of_current_rep.Min() + "kneeAngleCutoff: " + kneeAngleCutoff + frame_no);
+
+                    }
             }
 
             if ( torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
@@ -201,7 +208,7 @@ public class Lunge : MonoBehaviour
                 //Debug.Log("Sound on: Keep your chest up!");
                 if (!audioPlayed)
                 {
-                    VoiceManager.instance.PlayInstructionSound(9);
+                    VoiceManager.instance.PlayInstructionSound(10);
                     audioPlayed = true;
                 }
             }

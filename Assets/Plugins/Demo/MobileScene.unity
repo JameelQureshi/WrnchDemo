@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44940728, g: 0.49633723, b: 0.55877745, a: 1}
+  m_IndirectSpecularColor: {r: 0.44940758, g: 0.49633753, b: 0.5587779, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -538,10 +538,6 @@ MonoBehaviour:
   l_knee_angles_of_current_rep: []
   r_knee_angles_of_current_rep: []
   user_rotations_of_current_rep: []
-  depth1: 129
-  depth2: 140
-  kneeAngleCutoff: 120
-  torsoAngleCutoff: 130
   trackingBegan: 0
   thresholdReached: 0
   frame_no: 0
@@ -1121,8 +1117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17cc2de1d97b74999858ea80dad708e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetAngleMin: 20
-  targetAngleMax: 25
+  targetAngleMin: 16
+  targetAngleMax: 20
   handleStateSprite:
   - {fileID: 21300000, guid: 1ec30eaa7182440ed8c1af3493044297, type: 3}
   - {fileID: 21300000, guid: 5e45d6c26a85a467f8c8e42e1199e941, type: 3}
@@ -1182,10 +1178,6 @@ MonoBehaviour:
   torso_angles_of_current_rep: []
   knee_angles_of_current_rep: []
   user_rotations_of_current_rep: []
-  depth1: 130
-  depth2: 140
-  kneeAngleCutoff: 110
-  torsoAngleCutoff: 130
   trackingBegan: 0
   thresholdReached: 0
   frame_no: 0
