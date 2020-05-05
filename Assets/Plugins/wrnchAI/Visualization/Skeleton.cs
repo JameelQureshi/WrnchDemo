@@ -83,25 +83,44 @@ namespace wrnchAI.Visualization
         public bool HasBeenInitialized { get { return m_initialized; } }
 
         private static readonly List<string> m_jointsToDisplay = new List<string> {
-            "RANKLE",
-            "RKNEE",
-            "RHIP",
-            "LHIP",
-            "LKNEE",
-            "LANKLE",
-            "PELV",  //6
+            "RANKLE",//0
+            "RKNEE",//2
+            "RHIP",//3
+            "LHIP",//4
+            "LKNEE",//5
+            "LANKLE",//6
+            "PELV",  //7
             "NECK", //8
             "HEAD", //9
-            "RWRIST",
-            "RELBOW",
-            "RSHOULDER",
-            "LSHOULDER",
-            "LELBOW",
-            "LWRIST",
-            "RTOE",
-            "LTOE",
+            "RWRIST",//10
+            "RELBOW",//11
+            "RSHOULDER",//12
+            "LSHOULDER",//13
+            "LELBOW",//14
+            "LWRIST",//15
+            "RTOE",//16
+            "LTOE",//17
             };
 
+        private static readonly List<Color> m_colorToDisplay = new List<Color> {
+            Color.black, //"RANKLE",//0
+            Color.black,//"RKNEE",//2
+            Color.black,//"RHIP",//3
+            Color.white,//"LHIP",//4
+            Color.white,//"LKNEE",//5
+            Color.white,//"LANKLE",//6
+            Color.green,//"PELV",  //7
+            Color.green,//"NECK", //8
+            Color.green,//"HEAD", //9
+            Color.black,//"RWRIST",//10
+            Color.black,//"RELBOW",//11
+            Color.black,//"RSHOULDER",//12
+            Color.white,//"LSHOULDER",//13
+            Color.white,//"LELBOW",//14
+            Color.white,//"LWRIST",//15
+            Color.black,//"RTOE",//16
+            Color.white,//"LTOE",//17
+            };
 
 
         public void Init(List<int[]> boneMap)
@@ -112,6 +131,7 @@ namespace wrnchAI.Visualization
 
 
             //Spawn all joints 
+            int k = 0;
             foreach (string name in m_jointsToDisplay)
             {
                 var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
@@ -120,7 +140,8 @@ namespace wrnchAI.Visualization
 
                 var visualJoint = go.GetComponent<Joint>();
                 visualJoint.JointId = jointIdx;
-                visualJoint.Color = m_color;
+                visualJoint.Color = m_colorToDisplay[k];
+                k++;
                 visualJoint.ScaleJoint(m_jointScaleOffset);
                 m_debugJoints[jointIdx] = visualJoint;
 
