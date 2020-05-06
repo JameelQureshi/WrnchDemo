@@ -31,11 +31,13 @@ public class VoiceManager : MonoBehaviour
 
     public void PlayCountingSound(int index)
     {
+        if(!audioSource.isPlaying)
         audioSource.PlayOneShot(countingClips[index]);
     }
 
     public void PlayInstructionSound(int index)
     {
+        if (!audioSource.isPlaying)
         audioSource.PlayOneShot(instructionClips[index]);
     }
 }

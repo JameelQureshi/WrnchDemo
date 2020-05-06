@@ -131,7 +131,7 @@ namespace wrnchAI.Visualization
 
 
             //Spawn all joints 
-            int k = 0;
+
             foreach (string name in m_jointsToDisplay)
             {
                 var jointIdx = PoseManager.Instance.JointDefinition2D.GetJointIndex(name);
@@ -140,8 +140,7 @@ namespace wrnchAI.Visualization
 
                 var visualJoint = go.GetComponent<Joint>();
                 visualJoint.JointId = jointIdx;
-                visualJoint.Color = m_colorToDisplay[k];
-                k++;
+                visualJoint.Color = m_color;
                 visualJoint.ScaleJoint(m_jointScaleOffset);
                 m_debugJoints[jointIdx] = visualJoint;
 
