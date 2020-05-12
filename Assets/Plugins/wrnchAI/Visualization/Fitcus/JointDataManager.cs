@@ -168,15 +168,16 @@ using wrnchAI.wrAPI;
 
         if (canDoCoaching)
         {
-            //Squat.instance.AnalyseFrame(jointData);
-            Lunge.instance.AnalyseFrame(jointData);
+            // Squat.instance.AnalyseFrame(jointData);
+            // Lunge.instance.AnalyseFrame(jointData);
+            Pushup.instance.AnalyseFrame(jointData2D);
         }
 
             
             UpdateJointData2D();
 
 
-            totalRepsText.text = "" + Lunge.instance.reps;
+            totalRepsText.text = "" + Pushup.instance.reps;
             ShowJointdata();
         }
 

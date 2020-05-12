@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using wrnchAI.Core;
 using wrnchAI.Visualization;
@@ -48,17 +49,17 @@ public class Pushup : MonoBehaviour
     public List<float> slope_torso_of_current_rep = new List<float>();
     public List<float> slope_thigh_of_current_rep = new List<float>();
 
-    public float depth1 = 100.0f;
-    public float depth2 = 130.0f;
-    public float elbowAngleCutoff = 110.0f;
+    private float depth1 = 100.0f;
+    private float depth2 = 130.0f;
+    private float elbowAngleCutoff = 110.0f;
 
     //Used for rep counting
     public bool trackingBegan = false;
     public bool thresholdReached = false;
 
     public float frame_no = 0;
-    public float reps = 0;
-
+    public int reps = 0;
+    public CoachingOneEuroFilter one_euro_filter_elbow ;
 
 
    /*
@@ -89,6 +90,116 @@ public class Pushup : MonoBehaviour
         Vector3 l_shoulder = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LSHOULDER")].jointposition;
         Vector3 l_hip = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LHIP")].jointposition;
         Vector3 l_knee = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("LKNEE")].jointposition;
+
+        bool r_arm_detected; 
+        bool l_arm_detected;
+        bool hips_knee_detected;
+        string side;
+        float elbow_angle;
+        float slope_torso;
+        float slope_thigh;
+
+        if (r_wrist.x < 0 || r_elbow.x < 0 || r_shoulder.x < 0)
+        {
+            r_arm_detected = false;
+        } else {
+            r_arm_detected = true;
+        }
+
+        print("------- right arrm: " + r_wrist);
+
+        if (l_wrist.x < 0 || l_elbow.x < 0 || l_shoulder.x < 0)
+        {
+            l_arm_detected = false;
+        } else {
+            l_arm_detected = true;
+        }
+
+        if (r_knee.x < 0 || r_hip.x < 0 || l_knee.x < 0 || l_hip.x < 0)
+        {
+            hips_knee_detected = false;
+        } else {
+            hips_knee_detected = true;
+        }
+
+        l_arm_detected = false; // ------------------------ TEMP
+
+        if (l_arm_detected) {
+            side = "Left";
+            elbow_angle = MathHelper.instance.GetAngle(l_wrist, l_elbow, l_shoulder);
+            if (hips_knee_detected) {
+                slope_torso = MathHelper.instance.CalculateSlope2D(l_hip.x, l_hip.y, l_shoulder.x, l_shoulder.y);
+                slope_thigh = MathHelper.instance.CalculateSlope2D(l_hip.x, l_hip.y, l_knee.x, l_knee.y);
+                slope_thigh_of_current_rep.Add(slope_thigh);
+                slope_torso_of_current_rep.Add(slope_torso);
+            }
+        }
+        else if (r_arm_detected) {
+            side = "Right";
+            elbow_angle = MathHelper.instance.GetAngle(r_wrist, r_elbow, r_shoulder);
+            if (hips_knee_detected) {
+                slope_torso = MathHelper.instance.CalculateSlope2D(r_hip.x, r_hip.y, r_shoulder.x, r_shoulder.y);
+                slope_thigh = MathHelper.instance.CalculateSlope2D(r_hip.x, r_hip.y, r_knee.x, r_knee.y);
+                slope_thigh_of_current_rep.Add(slope_thigh);
+                slope_torso_of_current_rep.Add(slope_torso);
+            }
+
+        } else {
+            frame_no +=1;
+            return;
+        }
+
+        if (frame_no == 0)
+        {   
+            // Reduce min_cutoff to 0.01 from 0.1
+            one_euro_filter_elbow = new CoachingOneEuroFilter(frame_no, elbow_angle, 0.0f, 0.025f, 0.0f, 1.0f);
+        }
+        else
+        {
+            elbow_angle = one_euro_filter_elbow.ApplyFilter(frame_no, elbow_angle);
+        }
+
+        elbow_angles_of_current_rep.Add(elbow_angle);
+
+        bool audioPlayed = false;
+
+        print("----------- Elbow Angle: " + elbow_angle);
+
+        if (RepCounter(elbow_angle, depth1, depth2))
+        {
+            reps += 1;
+
+            print("--------- Reps on frame: " + frame_no);
+
+            if (elbow_angles_of_current_rep.Min() > elbowAngleCutoff) {
+                print("Sound on: Try to get a bit lower!");
+                VoiceManager.instance.PlayInstructionSound(7);
+                audioPlayed = true;
+
+            }
+
+            // Get the slope of the torso and thigh and check for similarity
+            // The smaller the number the more similarity, which means more straight body
+            float sad = MathHelper.instance.SumOfAbsoluteDifferences(slope_torso_of_current_rep, slope_thigh_of_current_rep);
+            if (sad >= 40) {
+                print("Sound on: Try to keep your back and thighs in a straight line");
+                VoiceManager.instance.PlayInstructionSound(9);
+                audioPlayed = true;
+            }
+
+            // Play Audio Count
+            if (!audioPlayed)
+            {
+                VoiceManager.instance.PlayCountingSound(reps - 1);
+                audioPlayed = true;
+            }
+
+            elbow_angles_of_current_rep.Clear();
+            slope_thigh_of_current_rep.Clear();
+            slope_torso_of_current_rep.Clear();
+        }
+
+        frame_no += 1;
 
 
     }

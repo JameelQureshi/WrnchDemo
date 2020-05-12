@@ -66,6 +66,10 @@ public class MathHelper : MonoBehaviour
         return (float)Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2) + Mathf.Pow(point2.z - point1.z, 2));
     }
 
+    public float GetEuclideanDistance2D(Vector3 point1, Vector3 point2)
+    {
+        return (float)Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2));
+    }
 
     public bool CheckForNegative(Vector3 listOfTuples)
     {
@@ -95,6 +99,23 @@ public class MathHelper : MonoBehaviour
         float a = GetEuclideanDistance(joint1, joint2);
         float b = GetEuclideanDistance(joint2, joint3);
         float c = GetEuclideanDistance(joint1, joint3);
+
+        float aSqaured = Mathf.Pow(a, 2);
+        float bSqaured = Mathf.Pow(b, 2);
+        float cSqaured = Mathf.Pow(c, 2);
+
+        float C = (aSqaured + bSqaured - cSqaured) / (2 * a * b);
+        float angle = ToDegree(Mathf.Acos(C));
+
+        return angle;
+    }
+
+    public float GetAngle2D(Vector3 joint1, Vector3 joint2, Vector3 joint3)
+    {
+        // The angle you want is located at joint2
+        float a = GetEuclideanDistance2D(joint1, joint2);
+        float b = GetEuclideanDistance2D(joint2, joint3);
+        float c = GetEuclideanDistance2D(joint1, joint3);
 
         float aSqaured = Mathf.Pow(a, 2);
         float bSqaured = Mathf.Pow(b, 2);

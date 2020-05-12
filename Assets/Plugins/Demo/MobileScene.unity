@@ -121,6 +121,62 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &53612703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 53612704}
+  - component: {fileID: 53612705}
+  m_Layer: 0
+  m_Name: Pushup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &53612704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53612703}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2011834719}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &53612705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53612703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc8fb8e89f90420c8e9dc630bcbff94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elbow_angle_list: []
+  slope_torso_list: []
+  slope_thigh_list: []
+  elbow_angles_of_current_rep: []
+  slope_torso_of_current_rep: []
+  slope_thigh_of_current_rep: []
+  depth1: 100
+  depth2: 130
+  elbowAngleCutoff: 110
+  trackingBegan: 0
+  thresholdReached: 0
+  frame_no: 0
+  reps: 0
 --- !u!1 &75848650
 GameObject:
   m_ObjectHideFlags: 0
@@ -3476,6 +3532,7 @@ Transform:
   - {fileID: 950420668}
   - {fileID: 2052244670}
   - {fileID: 252239082}
+  - {fileID: 53612704}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

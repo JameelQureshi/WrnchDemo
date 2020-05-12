@@ -49,8 +49,9 @@ public class Lunge : MonoBehaviour
     //def __init__(self, depth1= 120, depth2= 140, kneeAngleCutoff= 120, torsoAngleCutoff= 130):
 
     public List<float> torso_angles_of_current_rep = new List<float>();
-    public List<float> l_knee_y_coord_of_current_rep = new List<float>();
-    public List<float> r_knee_y_coord_of_current_rep = new List<float>();
+    // public List<float> l_knee_x_coord_of_current_rep = new List<float>();
+    // public List<float> r_knee_x_coord_of_current_rep = new List<float>();
+    // public List<float> pelvis_x_coord_of_current_rep = new List<float>();
     public List<float> l_knee_angles_of_current_rep = new List<float>();
     public List<float> r_knee_angles_of_current_rep = new List<float>();
     public List<float> user_rotations_of_current_rep = new List<float>();
@@ -72,7 +73,9 @@ public class Lunge : MonoBehaviour
     public CoachingOneEuroFilter one_euro_filter_left ;
     public CoachingOneEuroFilter one_euro_filter_torso ;
 
-
+    private bool stride_is_long = false;
+    private int start_of_rep;
+    private int end_of_rep;
     /*
         Analyses lunge mechanics given a single frame of joints.
 
@@ -151,14 +154,24 @@ public class Lunge : MonoBehaviour
         torso_angles_of_current_rep.Add(torso_angle);
         l_knee_angles_of_current_rep.Add(l_knee_angle);
         r_knee_angles_of_current_rep.Add(r_knee_angle);
-        l_knee_y_coord_of_current_rep.Add(l_knee.y);
-        r_knee_y_coord_of_current_rep.Add(r_knee.y);
+        // l_knee_x_coord_of_current_rep.Add(l_knee.x);
+        // r_knee_x_coord_of_current_rep.Add(r_knee.x);
+        // float pelvis_x = (r_hip.x + l_hip.x)/2;
+        // pelvis_x_coord_of_current_rep.Add(pelvis_x);
         user_rotations_of_current_rep.Add(userRotation);
 
-        // print("----------- Knee Angle Left: " + l_knee_angle);
-        // print("----------- Knee Angle Right: " + r_knee_angle);
-        // print("----------- Knee Angle: " + knee_angle);
-        // print("----------- Depth: " + depth1);
+        float left_shin_length = MathHelper.instance.GetEuclideanDistance2D(l_ankle, l_knee);
+        float right_shin_length = MathHelper.instance.GetEuclideanDistance2D(r_ankle, r_knee);
+        float shin_length = (left_shin_length + right_shin_length) / 2;
+
+        float stride_length = MathHelper.instance.GetEuclideanDistance2D(l_ankle, r_ankle);
+
+        if (stride_length > shin_length * 1.3) {
+            stride_is_long = true;
+        }
+        
+        
+
         bool audioPlayed = false;
 
         if (RepCounter(knee_angle, depth1, depth2))
@@ -172,7 +185,7 @@ public class Lunge : MonoBehaviour
 
 
 
-            if (Mathf.Abs(avgUserRoation) <= 45) {
+            if (Mathf.Abs(userRotation) <= 45) {
                 // // If the user is facing the screen, check feet
                 Feetdata feetdata = MathHelper.instance.FeetAreHipWidth(r_hip, l_hip, r_heel, l_heel);
 
@@ -196,14 +209,26 @@ public class Lunge : MonoBehaviour
                     {
                         Debug.Log(r_knee_angles_of_current_rep.Min() + l_knee_angles_of_current_rep.Min());
                         // Debug.Log("Sound on: Try to get a bit lower!");
-                        VoiceManager.instance.PlayInstructionSound(7);
-                        audioPlayed = true;
-                        // print("Right Knee angle: " + r_knee_angles_of_current_rep.Min() + "Left Knee angle: " + r_knee_angles_of_current_rep.Min() + "kneeAngleCutoff: " + kneeAngleCutoff + frame_no);
-
+                        if (!audioPlayed)
+                        {
+                            VoiceManager.instance.PlayInstructionSound(7);
+                            audioPlayed = true;
+                            // print("Right Knee angle: " + r_knee_angles_of_current_rep.Min() + "Left Knee angle: " + r_knee_angles_of_current_rep.Min() + "kneeAngleCutoff: " + kneeAngleCutoff + frame_no);
+                        }
+                        
+                    }
+                    if (!stride_is_long) {
+                        //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
+                        if (!audioPlayed)
+                        {
+                            Debug.Log("Step Forward");
+                            VoiceManager.instance.PlayInstructionSound(9);
+                            audioPlayed = true;
+                        }
                     }
             }
 
-            if ( torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
+            if (torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
             {
                 //Debug.Log("Sound on: Keep your chest up!");
                 if (!audioPlayed)
@@ -225,9 +250,11 @@ public class Lunge : MonoBehaviour
                 audioPlayed = true;
             }
 
+            stride_is_long = false;
             torso_angles_of_current_rep.Clear();
-            l_knee_y_coord_of_current_rep.Clear();
-            r_knee_y_coord_of_current_rep.Clear();
+            // l_knee_x_coord_of_current_rep.Clear();
+            // r_knee_x_coord_of_current_rep.Clear();
+            // pelvis_x_coord_of_current_rep.Clear();
             l_knee_angles_of_current_rep.Clear();
             r_knee_angles_of_current_rep.Clear();
         }
@@ -257,6 +284,28 @@ public class Lunge : MonoBehaviour
 
     public bool RepCounter(float datapoint, float threshold1, float threshold2)
     {
+
+        // // Check if hips are between knees
+        // if (thresholdReached && hip_is_between_knees == false) {
+        //     float left = l_knee_x_coord_of_current_rep.Last();
+        //     float right = r_knee_x_coord_of_current_rep.Last();
+        //     float pelvis = pelvis_x_coord_of_current_rep.Last();
+
+        //     if (left < right) {
+        //         if (pelvis >= left && pelvis <= right) {
+        //             hip_is_between_knees = true;
+        //         } else {
+        //             hip_is_between_knees = false;
+        //         }
+        //     } else {
+        //         if (pelvis >= right && pelvis <= left) {
+        //             hip_is_between_knees = true;
+        //         } else {
+        //             hip_is_between_knees = false;
+        //         }
+        //     }
+        // }
+
         // This rep counter waits for the user to get below the threshold, then above again
         if (datapoint > threshold1 && trackingBegan == false)
         { 
@@ -264,7 +313,7 @@ public class Lunge : MonoBehaviour
 
             //Tracking has began
             trackingBegan = true;
-            return false; 
+            return false;
         }
 
         else if(datapoint < threshold1 && trackingBegan && thresholdReached == false)
