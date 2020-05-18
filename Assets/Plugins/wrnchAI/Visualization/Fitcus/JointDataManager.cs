@@ -164,17 +164,17 @@ using wrnchAI.wrAPI;
 
 
             UpdateJointData();
+            UpdateJointData2D();
 
 
-        if (canDoCoaching)
-        {
-            // Squat.instance.AnalyseFrame(jointData);
-            // Lunge.instance.AnalyseFrame(jointData);
-            Pushup.instance.AnalyseFrame(jointData2D);
-        }
+            if (canDoCoaching)
+            {
+                // Squat.instance.AnalyseFrame(jointData);
+                // Lunge.instance.AnalyseFrame(jointData);
+                Pushup.instance.AnalyseFrame(jointData);
+            }
 
             
-            UpdateJointData2D();
 
 
             totalRepsText.text = "" + Pushup.instance.reps;
@@ -197,6 +197,10 @@ using wrnchAI.wrAPI;
             int positionIndexX = 0;
             int positionIndexY = 1;
             int positionIndexZ = 2;
+
+            // print("-------------- Positions Length 3D: " + positions);
+
+            // Debug.Log("-------------- Positions Length 3D: " + System.String.Join("", new List<float>(positions).ConvertAll(i => i.ToString()).ToArray()));
 
             for (int i = 0 ; i<25 ; i++)
             {
@@ -230,6 +234,10 @@ using wrnchAI.wrAPI;
 
             int positionIndexX = 0;
             int positionIndexY = 1;
+
+            // print("-------------- Positions Length 2D: " + positions2D);
+            // Debug.Log("-------------- Positions Length 2D: " + System.String.Join("", new List<float>(positions2D).ConvertAll(i => i.ToString()).ToArray()));
+
 
 
             for (int i = 0; i < 25; i++)

@@ -94,7 +94,7 @@ public class Squat : MonoBehaviour
         Vector3 l_hip = frame[3].jointposition;
         Vector3 l_shoulder = frame[13].jointposition;
 
-        if ( r_heel.x <0 || r_ankle.x < 0 || r_knee.x < 0 || r_hip.x < 0 || r_shoulder.x < 0 || l_heel.x < 0 || l_ankle.x < 0 || l_knee.x < 0 || l_hip.x < 0 || l_shoulder.x < 0)
+        if ( r_heel.x <= 0 || r_ankle.x <= 0 || r_knee.x <= 0 || r_hip.x <= 0 || r_shoulder.x <= 0 || l_heel.x <= 0 || l_ankle.x <= 0 || l_knee.x <= 0 || l_hip.x <= 0 || l_shoulder.x <= 0)
         {
             return;
         }
