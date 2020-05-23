@@ -33,6 +33,18 @@ public class MobileAngleManager : MonoBehaviour
         slider.minValue = 0;
         slider.maxValue = avgAngle * 2;
         canCalculate = true;
+
+
+    }
+    private void OnEnable()
+    {
+        Invoke("PlayInstructionSound", 1);
+    }
+
+    void PlayInstructionSound()
+    {
+        VoiceManager.instance.PlayInstructionSound(13); // index of instruction sound
+        Debug.Log("code come here");
     }
 
     void Update()
@@ -105,8 +117,9 @@ public class MobileAngleManager : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         canCalculate = false;
+        PositionManager.instance.canAdjustPosition = true;
+        VoiceManager.instance.PlayInstructionSound(14); // index of middle screen instructions
         coachingTimer.enabled = true;
-        JointDataManager.instance.canDoCoaching=true;
         Destroy(gameObject);
         message.text = "Next Screen Loaded!";
     }

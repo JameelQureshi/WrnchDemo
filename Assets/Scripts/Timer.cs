@@ -70,10 +70,17 @@ public class Timer : MonoBehaviour {
 		float displayTimer = Mathf.Round (currentTime);
 		min = (int)(displayTimer / 60);
 		sec = (int)(displayTimer % 60);
-		if(sec<10)
-			timerText.text = "0"+sec;
-		else
-			timerText.text = ""+sec;
+        if (sec < 10)
+        {
+            if(timerText!=null)
+            timerText.text = "0" + sec;
+        }
+
+        else
+        {
+            timerText.text = "" + sec;
+        }
+
 
         if (timerFill!=null)
         {

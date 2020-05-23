@@ -20,7 +20,6 @@ public class VoiceManager : MonoBehaviour
     }
 
     private AudioSource audioSource;
-    public AudioClip[] countingClips;
     public AudioClip[] instructionClips;
 
     // Start is called before the first frame update
@@ -29,15 +28,12 @@ public class VoiceManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlayCountingSound(int index)
-    {
-        if(!audioSource.isPlaying)
-        audioSource.PlayOneShot(countingClips[index]);
-    }
 
     public void PlayInstructionSound(int index)
     {
         if (!audioSource.isPlaying)
         audioSource.PlayOneShot(instructionClips[index]);
     }
+
+
 }

@@ -122,29 +122,52 @@ using wrnchAI.wrAPI;
                 Destroy(gameObject);
             }
 
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
 
-        }
+    private IEnumerator WaitForEndOfFrameCoroutine(float time)
+    {
+        yield return (new WaitForEndOfFrame());
+        Debug.Log("End of frame: " + time);
+    }
 
-
-
-    public void ShowJointdata()
+    private IEnumerator ShowJointdata()
         {
+        yield return (new WaitForEndOfFrame());
+        //All3DRawValues.text = "";
+        //for (int i=0;i<15;i++)
+        //{
+        //    All3DRawValues.text = All3DRawValues.text+" " + positions[i];
+        //}
 
-            All3DRawValues.text = "";
-            for (int i=0;i<15;i++)
-            {
-                All3DRawValues.text = All3DRawValues.text+" " + positions[i];
-            }
+        All2DJointsValues.text = "";
 
-            All2DJointsValues.text = "";
+            //for (int i = 0; i < 10; i++)
+            //{
+                
+            All2DJointsValues.text = All2DJointsValues.text + " PELV-X: " + jointData2D[6].jointposition.x + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " PELV-Y: " + jointData2D[6].jointposition.y + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " NECK-X: " + jointData2D[8].jointposition.x + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " NECK-Y: " + jointData2D[8].jointposition.y + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " RSHOULDER-X: " + jointData2D[12].jointposition.x + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " RSHOULDER-Y: " + jointData2D[12].jointposition.y + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " LSHOULDER-X: " + jointData2D[13].jointposition.x + "\n";
+            All2DJointsValues.text = All2DJointsValues.text + " LSHOULDER-Y: " + jointData2D[13].jointposition.y + "\n";
 
-            for (int i = 0; i < 10; i++)
-            {
-                All2DJointsValues.text = All2DJointsValues.text + " " + positions2D[i];
-            }
+        All2DJointsValues.text = All2DJointsValues.text + " RANKLE-X: " + jointData2D[0].jointposition.x + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " RANKLE-Y: " + jointData2D[0].jointposition.y + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " LANKLE-X: " + jointData2D[5].jointposition.x + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " LANKLE-Y: " + jointData2D[5].jointposition.y + "\n";
+
+        All2DJointsValues.text = All2DJointsValues.text + " RKNEE-X: " + jointData2D[1].jointposition.x + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " RKNEE-Y: " + jointData2D[1].jointposition.y + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " LKNEE-X: " + jointData2D[4].jointposition.x + "\n";
+        All2DJointsValues.text = All2DJointsValues.text + " LKNEE-Y: " + jointData2D[4].jointposition.y + "\n";
 
 
-         
+        //}
+
+        PositionManager.instance.CalculatePosition(jointData2D);
         }
 
 
@@ -169,16 +192,17 @@ using wrnchAI.wrAPI;
 
             if (canDoCoaching)
             {
-                // Squat.instance.AnalyseFrame(jointData);
-                // Lunge.instance.AnalyseFrame(jointData);
-                Pushup.instance.AnalyseFrame(jointData);
+                Squat.instance.AnalyseFrame(jointData);
+                //Lunge.instance.AnalyseFrame(jointData);
+                //Pushup.instance.AnalyseFrame(jointData);
             }
 
-            
+
 
 
             totalRepsText.text = "" + Pushup.instance.reps;
-            ShowJointdata();
+            StartCoroutine(ShowJointdata());
+            
         }
 
 

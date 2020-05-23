@@ -169,7 +169,7 @@ public class Squat : MonoBehaviour
             // Play Audio Count
             if (!audioPlayed)
             {
-                VoiceManager.instance.PlayCountingSound(reps - 1);
+                VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
                 audioPlayed = true;
             }
                 
