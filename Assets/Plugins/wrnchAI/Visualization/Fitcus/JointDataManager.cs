@@ -131,19 +131,44 @@ using wrnchAI.wrAPI;
         Debug.Log("End of frame: " + time);
     }
 
+    public void PlaySoundOK()
+    {
+        float length = VoiceManager.instance.PlayInstructionSound(11,true); // index of ok sound 11   
+        StartCoroutine(PlaySoundAreYouReady(length));
+    }
+
+    IEnumerator PlaySoundAreYouReady(float delay)
+    {
+        yield return new WaitForSeconds(delay+1);
+        float length = VoiceManager.instance.PlayInstructionSound(15, true); // index of are you ready sound 15   
+        StartCoroutine(PlaySoundThreeTwoOne(length));
+    }
+
+    IEnumerator PlaySoundThreeTwoOne(float delay)
+    {
+        yield return new WaitForSeconds(delay+1);
+        float length = VoiceManager.instance.PlayInstructionSound(16, true); // index of three two one sound 16   
+        StartCoroutine(PlaySoundLetsGo(length));
+    }
+    IEnumerator PlaySoundLetsGo(float delay)
+    {
+        yield return new WaitForSeconds(delay+1);
+        float length = VoiceManager.instance.PlayInstructionSound(4, true); // index of three two one sound 4   
+        StartCoroutine(StartCoaching(length));
+    }
+    IEnumerator StartCoaching(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canDoCoaching = true;
+    }
+
     private IEnumerator ShowJointdata()
         {
         yield return (new WaitForEndOfFrame());
-        //All3DRawValues.text = "";
-        //for (int i=0;i<15;i++)
-        //{
-        //    All3DRawValues.text = All3DRawValues.text+" " + positions[i];
-        //}
 
         All2DJointsValues.text = "";
 
-            //for (int i = 0; i < 10; i++)
-            //{
+           
                 
             All2DJointsValues.text = All2DJointsValues.text + " PELV-X: " + jointData2D[6].jointposition.x + "\n";
             All2DJointsValues.text = All2DJointsValues.text + " PELV-Y: " + jointData2D[6].jointposition.y + "\n";
@@ -164,10 +189,6 @@ using wrnchAI.wrAPI;
         All2DJointsValues.text = All2DJointsValues.text + " LKNEE-X: " + jointData2D[4].jointposition.x + "\n";
         All2DJointsValues.text = All2DJointsValues.text + " LKNEE-Y: " + jointData2D[4].jointposition.y + "\n";
 
-
-        //}
-
-        PositionManager.instance.CalculatePosition(jointData2D);
         }
 
 

@@ -37,6 +37,16 @@ public class PositionManager : MonoBehaviour
     public PositionCalculator l_ankle    = new PositionCalculator();// index 5
 
 
+    private void Update()
+    {
+        StartCoroutine(AnalysePosition());
+    }
+
+    private IEnumerator AnalysePosition()
+    {
+        yield return new WaitForEndOfFrame();
+        CalculatePosition(JointDataManager.instance.jointData2D);
+    }
 
     public void CalculatePosition( JointData[] jointData2D )
     {
@@ -45,7 +55,7 @@ public class PositionManager : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Code comes here!");
+
 
         if (    head.CheackPointInPosition(jointData2D[9].jointposition)
              && r_shoulder.CheackPointInPosition(jointData2D[12].jointposition)
@@ -56,7 +66,7 @@ public class PositionManager : MonoBehaviour
              && r_ankle.CheackPointInPosition(jointData2D[0].jointposition)
              && l_ankle.CheackPointInPosition(jointData2D[5].jointposition) )
         {
-            Debug.Log("Body in position");
+
 
             if (timerRef == null)
             {
@@ -84,7 +94,9 @@ public class PositionManager : MonoBehaviour
     IEnumerator LoadNextScreen()
     {
         yield return new WaitForSeconds(3);
-        JointDataManager.instance.canDoCoaching = true;
+        Debug.Log("Before Playing OK sound");
+        JointDataManager.instance.PlaySoundOK();
+        Debug.Log("After Playing OK sound");
         Destroy(gameObject);
     }
 
@@ -102,8 +114,8 @@ public class PositionCalculator
     int negativeValueFixCounter;
     public PositionCalculator()
     {   
-        minX = 0.43f;
-        maxX = 0.5f;
+        minX = 0.28f;
+        maxX = 0.37f;
         minY = 0.05f;
         maxY = 0.95f;
         negativeValueFixCounter = 0;

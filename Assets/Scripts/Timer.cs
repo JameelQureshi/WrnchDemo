@@ -42,7 +42,6 @@ public class Timer : MonoBehaviour {
 
     void UpdateCounter()
 	{
-        Debug.Log(secondsSpent);
 
 		DateTime newTime = System.DateTime.Now;
 		TimeSpan difference = newTime.Subtract(startTime);

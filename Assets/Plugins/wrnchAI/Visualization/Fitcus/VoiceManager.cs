@@ -34,6 +34,17 @@ public class VoiceManager : MonoBehaviour
         if (!audioSource.isPlaying)
         audioSource.PlayOneShot(instructionClips[index]);
     }
+    public float PlayInstructionSound(int index,bool getLength)
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(instructionClips[index]);
+            float length = instructionClips[index].length;
+            return length;
+        }
+       
+        return 0;
+    }
 
 
 }

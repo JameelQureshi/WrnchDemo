@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 341597cadc9224c5cbef5fa6cf985ed2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: de719a5d2c2c24d9fbb28e8c5fcc0b3a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1460,6 +1460,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4bab5d5fe66ae4cc9a1381756a9f8dfb, type: 3}
   - {fileID: 8300000, guid: 1705b618508e94bd8a10dce47f7b08b0, type: 3}
   - {fileID: 8300000, guid: 2a0c154377b734b7cadf827988e55205, type: 3}
+  - {fileID: 8300000, guid: 7b9011af6df3f4a028b1bc772249f7a2, type: 3}
+  - {fileID: 8300000, guid: e0f736fe2617940c59548ab23a066709, type: 3}
 --- !u!82 &950420670
 AudioSource:
   m_ObjectHideFlags: 0
