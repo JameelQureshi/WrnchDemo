@@ -95,7 +95,7 @@ public class PositionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         Debug.Log("Before Playing OK sound");
-        JointDataManager.instance.PlaySoundOK();
+        JointDataManager.instance.GreatWorkTodayWeWillLearn();
         Debug.Log("After Playing OK sound");
         Destroy(gameObject);
     }

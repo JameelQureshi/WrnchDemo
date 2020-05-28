@@ -125,14 +125,17 @@ using wrnchAI.wrAPI;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    private IEnumerator WaitForEndOfFrameCoroutine(float time)
+
+
+    public void GreatWorkTodayWeWillLearn()
     {
-        yield return (new WaitForEndOfFrame());
-        Debug.Log("End of frame: " + time);
+        float length = VoiceManager.instance.PlayInstructionSound(17, true); // index of GreatWorkTodayWeWillLearn sound 17
+        StartCoroutine(PlaySoundOK(length));
     }
 
-    public void PlaySoundOK()
+    IEnumerator PlaySoundOK(float delay)
     {
+        yield return new WaitForSeconds(delay + 1);
         float length = VoiceManager.instance.PlayInstructionSound(11,true); // index of ok sound 11   
         StartCoroutine(PlaySoundAreYouReady(length));
     }
