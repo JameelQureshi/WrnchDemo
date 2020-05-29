@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: de719a5d2c2c24d9fbb28e8c5fcc0b3a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e0ffbcd45aad04ae78b2e081b6ca3fad, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2219,6 +2219,7 @@ MonoBehaviour:
   - jointname: 
     jointposition: {x: 0, y: 0, z: 0}
     index: 0
+  currentExercise: 2
   totalRepsText: {fileID: 1873178761}
   All2DJointsValues: {fileID: 245153944}
   All3DRawValues: {fileID: 1949179833}

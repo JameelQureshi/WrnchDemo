@@ -32,7 +32,7 @@ public class MobileAngleManager : MonoBehaviour
         avgAngle = (targetAngleMin + targetAngleMax) / 2;
         slider.minValue = 0;
         slider.maxValue = avgAngle * 2;
-        canCalculate = true;
+        canCalculate = false;
 
 
     }
@@ -43,8 +43,14 @@ public class MobileAngleManager : MonoBehaviour
 
     void PlayInstructionSound()
     {
-        VoiceManager.instance.PlayInstructionSound(13); // index of instruction sound
-        Debug.Log("code come here");
+        float length = VoiceManager.instance.PlayInstructionSound(13, true); // index of instruction sound
+        Invoke("StartAngleAdjustment", length);
+    }
+
+    void StartAngleAdjustment()
+    {
+        canCalculate = true;
+        Debug.Log("Testing This : "+canCalculate);
     }
 
     void Update()

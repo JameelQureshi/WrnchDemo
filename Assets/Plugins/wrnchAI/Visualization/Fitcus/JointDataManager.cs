@@ -15,6 +15,8 @@ using wrnchAI.wrAPI;
         [SerializeField]
         public JointData[] jointData;
         public JointData[] jointData2D;
+        
+        
 
         public Text totalRepsText;
 

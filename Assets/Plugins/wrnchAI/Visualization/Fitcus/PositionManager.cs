@@ -6,6 +6,7 @@ using UnityEngine;
 public class PositionManager : MonoBehaviour
 {
     public static PositionManager instance;
+    public static Exercise currentExercise;
     public void Awake()
     {
         if (instance == null)
@@ -27,15 +28,28 @@ public class PositionManager : MonoBehaviour
     private GameObject timerRef;
 
 
-    public PositionCalculator head       = new PositionCalculator(); // index 9
-    public PositionCalculator r_shoulder = new PositionCalculator(); // index 12
-    public PositionCalculator l_shoulder = new PositionCalculator(); //index 13
-    public PositionCalculator pelv       = new PositionCalculator(); // index 6
-    public PositionCalculator r_knee     = new PositionCalculator();// index 1
-    public PositionCalculator l_knee     = new PositionCalculator();// index 4
-    public PositionCalculator r_ankle    = new PositionCalculator();// index 0
-    public PositionCalculator l_ankle    = new PositionCalculator();// index 5
+    public PositionCalculator head;       //  = new PositionCalculator(); // index 9
+    public PositionCalculator r_shoulder; //= new PositionCalculator(); // index 12
+    public PositionCalculator l_shoulder; //= new PositionCalculator(); //index 13
+    public PositionCalculator pelv;     //= new PositionCalculator(); // index 6
+    public PositionCalculator r_knee;    // = new PositionCalculator();// index 1
+    public PositionCalculator l_knee;  //  = new PositionCalculator();// index 4
+    public PositionCalculator r_ankle;  //  = new PositionCalculator();// index 0
+    public PositionCalculator l_ankle;  // = new PositionCalculator();// index 5
 
+    private void Start()
+    {
+        currentExercise = Exercise.Pushup;
+
+        head = new PositionCalculator(); // index 9
+        r_shoulder = new PositionCalculator(); // index 12
+        l_shoulder = new PositionCalculator(); //index 13
+        pelv = new PositionCalculator(); // index 6
+        r_knee = new PositionCalculator();// index 1
+        l_knee = new PositionCalculator();// index 4
+        r_ankle = new PositionCalculator();// index 0
+        l_ankle = new PositionCalculator();// index 5
+    }
 
     private void Update()
     {
@@ -113,11 +127,19 @@ public class PositionCalculator
 
     int negativeValueFixCounter;
     public PositionCalculator()
-    {   
-        minX = 0.28f;
-        maxX = 0.37f;
-        minY = 0.05f;
-        maxY = 0.95f;
+    {
+            //values for standing
+          //  minX = 0.28f;
+          //  maxX = 0.37f;
+          //  minY = 0.05f;
+          //  maxY = 0.95f;
+
+
+            minX = 0.26f;
+            maxX = 0.7f;
+            minY = 0.4f;
+            maxY = 0.9f;
+
         negativeValueFixCounter = 0;
     }
 
@@ -147,4 +169,11 @@ public class PositionCalculator
             return false;
         }
     }
+}
+
+public enum Exercise
+{
+    Squat,
+    Lunge,
+    Pushup
 }
