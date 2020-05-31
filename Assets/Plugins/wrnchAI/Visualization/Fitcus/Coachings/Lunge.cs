@@ -5,7 +5,7 @@ using UnityEngine;
 using wrnchAI.Core;
 using wrnchAI.Visualization;
 
-public class Lunge : MonoBehaviour
+public class Lunge : Coaching
 {
 
     public static Lunge instance;
@@ -67,7 +67,6 @@ public class Lunge : MonoBehaviour
     public bool thresholdReached = false;
 
     public int frame_no = 0;
-    public int reps = 0;
 
     public CoachingOneEuroFilter one_euro_filter_right ;
     public CoachingOneEuroFilter one_euro_filter_left ;
@@ -88,7 +87,7 @@ public class Lunge : MonoBehaviour
            Joints are(x, y, z) coordinates */
 
 
-    public void AnalyseFrame(JointData[] frame)
+    public override void AnalyseFrame(JointData[] frame)
     {
 
         Vector3 r_heel = frame[23].jointposition;

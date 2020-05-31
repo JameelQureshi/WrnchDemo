@@ -5,10 +5,12 @@ using UnityEngine.UI;
 using wrnchAI.Core;
 using wrnchAI.wrAPI;
 
-    public class JointDataManager : MonoBehaviour
+    public class DataManager : MonoBehaviour
     {
 
-        public static JointDataManager instance;
+        public static DataManager instance;
+        public static Exercise currentExercise;
+
         /// <summary>
         /// JointData Use to store Joint Data for individaul joint; name and position
         /// </summary>
@@ -31,8 +33,16 @@ using wrnchAI.wrAPI;
         public float[] positions;
         public float[] positions2D;
 
+        [Header("Silhouettes Images")]
+        public Image silhouetteImage;
+        public Sprite[] silhouette;
+
+        [Header("Avatar References")]
+        public GameObject rootAvatar;
+        public GameObject[] avatar;
 
         public bool canDoCoaching = false;
+        Coaching coaching;
 
         /// <summary>
         /// The name of joints to extract from raw position.
@@ -64,31 +74,6 @@ using wrnchAI.wrAPI;
             "RHEEL", //23
             "LHEEL" //24
             };
-
-
-   
-
-    private static readonly List<BonePair> bonePairs = new List<BonePair>
-        {
-
-            new BonePair("RANKLE","RKNEE"),
-            new BonePair("RKNEE", "RHIP"),
-            new BonePair("LANKLE", "LKNEE"),
-            new BonePair("LKNEE", "LHIP"),
-            new BonePair("RHIP", "PELV"),
-            new BonePair("LHIP", "PELV"),
-            new BonePair("PELV", "NECK"),
-            new BonePair("RSHOULDER", "NECK"),
-            new BonePair("LSHOULDER", "NECK"),
-            new BonePair("LSHOULDER", "LELBOW"),
-            new BonePair("LELBOW", "LWRIST"),
-            new BonePair("RSHOULDER", "RELBOW"),
-            new BonePair("RELBOW", "RWRIST"),
-            new BonePair("LANKLE", "LTOE"),
-            new BonePair("RANKLE", "RTOE"),
-            new BonePair("LANKLE", "LHEEL"),
-            new BonePair("RANKLE", "RHEEL")
-        };
 
 
     private static readonly List<string> m_jointsToDisplay = new List<string> {
@@ -127,6 +112,49 @@ using wrnchAI.wrAPI;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
+    private void OnEnable()
+    {
+        string exerciseName = PlayerPrefs.GetString("ExerciseName");
+
+       
+        switch (exerciseName) {
+            case "Squat":
+                currentExercise = Exercise.Squat;
+                break;
+            case "Lunge":
+                currentExercise = Exercise.Lunge;
+                break;
+            case "Pushup":
+                currentExercise = Exercise.Pushup;
+                break;
+        }
+
+
+        // select data according to current Exercise
+        GameObject avatarRef;
+        switch (currentExercise)
+        {
+            case Exercise.Squat:
+                silhouetteImage.sprite = silhouette[0];
+                avatarRef = Instantiate(avatar[0],rootAvatar.transform);
+                avatarRef.transform.localPosition = Vector3.zero;
+                coaching = new Squat();
+                break;
+            case Exercise.Lunge:
+                silhouetteImage.sprite = silhouette[1];
+                avatarRef = Instantiate(avatar[1], rootAvatar.transform);
+                avatarRef.transform.localPosition = Vector3.zero;
+                coaching = new Lunge();
+                break;
+            case Exercise.Pushup:
+                silhouetteImage.sprite = silhouette[2];
+                avatarRef = Instantiate(avatar[2], rootAvatar.transform);
+                avatarRef.transform.localPosition = Vector3.zero;
+                coaching = new Pushup();
+                break;
+        }
+
+    }
 
 
     public void GreatWorkTodayWeWillLearn()
@@ -218,15 +246,10 @@ using wrnchAI.wrAPI;
 
             if (canDoCoaching)
             {
-                Squat.instance.AnalyseFrame(jointData);
-                //Lunge.instance.AnalyseFrame(jointData);
-                //Pushup.instance.AnalyseFrame(jointData);
+                coaching.AnalyseFrame(jointData);
             }
 
-
-
-
-            totalRepsText.text = "" + Pushup.instance.reps;
+            totalRepsText.text = "" + Coaching.reps;
             StartCoroutine(ShowJointdata());
             
         }
@@ -312,22 +335,17 @@ using wrnchAI.wrAPI;
 
     }
 
-    [System.Serializable]
-    public class JointData
-    {
-        public string jointname;
-        public Vector3 jointposition;
-        public int index;
-    }
+[System.Serializable]
+public class JointData
+{
+    public string jointname;
+    public Vector3 jointposition;
+    public int index;
+}
 
-    public class BonePair
-    {
-        public string bone1;
-        public string bone2;
-
-        public BonePair(string b1, string b2)
-        {
-            bone1 = b1;
-            bone2 = b2;
-        }
-    }
+public enum Exercise
+{
+    Squat,
+    Lunge,
+    Pushup
+}

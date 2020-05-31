@@ -1,11 +1,10 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using wrnchAI.Core;
-using wrnchAI.Visualization;
 
-public class Pushup : MonoBehaviour
+public class Pushup : Coaching
 {
     public static Pushup instance;
     public void Awake()
@@ -60,27 +59,26 @@ public class Pushup : MonoBehaviour
     public bool thresholdReached = false;
 
     public float frame_no = 0;
-    public int reps = 0;
     public CoachingOneEuroFilter one_euro_filter_elbow ;
     public CoachingOneEuroFilter one_euro_filter_hip;
 
 
-   /*
-        Analyses pushup mechanics given a single frame of joints.
+    /*
+         Analyses pushup mechanics given a single frame of joints.
 
-        This function will trigger count reps functionality and detect correct movement patterns.
+         This function will trigger count reps functionality and detect correct movement patterns.
 
-        Parameters
-        ----------
-        frame : list
-            A list of 25 joints that have been extracted from a video frame.
-            Joints are (x, y, z) coordinates
+         Parameters
+         ----------
+         frame : list
+             A list of 25 joints that have been extracted from a video frame.
+             Joints are (x, y, z) coordinates
 
-        debug : bool
-            Optional parameter to print extra information.
-        */
+         debug : bool
+             Optional parameter to print extra information.
+         */
 
-    public void AnalyseFrame(JointData[] frame)
+    public override void AnalyseFrame(JointData[] frame)
     {
         Vector3 r_wrist = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RWRIST")].jointposition;
         Vector3 r_elbow = frame[PoseManager.Instance.JointDefinition2D.GetJointIndex("RELBOW")].jointposition;

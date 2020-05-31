@@ -2,11 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PositionManager : MonoBehaviour
 {
+    /// <summary>
+    /// Static Variables 
+    /// </summary>
     public static PositionManager instance;
-    public static Exercise currentExercise;
+    public static bool isTimerRuning = false;
+
     public void Awake()
     {
         if (instance == null)
@@ -21,8 +26,10 @@ public class PositionManager : MonoBehaviour
 
     }
 
+    [HideInInspector]
     public bool canAdjustPosition = false;
-    public static bool isTimerRuning = false;
+
+
     [Header("Reference Area")]
     public GameObject m_timerPrefab;
     private GameObject timerRef;
@@ -37,18 +44,17 @@ public class PositionManager : MonoBehaviour
     public PositionCalculator r_ankle;  //  = new PositionCalculator();// index 0
     public PositionCalculator l_ankle;  // = new PositionCalculator();// index 5
 
-    private void Start()
+    public void Init()
     {
-        currentExercise = Exercise.Pushup;
-
-        head = new PositionCalculator(); // index 9
-        r_shoulder = new PositionCalculator(); // index 12
-        l_shoulder = new PositionCalculator(); //index 13
-        pelv = new PositionCalculator(); // index 6
-        r_knee = new PositionCalculator();// index 1
-        l_knee = new PositionCalculator();// index 4
-        r_ankle = new PositionCalculator();// index 0
-        l_ankle = new PositionCalculator();// index 5
+        head = new PositionCalculator(DataManager.currentExercise); // index 9
+        r_shoulder = new PositionCalculator(DataManager.currentExercise); // index 12
+        l_shoulder = new PositionCalculator(DataManager.currentExercise); //index 13
+        pelv = new PositionCalculator(DataManager.currentExercise); // index 6
+        r_knee = new PositionCalculator(DataManager.currentExercise);// index 1
+        l_knee = new PositionCalculator(DataManager.currentExercise);// index 4
+        r_ankle = new PositionCalculator(DataManager.currentExercise);// index 0
+        l_ankle = new PositionCalculator(DataManager.currentExercise);// index 5
+        canAdjustPosition = true;
     }
 
     private void Update()
@@ -59,7 +65,7 @@ public class PositionManager : MonoBehaviour
     private IEnumerator AnalysePosition()
     {
         yield return new WaitForEndOfFrame();
-        CalculatePosition(JointDataManager.instance.jointData2D);
+        CalculatePosition(DataManager.instance.jointData2D);
     }
 
     public void CalculatePosition( JointData[] jointData2D )
@@ -109,7 +115,7 @@ public class PositionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         Debug.Log("Before Playing OK sound");
-        JointDataManager.instance.GreatWorkTodayWeWillLearn();
+        DataManager.instance.GreatWorkTodayWeWillLearn();
         Debug.Log("After Playing OK sound");
         Destroy(gameObject);
     }
@@ -126,19 +132,34 @@ public class PositionCalculator
 
 
     int negativeValueFixCounter;
-    public PositionCalculator()
+    public PositionCalculator(Exercise exercise)
     {
-            //values for standing
-          //  minX = 0.28f;
-          //  maxX = 0.37f;
-          //  minY = 0.05f;
-          //  maxY = 0.95f;
+        switch (exercise)
+        {
+            case Exercise.Squat:
+                 //values for squats
+                minX = 0.41f;
+                maxX = 0.51f;
+                minY = 0.05f;
+                maxY = 0.95f;
+                break;
 
+            case Exercise.Lunge:
+                //values for Lunges
+                minX = 0.28f;
+                maxX = 0.38f;
+                minY = 0.05f;
+                maxY = 0.95f;
+                break;
 
-            minX = 0.26f;
-            maxX = 0.7f;
-            minY = 0.4f;
-            maxY = 0.9f;
+            case Exercise.Pushup:
+                //values for pushups
+                minX = 0.25f;
+                maxX = 0.71f;
+                minY = 0.39f;
+                maxY = 0.91f;
+                break;
+        }
 
         negativeValueFixCounter = 0;
     }
@@ -171,9 +192,3 @@ public class PositionCalculator
     }
 }
 
-public enum Exercise
-{
-    Squat,
-    Lunge,
-    Pushup
-}

@@ -179,7 +179,7 @@ namespace wrnchAI.Visualization
 
 
             // Send The Person to JointDataDisplay So we can use it for further calculations ;
-            JointDataManager.instance.person = person;
+            DataManager.instance.person = person;
 
 
             for (int i = 0; i < m_jointsToDisplay.Count; i++)

@@ -123,7 +123,7 @@ public class MobileAngleManager : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         canCalculate = false;
-        PositionManager.instance.canAdjustPosition = true;
+        PositionManager.instance.Init();
         VoiceManager.instance.PlayInstructionSound(14); // index of middle screen instructions
         coachingTimer.enabled = true;
         Destroy(gameObject);

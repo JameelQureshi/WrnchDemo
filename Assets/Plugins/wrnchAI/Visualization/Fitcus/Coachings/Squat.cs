@@ -1,10 +1,9 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
-using wrnchAI.Core;
-using wrnchAI.Visualization;
 using System.Linq;
-public class Squat : MonoBehaviour
+
+public class Squat : Coaching
 {
 
     public static Squat instance;
@@ -61,7 +60,6 @@ public class Squat : MonoBehaviour
 
 
     public int frame_no = 0;
-    public int reps = 0;
 
 
 
@@ -78,7 +76,7 @@ public class Squat : MonoBehaviour
 
 
 
-    public void AnalyseFrame( JointData[] frame)
+    public override void AnalyseFrame( JointData[] frame)
     {
 
 
