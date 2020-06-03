@@ -28,9 +28,12 @@ namespace wrnchAI.wrAPI
         [DllImport(Glob.DLLName)]
         private static extern void wrPoseEstimatorConfigParams_SetOutputFormat(IntPtr nativeHandle, IntPtr nativeJointDefParams);
         [DllImport(Glob.DLLName)]
-        private static extern void wrPoseEstimatorConfigParams_Set2dModelRegex(IntPtr nativeHandle, [MarshalAs(UnmanagedType.LPStr)] string regex);
+        private static extern void wrPoseEstimatorConfigParams_Set2dModelPath(IntPtr nativeHandle, [MarshalAs(UnmanagedType.LPStr)] string fullPath);
+        [DllImport(Glob.DLLName)]
+        private static extern void wrPoseEstimatorConfigParams_SetModelName2D(IntPtr nativeHandle, [MarshalAs(UnmanagedType.LPStr)] string fullPath);
         [DllImport(Glob.DLLName)]
         private static extern string wrPoseEstimatorConfigParams_GetModelsDirectory(IntPtr nativeHandle);
+
         [DllImport(Glob.DLLName)]
         private static extern void wrPoseEstimatorConfigParams_SetDeviceId(IntPtr nativeHandle, int deviceId);
         [DllImport(Glob.DLLName)]
@@ -98,15 +101,28 @@ namespace wrnchAI.wrAPI
             return this;
         }
 
-        public PoseEstimatorConfigParams Set2dModelRegex(string regex)
+        public PoseEstimatorConfigParams Set2dModelPath(string fullPath)
         {
-            if(m_nativeHandle == IntPtr.Zero)
+            if (m_nativeHandle == IntPtr.Zero)
             {
                 Debug.LogError("Trying to access native object from nullptr");
                 return null;
             }
 
-            wrPoseEstimatorConfigParams_Set2dModelRegex(m_nativeHandle, regex);
+            wrPoseEstimatorConfigParams_Set2dModelPath(m_nativeHandle, fullPath);
+            return this;
+        }
+
+
+        public PoseEstimatorConfigParams Set2dModelName(string modelName)
+        {
+            if (m_nativeHandle == IntPtr.Zero)
+            {
+                Debug.LogError("Trying to access native object from nullptr");
+                return null;
+            }
+
+            wrPoseEstimatorConfigParams_SetModelName2D(m_nativeHandle, modelName);
             return this;
         }
 

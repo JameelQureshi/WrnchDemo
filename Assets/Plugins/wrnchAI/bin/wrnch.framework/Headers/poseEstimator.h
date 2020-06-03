@@ -49,7 +49,7 @@ extern "C"
     ///                  server URL.  This must include the protocol and port e.g.,
     ///                  https://example.com:8043. This requires using PoseEstimatorConfigParams to
     ///                  initialize your pose estimator. Local license servers are only supported
-    ///					 for desktop Linux and Windows builds.
+    ///                  for desktop Linux and Windows builds.
     ///                 * On iOS, you must also set the device fingerprint to a unique ID. We
     ///                  recommend using the identifierForVendor or a privately stored GUID. This
     ///                  requires using PoseEstimatorConfigParams to initialize your pose estimator.
@@ -78,8 +78,10 @@ extern "C"
         wrPoseEstimatorConfigParamsConst params);
     WRNCH_DLL_INTERFACE void wrPoseEstimatorConfigParams_Destroy(
         wrPoseEstimatorConfigParams params);
-    WRNCH_DLL_INTERFACE wrReturnCode wrPoseEstimatorConfigParams_Set2dModelRegex(
-        wrPoseEstimatorConfigParams params, char const* modelRegex);
+    WRNCH_DLL_INTERFACE void wrPoseEstimatorConfigParams_Set2dModelPath(
+        wrPoseEstimatorConfigParams params, char const* modelPath);
+    WRNCH_DLL_INTERFACE wrPoseEstimatorConfigParams
+    wrPoseEstimatorConfigParams_Clone(wrPoseEstimatorConfigParamsConst params);
 
     struct wrPoseEstimator;
     typedef struct wrPoseEstimator* wrPoseEstimatorHandle;
@@ -109,6 +111,8 @@ extern "C"
     WRNCH_DLL_INTERFACE wrReturnCode wrPoseEstimator_CreateDefaultFromModel(
         wrPoseEstimatorHandle* handle, const char* modelsDirectory, const char* modelName2d);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode
     wrPoseEstimator_Reinitialize(wrPoseEstimatorHandle* handle,
                                  const char* modelsDirectory,
@@ -116,9 +120,13 @@ extern "C"
                                  wrPoseParamsHandleConst params,
                                  wrJointDefinitionHandleConst outputFormat);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode wrPoseEstimator_ReinitializeFromConfig(
         wrPoseEstimatorHandle* handle, wrPoseEstimatorConfigParamsConst configData);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode
     wrPoseEstimator_ReinitializeFromModel(wrPoseEstimatorHandle* handle,
                                           const char* modelsDirectory,
@@ -127,9 +135,13 @@ extern "C"
                                           wrPoseParamsHandleConst params,
                                           wrJointDefinitionHandleConst outputFormat);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode
     wrPoseEstimator_ReinitializeDefault(wrPoseEstimatorHandle* handle, const char* modelsDirectory);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode wrPoseEstimator_ReinitializeDefaultFromModel(
         wrPoseEstimatorHandle* handle, const char* modelName2d, const char* modelsDirectory);
 
@@ -140,6 +152,8 @@ extern "C"
     /// @note	It is safe to call this function on a null pointer
     WRNCH_DLL_INTERFACE void wrPoseEstimator_Destroy(wrPoseEstimatorHandle handle);
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     WRNCH_DLL_INTERFACE wrReturnCode wrPoseEstimator_ReinitializeDefaultFromModel(
         wrPoseEstimatorHandle* handle, const char* modelsDirectory, const char* modelsName2d);
 
@@ -186,6 +200,7 @@ extern "C"
     ///         initialized on the serialized estimator, a successful call to
     ///         `wrPoseEstimator_Deserialize` results in an estimator with hand models initialized.
     /// @note Not supported on Apple platforms or with CPU-Only build.
+    WRNCH_DEPRECATED("Instead, use wrPoseEstimator_DeserializeWithLicenseData")
     WRNCH_DLL_INTERFACE wrReturnCode
     wrPoseEstimator_Deserialize(char const* serializedData,
                                 int numBytes,
@@ -442,7 +457,7 @@ extern "C"
     ///            order whose values represent the confidence that a human is present in
     ///            that pixel.  The four generated masks are stored contiguously, as follows:
     ///            (0) body; (1) right hand; (2) left hand; and (3) both hands.
-
+    WRNCH_DEPRECATED("Instead, use wrJointDefinition_GetMaskView")
     WRNCH_DLL_INTERFACE void wrPoseEstimator_GetMask(wrPoseEstimatorHandleConst handle,
                                                      unsigned char* outMask);
 
@@ -570,16 +585,8 @@ extern "C"
 
     WRNCH_DLL_INTERFACE unsigned int wrPoseEstimator_GetNumHandBoxes(wrPoseEstimatorHandleConst);
 
-    /*
-        returns an unowned reference
-    */
-    WRNCH_DLL_INTERFACE wrPose3dHandleConst wrPoseEstimator_GetTPose3D(wrPoseEstimatorHandleConst,
-                                                                       int id);
     WRNCH_DLL_INTERFACE void wrPoseEstimator_GetDefaultTPose3D(wrPoseEstimatorHandleConst,
                                                                wrPose3dHandle poseOut);
-    WRNCH_DLL_INTERFACE void wrPoseEstimator_ResetIKSolver(wrPoseEstimatorHandle handle,
-                                                           wrPose3dHandleConst const initialPose,
-                                                           int ikSolverId);
     WRNCH_DLL_INTERFACE unsigned int wrPoseEstimator_GetInputWidth(wrPoseEstimatorHandleConst);
     WRNCH_DLL_INTERFACE unsigned int wrPoseEstimator_GetInputHeight(wrPoseEstimatorHandleConst);
     WRNCH_DLL_INTERFACE void wrPoseEstimator_SetParams(wrPoseEstimatorHandle,
@@ -587,42 +594,14 @@ extern "C"
 
     /// @brief	Query if pose estimator supports inverse kinematics
     /// @deprecated Inverse kinematics will always be supported. Function always returns 1.
-
+    WRNCH_DEPRECATED("Inverse kinematics will always be supported. Function always returns 1.")
     WRNCH_DLL_INTERFACE int wrPoseEstimator_HasIK(void);
-
-    /// @brief	Query property of a inverse kinematic solver in 3d pose estimator
-    /// @see	wrPoseEstimator_GetNumIKSolvers
-    /// @param	handle the wrPoseEstimatorHandle which has been processed
-    /// @param	prop the identifier of the IK property to query
-    /// @param	id the identifier for the IK solver for which one wishes to get the property.
-    ///     id must be between 0 and number returned by wrPoseEstimator_GetNumIKSolvers minus one.
-    WRNCH_DLL_INTERFACE float wrPoseEstimator_GetIKProperty(wrPoseEstimatorHandleConst handle,
-                                                            int prop,
-                                                            int id);
-
-    /// @brief	Set property of a inverse kinematic solver in 3d pose estimator
-    /// @see	wrPoseEstimator_GetNumIKSolvers
-    /// @param	handle the wrPoseEstimatorHandle which has been processed
-    /// @param	prop the identifier of the IK property to assign
-    /// @param	value the new value one wishes to assign to the property
-    /// @param	id the identifier for the IK solver for which one wishes to assign a new property
-    /// value.
-    ///     id must be between 0 and number returned by wrPoseEstimator_GetNumIKSolvers minus one.
-    WRNCH_DLL_INTERFACE void wrPoseEstimator_SetIKProperty(wrPoseEstimatorHandle handle,
-                                                           int prop,
-                                                           float value,
-                                                           int id);
-
-    WRNCH_DLL_INTERFACE unsigned int wrPoseEstimator_GetNumIKSolvers(
-        wrPoseEstimatorHandleConst handle);
 
     WRNCH_DLL_INTERFACE wrIKParamsHandleConst
     wrPoseEstimator_GetIKParams(wrPoseEstimatorHandleConst handle);
 
-    WRNCH_DLL_INTERFACE wrPoseIKHandle wrPoseEstimator_GetIKSolver(wrPoseEstimatorHandle handle,
-                                                                   int ikSolverId);
-    WRNCH_DLL_INTERFACE wrPoseIKHandleConst
-    wrPoseEstimator_GetIKSolverConst(wrPoseEstimatorHandleConst handle, int ikSolverId);
+    WRNCH_DLL_INTERFACE void wrPoseEstimator_SetIKParams(wrPoseEstimatorHandle handle,
+                                                         wrIKParamsHandleConst params);
 
     WRNCH_DLL_INTERFACE wrPoseParamsHandleConst
     wrPoseEstimator_GetParams(wrPoseEstimatorHandleConst handle);

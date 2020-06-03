@@ -81,7 +81,7 @@ class BasicIKParams
     float GetFPS() const { return wrIKParams_GetFPS(m_impl); }
     bool GetOptimizeForMonocular() const { return wrIKParams_GetOptimizeForMonocular(m_impl); }
     float GetJointVisibilityThresh() const { return wrIKParams_GetJointVisibilityThresh(m_impl); }
-    float* GetUpDirection() const { return wrIKParams_GetUpDirection(m_impl); }
+    float const* GetUpDirection() const { return wrIKParams_GetUpDirection(m_impl); }
 
     bool operator==(const BasicIKParams& r) const
     {

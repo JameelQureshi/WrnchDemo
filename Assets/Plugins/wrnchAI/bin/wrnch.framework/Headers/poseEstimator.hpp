@@ -55,7 +55,7 @@
 ///                  URL.  This must include the protocol and port,  e.g. https://example.com:8043.
 ///                  This requires using PoseEstimatorConfigParams to initialize your pose
 ///                  estimator.  Local license servers are only supported for desktop Linux and
-///					 Windows builds.
+///                  Windows builds.
 ///                 * On iOS, you must also set the device fingerprint to a unique ID. We recommend
 ///                  using the identifierForVendor or a privately stored GUID. This requires using
 ///                  PoseEstimatorConfigParams to initialize your pose estimator.
@@ -168,6 +168,10 @@ class PoseEstimatorConfigParams
     {
         utils::CheckBadAlloc(m_impl.get());
     }
+    PoseEstimatorConfigParams(PoseEstimatorConfigParams const& other)
+    : m_impl(wrPoseEstimatorConfigParams_Clone(other.Get()))
+    {
+    }
     PoseEstimatorConfigParams(PoseEstimatorConfigParams&&) = default;
     PoseEstimatorConfigParams& operator=(PoseEstimatorConfigParams&&) = default;
     PoseEstimatorConfigParams& WithDeviceId(int deviceId)
@@ -210,14 +214,9 @@ class PoseEstimatorConfigParams
         wrPoseEstimatorConfigParams_SetOutputFormat(m_impl.get(), outputFormat.Get());
         return *this;
     }
-    PoseEstimatorConfigParams& With2dModelRegex(std::string const& modelRegexStr)
+    PoseEstimatorConfigParams& With2dModelPath(std::string const& modelPath)
     {
-        wrReturnCode const code
-            = wrPoseEstimatorConfigParams_Set2dModelRegex(m_impl.get(), modelRegexStr.c_str());
-        if (code != wrReturnCode_OK)
-        {
-            throw utils::Exception(code);
-        }
+        wrPoseEstimatorConfigParams_Set2dModelPath(m_impl.get(), modelPath.c_str());
         return *this;
     }
 
@@ -367,6 +366,8 @@ class PoseEstimator
         CType const* m_impl;
     };
 
+    PoseEstimator(PoseEstimator const&) = delete;
+    PoseEstimator& operator=(PoseEstimator const&) = delete;
     PoseEstimator(PoseEstimator&&) = default;
     PoseEstimator& operator=(PoseEstimator&&) = default;
 
@@ -601,36 +602,50 @@ class PoseEstimator
         this->m_impl.reset(ptr);
     }
 
+    void Destroy() { m_impl = nullptr; }
+
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory)
     {
         wrReturnCode code;
         Reinitialize(modelsDirectory, code);
         this->ExceptionHandler(code, modelsDirectory);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory, wrReturnCode& code)
     {
         wrPoseEstimator* ptr = this->m_impl.release();
         code = wrPoseEstimator_ReinitializeDefault(&ptr, modelsDirectory);
         this->m_impl.reset(ptr);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const PoseEstimatorConfigParams& configData)
     {
         wrReturnCode code;
         Reinitialize(configData, code);
         this->ExceptionHandler(code, configData.GetModelsDirectory().c_str());
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const PoseEstimatorConfigParams& configData, wrReturnCode& code)
     {
         wrPoseEstimator* ptr = this->m_impl.release();
         code = wrPoseEstimator_ReinitializeFromConfig(&ptr, configData.Get());
         this->m_impl.reset(ptr);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory, const char* modelName2d)
     {
         wrReturnCode code;
         Reinitialize(modelsDirectory, modelName2d, code);
         this->ExceptionHandler(code, modelName2d);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory, const char* modelName2d, wrReturnCode& code)
     {
         wrPoseEstimator* ptr = this->m_impl.release();
@@ -638,6 +653,8 @@ class PoseEstimator
         this->m_impl.reset(ptr);
     }
 
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory,
                       int deviceId,
                       const PoseParams& params,
@@ -647,6 +664,8 @@ class PoseEstimator
         Reinitialize(modelsDirectory, deviceId, params, outputFormat, code);
         this->ExceptionHandler(code, modelsDirectory);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory,
                       int deviceId,
                       const PoseParams& params,
@@ -658,6 +677,8 @@ class PoseEstimator
             &ptr, modelsDirectory, deviceId, params.Get(), outputFormat.Get());
         this->m_impl.reset(ptr);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory,
                       const char* modelName2d,
                       int deviceId,
@@ -668,6 +689,8 @@ class PoseEstimator
         Reinitialize(modelsDirectory, modelName2d, deviceId, params, outputFormat, code);
         this->ExceptionHandler(code, modelsDirectory);
     }
+    WRNCH_DEPRECATED(
+        "Instead of reinitializing, fresh pose estimators should be created from scratch.")
     void Reinitialize(const char* modelsDirectory,
                       const char* modelName2d,
                       int deviceId,
@@ -683,6 +706,7 @@ class PoseEstimator
 
     /// @brief Query is pose estimator supports inverse kinematics
     /// @deprecated Inverse kinematics will always be supported. Function always returns true.
+    WRNCH_DEPRECATED("Inverse kinematics will always be supported. Function always returns true.")
     static bool HasIK() { return wrPoseEstimator_HasIK() != 0; }
 
     wrHandSegmenterType GetHandSegmenterType() const
@@ -721,9 +745,9 @@ class PoseEstimator
 
     IKParamsView GetIKParams() const { return IKParamsView(wrPoseEstimator_GetIKParams(GetPtr())); }
 
-    PoseIK GetIKSolver(int ikSolverId)
+    void SetIKParams(const IKParams& params)
     {
-        return PoseIK(wrPoseEstimator_GetIKSolver(GetPtr(), ikSolverId));
+        wrPoseEstimator_SetIKParams(GetPtr(), params.Get());
     }
 
     bool Is3dInitialized() const { return wrPoseEstimator_Is3dInitialized(GetPtr()) != 0; }
@@ -867,6 +891,7 @@ class PoseEstimator
     ///            oder whose values represent the confidence that a human is present in
     ///            that pixel.  The four generated masks are stored contiguously, as follows:
     ///            (0) body; (1) right hand; (2) left hand; and (3) both hands.
+    WRNCH_DEPRECATED("Instead, use PoseEstimator::GetMaskView")
     void GetMask(unsigned char* outMask) const { wrPoseEstimator_GetMask(GetPtr(), outMask); }
 
     /// @brief	Obtain estimated masks
@@ -993,21 +1018,12 @@ class PoseEstimator
         return numWritten;
     }
 
-    Pose3dView GetTPose3D(int id) const
-    {
-        return Pose3dView(wrPoseEstimator_GetTPose3D(GetPtr(), id));
-    }
     void GetDefaultTPose3D(Pose3d& poseOut) const
     {
         wrPoseEstimator_GetDefaultTPose3D(GetPtr(), poseOut.Get());
     }
     unsigned int GetInputWidth() const { return wrPoseEstimator_GetInputWidth(GetPtr()); }
     unsigned int GetInputHeight() const { return wrPoseEstimator_GetInputHeight(GetPtr()); }
-    float GetIKProperty(int prop, int id) const
-    {
-        return wrPoseEstimator_GetIKProperty(GetPtr(), prop, id);
-    }
-    unsigned int GetNumIKSolvers() const { return wrPoseEstimator_GetNumIKSolvers(GetPtr()); }
 
     wrPoseEstimator const* GetPtr() const { return m_impl.get(); }
     wrPoseEstimator const* Get() const { return GetPtr(); }
@@ -1302,10 +1318,6 @@ class PoseEstimator
     }
 
     void SetParams(const PoseParams& params) { wrPoseEstimator_SetParams(GetPtr(), params.Get()); }
-    void SetIKProperty(int prop, float value, int id)
-    {
-        wrPoseEstimator_SetIKProperty(GetPtr(), prop, value, id);
-    }
 
   private:
     void ExceptionHandler(wrReturnCode code) const { ExceptionHandler(code, ""); }
@@ -1374,6 +1386,7 @@ class PoseEstimator
             case wrReturnCode_INCOMPATIBLE_TENSORRT_VERSION:
             case wrReturnCode_INVALID_REGEX:
             case wrReturnCode_NO_MATCHING_MODEL:
+            case wrReturnCode_PLUGIN_LOAD_ERROR:
                 throw utils::InitializationError(code);
             default:  // wrReturnCode_NO_MODELS, wrReturnCode_MODEL_LOAD_FAILED,
                       // wrReturnCode_OTHER_ERROR

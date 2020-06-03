@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Text.RegularExpressions;
+using System.IO;
 using UnityEngine;
 using wrnchAI.wrAPI;
 using wrnchAI.Config;
@@ -99,6 +101,80 @@ namespace wrnchAI.Core
             this.Config.RotationMultipleOf90 = rotation;
         }
 
+        private static string GetwrAPIPath()
+        {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "wrAPI.dll", System.IO.SearchOption.AllDirectories);
+            if (res.Length == 0)
+            {
+                throw new Exception("Failed to find wrAPI.dll");
+            }
+            return res[0];
+#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "libwrAPI.so", System.IO.SearchOption.AllDirectories);
+            if (res.Length == 0)
+            {
+                throw new Exception("Failed to find libwrAPI.so");
+            }
+            return res[0];
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX  // Not yet supported
+            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "wrAPI.bundle", System.IO.SearchOption.AllDirectories);
+            if (res.Length == 0)
+            {
+                throw new Exception("Failed to find wrAPI.bundle");
+            }
+            return res[0];
+#elif UNITY_IOS
+            throw new InvalidOperationException("Operation not supported on iOS");
+#elif UNITY_ANDROID
+            throw new InvalidOperationException("Operation not supported on Android");
+#endif
+            return "";
+        }
+
+        private static string FindModel2d(string modelsDir, bool portrait = true)
+        {
+#if UNITY_IOS
+            var fullPath = Directory.GetFiles(modelsDir).Where(fileName =>
+                fileName.Contains("pose2d") && (portrait ^ fileName.Contains("portrait")))
+                .FirstOrDefault();
+#else
+            var fullPath = Directory.GetFiles(modelsDir).Where(fileName =>
+                fileName.Contains("pose2d"))
+                .FirstOrDefault();
+#endif
+            if (String.IsNullOrEmpty(fullPath))
+            {
+                throw new IOException("Unable to find a 2D model");
+            }
+            return fullPath;
+        }
+
+        private static string GetModelsDir(bool shortPath = false)
+        {
+            string modelDir = "";
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            string wrapiPath = GetwrAPIPath();
+            modelDir = wrapiPath.Replace("wrAPI.dll", "wrModels");
+#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+            modelDir = Application.streamingAssetsPath;
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX  // Not yet supported
+            modelDir = Application.streamingAssetsPath;
+#elif UNITY_IOS
+            if (shortPath)
+            {
+                modelDir = "Data/Raw";
+            }
+            else
+            {
+                modelDir = Application.dataPath + "/Raw";
+            }
+#elif UNITY_ANDROID
+            modelDir = Application.persistentDataPath;
+#endif
+            return modelDir;
+        }
+
         /// <summary>
         ///  Create and run a pose estimator in a separate thread.
         /// </summary>
@@ -108,33 +184,8 @@ namespace wrnchAI.Core
             PoseWorkerConfig.onConfigChanged += UpdateConfig;
             VideoControllerConfig.OnRotationChanged += ReceiveRotation;
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "wrAPI.dll", System.IO.SearchOption.AllDirectories);
-            if (res.Length == 0)
-            {
-                throw new Exception("Failed to find wrAPI.dll");
-            }
-            string path = (config.OverrideModelPath != null && config.OverrideModelPath != "") ? config.OverrideModelPath : res[0].Replace("wrAPI.dll", "wrModels");
-#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "libwrAPI.so", System.IO.SearchOption.AllDirectories);
-            if (res.Length == 0)
-            {
-                throw new Exception("Failed to find libwrAPI.so");
-            }
-            string path = Application.streamingAssetsPath;
-#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX  // Not yet supported
-            string[] res = System.IO.Directory.GetFiles(Application.dataPath, "wrAPI.bundle", System.IO.SearchOption.AllDirectories);
-            if (res.Length == 0)
-            {
-                throw new Exception("Failed to find wrAPI.bundle");
-            }
-            string path = Application.streamingAssetsPath;
-
-#elif UNITY_IOS
-            string path = "/Data/Raw";
-#elif UNITY_ANDROID
-            string path = Application.persistentDataPath;
-#endif
+            string fullModelsDir = String.IsNullOrEmpty(config.OverrideModelPath) ? GetModelsDir() : config.OverrideModelPath;
+            string shortModelsDir = GetModelsDir(true);
 
             m_poseEstimatorHorizontal = new PoseEstimator();
             if (config.SerializedModelPath.Length > 0)
@@ -143,12 +194,12 @@ namespace wrnchAI.Core
             }
             else
             {
-                m_poseEstimatorHorizontal.Init(path, config, "^((?!portrait).)*$");
+                m_poseEstimatorHorizontal.Init(shortModelsDir, config, FindModel2d(fullModelsDir, false));
             }
 
 #if UNITY_IOS && !UNITY_EDITOR
             m_poseEstimatorVertical = new PoseEstimator();
-            m_poseEstimatorVertical.Init(path, config, "portrait");
+            m_poseEstimatorVertical.Init(shortModelsDir, config, FindModel2d(fullModelsDir, true));
             changePoseEstimator(Screen.orientation == ScreenOrientation.Landscape);
 #else
             changePoseEstimator();
@@ -319,13 +370,12 @@ namespace wrnchAI.Core
 #endif
         }
 
-        public void SetIKProperty(int prop, float val)
-        {
-            m_poseEstimator.SetIKProperty(prop, val);
-        }
-
         public JointDefinition GetJointDef2D() { return m_poseEstimator.JointDefinition2d; }
         public JointDefinition GetJointDef3D() { return m_poseEstimator.JointDefinition3d; }
-        public Pose3D GetDefaultTPose3D() { return m_poseEstimator.GetTPose3D(0); }
+        public Pose3D GetDefaultTPose3D()
+        {
+            var tempPose = new PoseIK(m_poseEstimator.JointDefinitionRaw3d, new IKParams());
+            return tempPose.GetTPose();
+        }
     }
 }

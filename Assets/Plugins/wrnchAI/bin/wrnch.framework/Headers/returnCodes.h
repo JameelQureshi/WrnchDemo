@@ -49,6 +49,7 @@ typedef enum
     wrReturnCode_OTHER_ERROR,
     wrReturnCode_NO_MODELS,
     wrReturnCode_MODEL_LOAD_FAILED,
+    wrReturnCode_MODEL_LOAD_FAILED_NO_SUCH_PATH,
     wrReturnCode_HEAD_NOT_INITIALIZED,
     wrReturnCode_HAND_SEGMENTER_NOT_SET,
     wrReturnCode_HANDS_NOT_INITIALIZED,
@@ -67,6 +68,7 @@ typedef enum
     wrReturnCode_INCOMPATIBLE_TENSORRT_VERSION,
     wrReturnCode_INVALID_REGEX,
     wrReturnCode_NO_MATCHING_MODEL,
+    wrReturnCode_PLUGIN_LOAD_ERROR,
 } wrReturnCode;
 
 #ifdef __cplusplus

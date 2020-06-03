@@ -21,7 +21,7 @@ namespace wrnchAI.wrAPI
         public JointDefinition outputFormat { get { return m_outputFormat; } }
 
         [DllImport(Glob.DLLName)]
-        private static extern int wrPoseIK_CreateDefault(ref IntPtr handle, IntPtr inputFormat);
+        private static extern int wrPoseIK_CreateDefault(ref IntPtr handle, IntPtr inputFormat, IntPtr ikParams);
         [DllImport(Glob.DLLName)]
         private static extern int wrPoseIK_Create(ref IntPtr handle, IntPtr inputFormat, IntPtr initialPose, uint numJoints);
         //This shouldn't be used from here, Pose3D is not holding it's native counterpart because of risks of data corruption and performance issues.
@@ -44,20 +44,16 @@ namespace wrnchAI.wrAPI
         [DllImport(Glob.DLLName)]
         private static extern void wrPoseIK_SetInputFormat(IntPtr handle, IntPtr inputFormat);
         [DllImport(Glob.DLLName)]
-        private static extern float wrPoseIK_GetIKProperty(IntPtr handle, int property);
-        [DllImport(Glob.DLLName)]
-        private static extern void wrPoseIK_SetIKProperty(IntPtr handle, int property, float value);
-        [DllImport(Glob.DLLName)]
         private static extern IntPtr wrPoseIK_GetTPose(IntPtr handle);
 
-        public PoseIK(JointDefinition inputFormat)
+        public PoseIK(JointDefinition inputFormat, IKParams ikParams)
         {
             if (inputFormat.NativeHandle == IntPtr.Zero)
             {
                 throw new NullReferenceException("Trying to build a PoseIK Object with null joint definition");
             }
 
-            wrPoseIK_CreateDefault(ref m_nativeHandle, inputFormat.NativeHandle);
+            wrPoseIK_CreateDefault(ref m_nativeHandle, inputFormat.NativeHandle, ikParams.NativeHandle);
             m_inputFormat = inputFormat;
         }
 
@@ -120,27 +116,17 @@ namespace wrnchAI.wrAPI
             initialPoseHandle.Free();
         }
 
-        public float GetIKProperty(int property)
-        {
-            return wrPoseIK_GetIKProperty(m_nativeHandle, property);
-        }
-
-        public void SetIKProperty(int property, float value)
-        {
-            wrPoseIK_SetIKProperty(m_nativeHandle, property, value);
-        }
-
-        JointDefinition GetInputFormat()
+        public JointDefinition GetInputFormat()
         {
             return new JointDefinition(wrPoseIK_GetInputFormat(m_nativeHandle));
         }
 
-        JointDefinition GetOutputFormat()
+        public JointDefinition GetOutputFormat()
         {
             return new JointDefinition(wrPoseIK_GetOutputFormat(m_nativeHandle));
         }
 
-        Pose3D GetTPose()
+        public Pose3D GetTPose()
         {
             var result = wrPoseIK_GetTPose(m_nativeHandle);
 
@@ -149,6 +135,5 @@ namespace wrnchAI.wrAPI
 
             return output;
         }
-
     }
 }

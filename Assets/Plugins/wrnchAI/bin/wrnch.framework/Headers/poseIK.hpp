@@ -27,7 +27,53 @@ namespace wrnch
 ////////////////// Experimental IK Solver //////////////////
 ////////////////// For advanced users only //////////////////
 
-/// @brief PoseIK allows to control a rig using 3d joints as effectors.
+enum class OwnershipPolicy : bool
+{
+    Owned,
+    Unowned
+};
+
+template<OwnershipPolicy>
+class PoseIKPtr;
+
+template<>
+class PoseIKPtr<OwnershipPolicy::Owned>
+{
+  public:
+    explicit PoseIKPtr(wrPoseIK* ptr)
+    : m{ ptr }
+    {
+    }
+    PoseIKPtr() = default;
+    PoseIKPtr(PoseIKPtr&&) = default;
+    PoseIKPtr& operator=(PoseIKPtr&&) = default;
+
+    wrPoseIK* Get() { return m.get(); }
+    wrPoseIK const* Get() const { return m.get(); }
+
+  private:
+    std::unique_ptr<wrPoseIK> m;
+};
+
+template<>
+class PoseIKPtr<OwnershipPolicy::Unowned>
+{
+  public:
+    explicit PoseIKPtr(wrPoseIK* ptr)
+    : m{ ptr }
+    {
+    }
+    PoseIKPtr() = default;
+    PoseIKPtr(PoseIKPtr const&) = default;
+    PoseIKPtr& operator=(PoseIKPtr const&) = default;
+    wrPoseIK* Get() { return m; }
+    wrPoseIK const* Get() const { return m; }
+
+  private:
+    wrPoseIK* m = nullptr;
+};
+
+/// @brief BasicPoseIK allows to control a rig using 3d joints as effectors.
 ///        The solver internally uses the following referential: Y up, Z forward, X left.
 ///        All input coordinates needs to be converted to the right referential before calling
 ///        the Solve function. The output format is always formated with the extended joint
@@ -35,29 +81,31 @@ namespace wrnch
 ///        as the input data. Positions will be returned scaled to the initial T pose specified
 ///        at initialization. Rotations are returned as quaternions for each joint, in world
 ///        space.
-class PoseIK
+template<OwnershipPolicy ownershipPolicy>
+class BasicPoseIK
 {
-  public:
-    PoseIK(PoseIK&& ikSolver) = default;
+    using PtrType = PoseIKPtr<ownershipPolicy>;
+    PtrType m_impl;
 
-    explicit PoseIK(wrPoseIKHandle ikSolverHandle)
+  public:
+    explicit BasicPoseIK(wrPoseIKHandle ikSolverHandle)
     : m_impl(ikSolverHandle)
     {
     }
 
-    /// @brief Creates a PoseIK solver using default internal node positions.
+    /// @brief Creates a BasicPoseIK solver using default internal node positions.
     /// @param inputFormat The input format used when feeding positions to the solver.
     /// @param params Solver parameters
     /// @see IKParams
-    explicit PoseIK(JointDefinition inputFormat, IKParams params)
+    BasicPoseIK(JointDefinition inputFormat, IKParams params)
     {
         wrPoseIKHandle handle;
         wrReturnCode code = wrPoseIK_CreateDefault(&handle, inputFormat.Get(), params.Get());
         ExceptionHandler(code);
-        m_impl = std::unique_ptr<wrPoseIK>(handle);
+        m_impl = PtrType(handle);
     }
 
-    /// @brief Creates a PoseIK solver using provided node positions.
+    /// @brief Creates a BasicPoseIK solver using provided node positions.
     /// @param inputFormat The input format used when feeding positions to the solver
     /// @param initialPose The initial pose used to initiallize the internal IK Solver in a pose3d
     ///        handle. This pose must follow the extended joints definition composed of 30 joints
@@ -65,16 +113,16 @@ class PoseIK
     ///        left).
     /// @param params Solver parameters
     /// @see IKParams
-    PoseIK(JointDefinition inputFormat, Pose3dView initialPose, IKParams params)
+    BasicPoseIK(JointDefinition inputFormat, Pose3dView initialPose, IKParams params)
     {
         wrPoseIKHandle handle;
         wrReturnCode code
             = wrPoseIK_CreateFromPose(&handle, inputFormat.Get(), initialPose.Get(), params.Get());
         ExceptionHandler(code);
-        m_impl = std::unique_ptr<wrPoseIK>(handle);
+        m_impl = PtrType(handle);
     }
 
-    /// @brief Creates a PoseIK solver using provided node positions.
+    /// @brief Creates a BasicPoseIK solver using provided node positions.
     /// @param inputFormat The input format used when feeding positions to the solver
     /// @param initialPose The initial pose used to initiallize the internal IK Solver.
     ///        This pose must follow the extended joints definition composed of 30 joints
@@ -84,21 +132,21 @@ class PoseIK
     ///        joints present in the extended joint definition.
     /// @param params Solver parameters
     /// @see IKParams
-    PoseIK(JointDefinition inputFormat,
-           const float* initialPose,
-           unsigned int numJoints,
-           IKParams params)
+    BasicPoseIK(JointDefinition inputFormat,
+                const float* initialPose,
+                unsigned int numJoints,
+                IKParams params)
     {
         wrPoseIKHandle handle;
         wrReturnCode code
             = wrPoseIK_Create(&handle, inputFormat.Get(), initialPose, numJoints, params.Get());
         ExceptionHandler(code);
-        m_impl = std::unique_ptr<wrPoseIK>(handle);
+        m_impl = PtrType(handle);
     }
 
-    IKParamsView GetParams() const { return IKParamsView(wrPoseIK_GetParams(m_impl.get())); }
+    IKParamsView GetParams() const { return IKParamsView(wrPoseIK_GetParams(m_impl.Get())); }
 
-    void SetParams(IKParams params) { wrPoseIK_SetParams(m_impl.get(), params.Get()); }
+    void SetParams(IKParams params) { wrPoseIK_SetParams(m_impl.Get(), params.Get()); }
 
     /// @brief Performs a solving step using the provided 3d positions as effectors.
     ///        The result will be returned in a pose3d containing positions and rotations for each
@@ -118,15 +166,15 @@ class PoseIK
     /// @see Pose3d
     Pose3dView Solve(const float* pose, const int* visibilities)
     {
-        return Pose3dView(wrPoseIK_Solve(m_impl.get(), pose, visibilities));
+        return Pose3dView(wrPoseIK_Solve(m_impl.Get(), pose, visibilities));
     }
     Pose3dView Solve(Pose3d pose, const int* visibilities)
     {
-        return Pose3dView(wrPoseIK_Solve(m_impl.get(), pose.GetPositions(), visibilities));
+        return Pose3dView(wrPoseIK_Solve(m_impl.Get(), pose.GetPositions(), visibilities));
     }
 
     /// @brief Resets the internal state of the IK Solver.
-    void Reset() { wrPoseIK_ResetDefault(m_impl.get()); }
+    void Reset() { wrPoseIK_ResetDefault(m_impl.Get()); }
 
     /// @param initialPose initialPose The initial pose used to initiallize the internal IK Solver.
     ///        This pose must follow the extended joints definition composed of 30 joints
@@ -135,60 +183,59 @@ class PoseIK
     /// @param numJoints number of joints present in initialPose
     void Reset(const float* initialPose, int numJoints)
     {
-        wrPoseIK_Reset(m_impl.get(), initialPose, numJoints);
+        wrPoseIK_Reset(m_impl.Get(), initialPose, numJoints);
     }
     void Reset(wrPose3dHandleConst initialPose)
     {
-        wrPoseIK_ResetFromPose(m_impl.get(), initialPose);
+        wrPoseIK_ResetFromPose(m_impl.Get(), initialPose);
     }
 
     float GetIKProperty(wrIKProperty property) const
     {
-        return wrPoseIK_GetIKProperty(m_impl.get(), property);
+        return wrPoseIK_GetIKProperty(m_impl.Get(), property);
     }
     void SetIKProperty(wrIKProperty property, float value)
     {
-        wrPoseIK_SetIKProperty(m_impl.get(), property, value);
+        wrPoseIK_SetIKProperty(m_impl.Get(), property, value);
     }
 
     void SetInputFormat(JointDefinition inputFormat)
     {
-        wrPoseIK_SetInputFormat(m_impl.get(), inputFormat.Get());
+        wrPoseIK_SetInputFormat(m_impl.Get(), inputFormat.Get());
     }
 
     JointDefinition GetOutputFormat() const
     {
-        return JointDefinition(wrPoseIK_GetOutputFormat(m_impl.get()));
+        return JointDefinition(wrPoseIK_GetOutputFormat(m_impl.Get()));
     }
 
     JointDefinition GetInputFormat() const
     {
-        return JointDefinition(wrPoseIK_GetInputFormat(m_impl.get()));
+        return JointDefinition(wrPoseIK_GetInputFormat(m_impl.Get()));
     }
 
     /// @brief Get the initial TPose specified in the solver. The T pose will be returned as a
     ///        Pose3dView, containing positions only. We assume unit quaternions when in TPose.
-    Pose3dView GetTPose() const { return Pose3dView(wrPoseIK_GetTPose(m_impl.get())); }
+    Pose3dView GetTPose() const { return Pose3dView(wrPoseIK_GetTPose(m_impl.Get())); }
 
     /// @brief Toggles the solving of foot contact in IK
     /// @param contact
-    void SetFloorContact(bool contact) { wrPoseIK_SetFloorContact(m_impl.get(), contact); }
+    void SetFloorContact(bool contact) { wrPoseIK_SetFloorContact(m_impl.Get(), contact); }
 
     /// @brief Set the transform of the floor plane used when solving foot contact in IK.
-    ///        This transform is applied to a plane with a normal pointing up in the Y direction 
+    ///        This transform is applied to a plane with a normal pointing up in the Y direction
     ///        and containing the world origin.
     /// @param transform The translation of the floor plane (x, y, z, w)
     /// @param rotation A quaternion expressing the rotation of the floor plane.
     void SetFloorTransform(const float* const transform, const float* const rotation)
     {
-        wrPoseIK_SetFloorTransform(m_impl.get(), transform, rotation);
+        wrPoseIK_SetFloorTransform(m_impl.Get(), transform, rotation);
     }
 
-    wrPoseIKHandle Get() const { return m_impl.get(); }
+    wrPoseIKHandle Get() { return m_impl.Get(); }
+    wrPoseIKHandleConst Get() const { return m_impl.Get(); }
 
   private:
-    std::unique_ptr<wrPoseIK> m_impl;
-
     void ExceptionHandler(wrReturnCode code) const { ExceptionHandler(code, ""); }
     void ExceptionHandler(wrReturnCode code, const char* msg) const
     {
@@ -212,6 +259,57 @@ class PoseIK
         }
     }
 };
-}
+
+/// @brief PoseIK an owned PoseIK solver
+///        When a PoseIKView goes out of scope, the underlying wrPoseIK is destroyed.
+class PoseIK : public BasicPoseIK<OwnershipPolicy::Owned>
+{
+  public:
+    using base_class = BasicPoseIK<OwnershipPolicy::Owned>;
+
+    explicit PoseIK(wrPoseIKHandle ikSolverHandle)
+    : base_class(ikSolverHandle)
+    {
+    }
+
+    PoseIK(PoseIK&&) = default;
+    PoseIK& operator=(PoseIK&&) = default;
+
+    PoseIK(JointDefinition inputFormat, IKParams params)
+    : base_class(inputFormat, params)
+    {
+    }
+
+    PoseIK(JointDefinition inputFormat, Pose3dView initialPose, IKParams params)
+    : base_class(inputFormat, initialPose, params)
+    {
+    }
+
+    PoseIK(JointDefinition inputFormat,
+           const float* initialPose,
+           unsigned int numJoints,
+           IKParams params)
+    : base_class(inputFormat, initialPose, numJoints, params)
+    {
+    }
+};
+
+/// @brief PoseIKView an unowned PoseIK solver
+///        Returned by PoseEstimator::GetIKSolver, this is a "view" type, meaning the ownership of
+///        the underlying wrPoseIK object is someone else's. When a PoseIKView goes out of scope, it
+///        does not destroy the underlying wrPoseIK
+class PoseIKView : public BasicPoseIK<OwnershipPolicy::Unowned>
+{
+  public:
+    using base_class = BasicPoseIK<OwnershipPolicy::Unowned>;
+
+    explicit PoseIKView(wrPoseIKHandle ikSolverHandle)
+    : base_class(ikSolverHandle)
+    {
+    }
+};
+
+
+} /*namespace wrnch*/
 
 #endif /* WRNCH_wrPoseIK_CXX_API */

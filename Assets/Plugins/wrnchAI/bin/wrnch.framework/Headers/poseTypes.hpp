@@ -421,13 +421,19 @@ class BasicPoseHead
 
     WRNCH_DEPRECATED("Replaced by GetHeadRotationEulerLength.")
     static unsigned int GetHeadRotationLength() { return wrPoseHead_GetHeadRotationLength(); }
-    static unsigned int GetHeadRotationEulerLength() { return wrPoseHead_GetHeadRotationEulerLength();}
-    static unsigned int GetHeadRotationQuatLength() { return wrPoseHead_GetHeadRotationQuatLength();}
+    static unsigned int GetHeadRotationEulerLength()
+    {
+        return wrPoseHead_GetHeadRotationEulerLength();
+    }
+    static unsigned int GetHeadRotationQuatLength()
+    {
+        return wrPoseHead_GetHeadRotationQuatLength();
+    }
 
     WRNCH_DEPRECATED("Replaced by GetHeadRotationEuler.")
     const float* GetHeadRotation() const { return wrPoseHead_GetHeadRotation(m_impl); }
-    const float* GetHeadRotationEuler() const { return wrPoseHead_GetHeadRotationEuler(m_impl);}
-    const float* GetHeadRotationQuat() const {return wrPoseHead_GetHeadRotationQuat(m_impl);}
+    const float* GetHeadRotationEuler() const { return wrPoseHead_GetHeadRotationEuler(m_impl); }
+    const float* GetHeadRotationQuat() const { return wrPoseHead_GetHeadRotationQuat(m_impl); }
     Box3dView GetFaceBoundingBox() const
     {
         return Box3dView(wrPoseHead_GetFaceBoundingBox(m_impl));

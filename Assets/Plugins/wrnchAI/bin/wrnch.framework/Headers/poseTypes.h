@@ -88,8 +88,6 @@ extern "C"
     WRNCH_DLL_INTERFACE void wrPose2d_SetId(wrPose2dHandle, int id);
     WRNCH_DLL_INTERFACE int wrPose2d_GetIsMain(wrPose2dHandleConst);
 
-    /// @deprecated This function is deprecated. Instead, use wrJointDefinition_GetNumJoints
-    /// @see        wrJointDefinition_GetNumJoints
     WRNCH_DLL_INTERFACE unsigned int wrPose2d_GetNumJoints(wrPose2dHandleConst);
     WRNCH_DLL_INTERFACE const float* wrPose2d_GetJoints(wrPose2dHandleConst);
     WRNCH_DLL_INTERFACE float* wrPose2d_GetJointsMutable(wrPose2dHandle);
@@ -125,8 +123,6 @@ extern "C"
     WRNCH_DLL_INTERFACE void wrPose3d_Copy(wrPose3dHandleConst src, wrPose3dHandle dest);
     WRNCH_DLL_INTERFACE int wrPose3d_GetId(wrPose3dHandleConst);
     WRNCH_DLL_INTERFACE void wrPose3d_SetId(wrPose3dHandle, int id);
-    /// @deprecated This function is deprecated. Instead, use wrJointDefinition_GetNumJoints
-    /// @see        wrJointDefinition_GetNumJoints
     WRNCH_DLL_INTERFACE unsigned int wrPose3d_GetNumJoints(wrPose3dHandleConst);
     WRNCH_DLL_INTERFACE const float* wrPose3d_GetPositions(wrPose3dHandleConst);
     WRNCH_DLL_INTERFACE float* wrPose3d_GetPositionsMutable(wrPose3dHandle);
@@ -184,7 +180,6 @@ extern "C"
     WRNCH_DLL_INTERFACE unsigned int wrPoseHead_GetHeadRotationLength(void);
     WRNCH_DLL_INTERFACE unsigned int wrPoseHead_GetHeadRotationEulerLength(void);
     WRNCH_DLL_INTERFACE unsigned int wrPoseHead_GetHeadRotationQuatLength(void);
-    WRNCH_DLL_INTERFACE unsigned int wrPoseHead_GetFaceBoundingBoxLength(void);
     WRNCH_DLL_INTERFACE int wrPoseHead_Equals(wrPoseHeadHandleConst, wrPoseHeadHandleConst);
 
 #ifdef __cplusplus

@@ -1,8 +1,10 @@
 #ifndef WRNCH_ENGINE_C_API
 #define WRNCH_ENGINE_C_API
 
-#include <wrnch/poseEstimator.h>
 #include <wrnch/activityModel.h>
+#include <wrnch/logging.h>
+#include <wrnch/poseEstimator.h>
+
 
 #ifdef __cplusplus
 extern "C"

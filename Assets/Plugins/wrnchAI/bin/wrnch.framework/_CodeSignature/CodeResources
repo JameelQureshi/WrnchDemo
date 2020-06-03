@@ -38,11 +38,11 @@
 		</data>
 		<key>Headers/engine.h</key>
 		<data>
-		fy3zHNveZcEBtH/+tNf66SaApmw=
+		2vlUZkfUUaZQTJk8hi6KKAL8oXU=
 		</data>
 		<key>Headers/engine.hpp</key>
 		<data>
-		7BWO5XA2I3He6u7CrkC8McTdTbY=
+		LIxEaxQ0fCp6aqBgc77T0I91z5E=
 		</data>
 		<key>Headers/individualActivityModel.h</key>
 		<data>
@@ -60,13 +60,21 @@
 		<data>
 		XUkTzEZNNTg9ehBchODEJX7FqPI=
 		</data>
+		<key>Headers/logging.h</key>
+		<data>
+		lk+VWHnjtqL3cufHWxjdqMmwUio=
+		</data>
+		<key>Headers/logging.hpp</key>
+		<data>
+		imEHb2Gt43WvFy/VzTj2hZ93jmA=
+		</data>
 		<key>Headers/poseEstimator.h</key>
 		<data>
-		oKUknvZ9AZVGcqF16sPrR4WXgxU=
+		nbA+UowM8rQz6I6T88kf7/OSYQk=
 		</data>
 		<key>Headers/poseEstimator.hpp</key>
 		<data>
-		4tQWBYPgt5QHv5uaaNn4x1EX/mM=
+		gwmEUKgi1NXFfF5ie/6kKHEcEoo=
 		</data>
 		<key>Headers/poseEstimatorOptions.h</key>
 		<data>
@@ -82,15 +90,15 @@
 		</data>
 		<key>Headers/poseIK.hpp</key>
 		<data>
-		1sqckgiV+w/ssnEecdZxcySz0lo=
+		Bbn/v0YfdlPwC8pI/ajLQpo6d7o=
 		</data>
 		<key>Headers/poseParams.h</key>
 		<data>
-		RmrjYNboGMjlPpZLsGGe6U4+6K0=
+		6vrtMk507xsn4jkkrJnOOhelits=
 		</data>
 		<key>Headers/poseParams.hpp</key>
 		<data>
-		Uv84+2wuszZvollDhiYleAgpfMo=
+		kq3+vEBKYGjUxk5pJLCNx7wItyY=
 		</data>
 		<key>Headers/poseTypeTraits.hpp</key>
 		<data>
@@ -98,15 +106,15 @@
 		</data>
 		<key>Headers/poseTypes.h</key>
 		<data>
-		v5QNY7/HdgRIpWEf260B29sA5mk=
+		iS4TCtl6dMeGD9KkgcV0F8qacX8=
 		</data>
 		<key>Headers/poseTypes.hpp</key>
 		<data>
-		w6TLp0VdnG8b/eETHPGZNScOcX8=
+		fZIWhDd5agtW6FxHTecX+lyRLcs=
 		</data>
 		<key>Headers/returnCodes.h</key>
 		<data>
-		K1MtUW90+WrWgEQoqQRkpc/RTKo=
+		9LjInAOyQLv8LLJZD9/Y9G/v6cs=
 		</data>
 		<key>Headers/utils.hpp</key>
 		<data>
@@ -114,11 +122,11 @@
 		</data>
 		<key>Headers/version.h</key>
 		<data>
-		qoEoYkscbZOL/Ni0Hyh0btMwGLA=
+		N6ie20duGXrSjV/Sn9chISqHALg=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		q1disf5Cy1VM7APC5YjZXWul/H4=
+		rpP0NiTJp2dZ0uUyqprqdYL4vng=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -183,14 +191,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			l23ct95Hq6XHiOq3vs8MhwwJijvhG5MNsPRv3H/U1+g=
+			By4U2U4ovEb/SNIvD+0joGprg9xiNjsyFdNbMvLtvrs=
 			</data>
 		</dict>
 		<key>Headers/engine.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			PRBbrIi9GCKdO7LDWSpSa165uPY+eF5+OePir+esGWc=
+			qmu4UTQVUyPnNDG+RSg1gyyQ4AqGq87h1u7m6egQm5A=
 			</data>
 		</dict>
 		<key>Headers/individualActivityModel.h</key>
@@ -221,18 +229,32 @@
 			eW/rbQSS6btbbDMMVkuItqAAEd2WdQni9DQASlyoEok=
 			</data>
 		</dict>
+		<key>Headers/logging.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ajcHnXrh7R18e/drQqQCDXy+ESinNDALuQl9O5/xz00=
+			</data>
+		</dict>
+		<key>Headers/logging.hpp</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			t4l4SkSystXGV+17GqbtdSY5zR12iOQ0d0RetArFVdU=
+			</data>
+		</dict>
 		<key>Headers/poseEstimator.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JenZdb20Xl9MXwARltVc2ira/lQPD7gw2+FabJGdT/4=
+			kOysCilWw7UYXcas3LROzL8C1rZ0qVBQs8nt+QIzrgg=
 			</data>
 		</dict>
 		<key>Headers/poseEstimator.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9zSHkW70TORtGzD+py1gBP0psLHJafhrLDPEElkBXAc=
+			5QIHhzpfuS1sVsQTfNGZL5JLyCfNsTDAF6m40zyZag4=
 			</data>
 		</dict>
 		<key>Headers/poseEstimatorOptions.h</key>
@@ -260,21 +282,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GcFtebXTmgG0Ign8nFYi/aotejYajD+SyOIkLiL/KAw=
+			t0fOJA6tFiuKu8QTIunKTrjWw6aA5IbYfAFEnRl6oZ4=
 			</data>
 		</dict>
 		<key>Headers/poseParams.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			I2hG2Zz5XX1d4hm63WQ2JBLydgnAS4a0tij4bxBPiuQ=
+			6jlGq5e6r7uKMQkApTJbaIySrToUONQiMFojdVyB83Q=
 			</data>
 		</dict>
 		<key>Headers/poseParams.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3FeeZsaGZwKVecZzpFq+LoOgC0extiIdX28BAh8bl20=
+			ODbN/NMOHRB37KBmsYOFyCCRQtyldxaPvLMaEEePmZE=
 			</data>
 		</dict>
 		<key>Headers/poseTypeTraits.hpp</key>
@@ -288,21 +310,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8lxLdm/dC1f+k6AeLREWR4opi1mwE617hve7mLoGG+M=
+			3/YwqSg7mTGq06YwmCoxgreWzwJnSb+NltyU14x1uck=
 			</data>
 		</dict>
 		<key>Headers/poseTypes.hpp</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			BJcjQdBafaBWRfY9WaiL/GCqYDNZdvGACr8NPMGNB/g=
+			BhCq9+VbOAQeeoiMz/HEAiOxNOUpXE54kvL5HczbjyY=
 			</data>
 		</dict>
 		<key>Headers/returnCodes.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Skyv3Tf6/Si7YyF54eGzs1CLToRwbPyyWlUHp8d18gs=
+			ac+Dvx+rCpFM0FkQD92b9/4fTlbl+m8ybXTSSOQpdPY=
 			</data>
 		</dict>
 		<key>Headers/utils.hpp</key>
@@ -316,7 +338,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Tvo07RaIBY/aBwAwStH2xUyrCUYUVkDp8wfFhk0mRTQ=
+			HkUxoRWNVA/UA2A3nd8b0OcCLJI8wY3FzxIilNuuCcw=
 			</data>
 		</dict>
 	</dict>

@@ -55,6 +55,8 @@ namespace wrnchAI.wrAPI
         [DllImport(Glob.DLLName)]
         private static extern IntPtr wrPoseEstimator_GetFaceOutputFormat(IntPtr nativeHandle);
         [DllImport(Glob.DLLName)]
+        private static extern void wrPoseEstimator_GetDefaultTPose3D(IntPtr nativeHandle, IntPtr poseInOut);
+        [DllImport(Glob.DLLName)]
         private static extern int wrPoseEstimator_ProcessFrame(IntPtr nativeHandle, IntPtr bgrData, int width, int height, IntPtr options);
         [DllImport(Glob.DLLName)]
         private static extern int wrPoseEstimator_InitializeHeadDefault(IntPtr nativeHandle, [MarshalAs(UnmanagedType.LPStr)] string modelPath);
@@ -65,7 +67,7 @@ namespace wrnchAI.wrAPI
         [DllImport(Glob.DLLName)]
         protected static extern IntPtr wrPoseEstimator_GetHeadPosesEnd(IntPtr nativeHandle);
         [DllImport(Glob.DLLName)]
-        protected static extern void wrPoseEstimator_GetAllHumans2D(IntPtr nativeHandle, ref IntPtr[] posesOut);
+        protected static extern void wrPoseEstimator_GetAllHumans2D(IntPtr nativeHandle, IntPtr[] posesOut);
         [DllImport(Glob.DLLName)]
         protected static extern int wrPoseEstimator_GetNumHumans2D(IntPtr nativeHandle);
         [DllImport(Glob.DLLName)]
@@ -93,11 +95,7 @@ namespace wrnchAI.wrAPI
         [DllImport(Glob.DLLName)]
         protected static extern int wrPoseEstimator_Initialize3D(IntPtr nativeHandle, IntPtr ikParams, [MarshalAs(UnmanagedType.LPStr)] string modelPath);
         [DllImport(Glob.DLLName)]
-        protected static extern IntPtr wrPoseEstimator_GetTPose3D(IntPtr nativeHandle, int id);
-        [DllImport(Glob.DLLName)]
         protected static extern int wrPoseEstimator_HasIK(IntPtr nativeHandle);
-        [DllImport(Glob.DLLName)]
-        protected static extern void wrPoseEstimator_SetIKProperty(IntPtr nativeHandle, int prop, float value, int solverId);
         [DllImport(Glob.DLLName)]
         protected static extern void wrPoseEstimator_GetMaskDims(IntPtr nativeHandle, ref int outMaskWidth, ref int outMaskHeight, ref int outMaskDepth);
         [DllImport(Glob.DLLName)]
@@ -119,18 +117,19 @@ namespace wrnchAI.wrAPI
         /// <summary>
         ///  Initialization of the pose estimator and structures
         /// </summary>
-        /// <param name="modelsPath">Path to the folder containing the network models</param>
-        /// <returns>true if initialization went well.</returns>
-        public void Init(string modelsPath, Config.PoseWorkerConfig config, string _2dModelRegex = "")
+        /// <param name="modelsDir">Path to the folder containing the network models</param>
+        /// <param name="modelPath2d">Full path to the 2D model (optional)</param>
+        public void Init(string modelsDir, Config.PoseWorkerConfig config, string modelPath2d = "")
         {
             PoseParams poseParams = new PoseParams();
             poseParams.SetTrackerKind(config.TrackerKind);
 
-            PoseEstimatorConfigParams configParams = new PoseEstimatorConfigParams(modelsPath);
+            Debug.Log($"modelsDir={modelsDir}");
+            PoseEstimatorConfigParams configParams = new PoseEstimatorConfigParams(modelsDir);
 
-            if(_2dModelRegex != "")
+            if (modelPath2d != "")
             {
-                configParams.Set2dModelRegex(_2dModelRegex);
+                configParams.Set2dModelPath(modelPath2d);
             }
 
 #if UNITY_IOS || UNITY_ANDROID
@@ -162,17 +161,21 @@ namespace wrnchAI.wrAPI
             SetPoseParams(poseParams.NativeHandle);
             int code = wrPoseEstimator_CreateFromConfig(ref m_nativeHandle, configParams.NativeHandle);
             configParams.Destroy();
+            Debug.Log("Checking return code for 2D");
             CheckReturnCodeOk(code);
+            Debug.Log("2D model OK");
 
             IKParams ikParams = new IKParams(); // default ctor - default params
             ikParams.SetMaxAngularVelocity(Mathf.Deg2Rad * 750.0F);
             ikParams.SetFPS(60.0f); // nominal FPS. Doesn't have to be exact.
 
-            code = wrPoseEstimator_Initialize3D(m_nativeHandle, ikParams.NativeHandle, modelsPath);
+            code = wrPoseEstimator_Initialize3D(m_nativeHandle, ikParams.NativeHandle, modelsDir);
+            Debug.Log("Checking return code for 3D");
             CheckReturnCodeOk(code);
+            Debug.Log("3D model OK");
 
 #if !(UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_ANDROID)
-            code = wrPoseEstimator_InitializeHeadDefault(m_nativeHandle, modelsPath);
+            code = wrPoseEstimator_InitializeHeadDefault(m_nativeHandle, modelsDir);
             try
             {
                 CheckReturnCodeOk(code);
@@ -211,21 +214,6 @@ namespace wrnchAI.wrAPI
             {
                 throw new Exception(ReturncodeDefinition.ToString(code));
             }
-        }
-
-        /// <summary>
-        ///  Set value for internal IK properties.
-        /// </summary>
-        /// <param name="prop"> name of the property </param>
-        /// <param name="value"> value of the property </param>
-        public void SetIKProperty(int prop, float value)
-        {
-            if (m_nativeHandle == IntPtr.Zero)
-            {
-                Debug.LogError("PoseEstimator::SetIKProperty -Trying to call an uninitialized pose estimator");
-                return;
-            }
-            wrPoseEstimator_SetIKProperty(m_nativeHandle, prop, value, 0);
         }
 
         /// <summary>
@@ -433,25 +421,6 @@ namespace wrnchAI.wrAPI
             }
 
             return idx;
-        }
-
-        /// <summary>
-        /// Returns the initial TPose used in wrIK for solving corresponding to the provided Id.
-        /// </summary>
-        /// <param name="id"> Id of the tracked pose </param>
-        /// <returns> Pose3D filled with TPose informations as positions </returns>
-        public Pose3D GetTPose3D(int id)
-        {
-            Pose3D tPose3D = new Pose3D();
-
-            if (m_nativeHandle == IntPtr.Zero)
-            {
-                Debug.LogError("PoseEstimator::GetDefaultTPose3D - Trying to call an uninitialized pose estimator");
-                return tPose3D;
-            }
-
-            tPose3D.Update(wrPoseEstimator_GetTPose3D(m_nativeHandle, id), JointDefinition3d);
-            return tPose3D;
         }
 
         /// <summary>
