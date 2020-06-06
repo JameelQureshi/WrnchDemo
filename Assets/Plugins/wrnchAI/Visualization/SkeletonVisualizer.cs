@@ -3,6 +3,7 @@ Copyright (c) 2019 Wrnch Inc.
 All rights reserved
 */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using wrnchAI.Core;
@@ -80,10 +81,12 @@ namespace wrnchAI.Visualization
         {
             Skeleton skeleton;
 
+
             if (m_isUI)
                 skeleton = Instantiate(Resources.Load("PF_SkeletonUI") as GameObject).GetComponent<Skeleton>();
             else
                 skeleton = Instantiate(Resources.Load("PF_Skeleton") as GameObject).GetComponent<Skeleton>();
+
 
             skeleton.color = visualColor;
             skeleton.JointToVideoQuad = m_jointToVideoQuad;
@@ -91,11 +94,24 @@ namespace wrnchAI.Visualization
 
             skeleton.Id = personToAdd.Id;
 
-            skeleton.JointScaleOffset = new Vector2(gameObject.transform.localScale.y, gameObject.transform.localScale.x);
+           
+
+            try
+            {
+                skeleton.JointScaleOffset = new Vector2(gameObject.transform.localScale.y, gameObject.transform.localScale.x);
+                Debug.Log("After Assigning JointScaleOffset");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Error Caught");
+                Debug.Log(e);
+            }
+
 
             skeleton.Init(m_boneMap);
             skeleton.transform.SetParent(gameObject.transform, false);
             m_skeletons.Add(skeleton);
+
         }
 
         /// <summary>

@@ -14,6 +14,9 @@ id<NativeCallsProtocol> api = NULL;
 
 
 extern "C" {
-    void showHostMainWindow(const char* color) { return [api showHostMainWindow:[NSString stringWithUTF8String:color]]; }
+
+    void SwitchToNativeWindow(const char* color) { return [api SwitchToNativeWindow:[NSString stringWithUTF8String:color]]; }
+
+    void UnloadUnity() { return [api UnloadUnity]; }
 }
 

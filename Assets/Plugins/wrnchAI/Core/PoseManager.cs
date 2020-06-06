@@ -85,7 +85,7 @@ namespace wrnchAI.Core
 
         protected VideoSource m_videoController;
         public VideoSource VideoController { get { return m_videoController; } }
-        protected VisualHandler m_visualHandler;
+        protected VisualHandler  m_visualHandler;
         public VisualHandler VisualHandler { get { return m_visualHandler; } }
 
 
@@ -200,7 +200,9 @@ namespace wrnchAI.Core
             m_poseWorker.onNewPersons += ReceivePersons;
 
             m_visualHandler = gameObject.AddComponent<VisualHandler>();
-            onPoseReceived += m_visualHandler.UpdatePersons;
+
+            //onPoseReceived += m_visualHandler.UpdatePersons;
+            onPoseReceived += OnPersonFound;
 
             m_fps = 0f;
             PoseEstimatorWorker.OnFPSUpdated += ReceiveFPS;
@@ -223,10 +225,20 @@ namespace wrnchAI.Core
             }
         }
 
-        /// <summary>
-        /// Starts the pose worker thread.
-        /// </summary>
-        private void Start()
+        public void OnPersonFound(List<Person> persons)
+        {
+            foreach (Person p in persons)
+            {
+                // Send The Person to JointDataDisplay So we can use it for further calculations ;
+                DataManager.instance.person = p;
+                return;
+            }
+        }
+
+            /// <summary>
+            /// Starts the pose worker thread.
+            /// </summary>
+            private void Start()
         {
             m_latestPoses = new List<Person>();
 
@@ -333,6 +345,15 @@ namespace wrnchAI.Core
         /// <summary>
         /// Destroy resources.
         /// </summary>
+
+        private void OnDisable()
+        {
+            if (m_instance!=null)
+            {
+                Destroy(m_instance);
+            }
+        }
+
         private void OnApplicationQuit()
         {
             if (m_visualizerConfig.Visualizer != null)

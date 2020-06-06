@@ -146,7 +146,7 @@ namespace wrnchAI.Visualization
 
             }
 
-            Debug.Log("Total Bones: " + boneMap.Count);
+          
 
             //Spawn all bones
             for (int i = 0; i < boneMap.Count; i++)
@@ -179,8 +179,8 @@ namespace wrnchAI.Visualization
 
 
             // Send The Person to JointDataDisplay So we can use it for further calculations ;
-            DataManager.instance.person = person;
-
+            //DataManager.instance.person = person;
+           
 
             for (int i = 0; i < m_jointsToDisplay.Count; i++)
             {
