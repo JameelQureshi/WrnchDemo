@@ -618,7 +618,7 @@ MonoBehaviour:
     m_mirrorX: 0
     m_mirrorY: 0
     m_rotationMultipleOf90: 1
-    m_displaySkeletons: 0
+    m_displaySkeletons: 1
   m_displayAvatars: 0
   m_defaultCharacter: {fileID: 1098247215133530, guid: 35bd3c0416c2e47499dcb10b7167be3c,
     type: 3}

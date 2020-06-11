@@ -87,6 +87,9 @@ namespace wrnchAI.Visualization
             else
                 skeleton = Instantiate(Resources.Load("PF_Skeleton") as GameObject).GetComponent<Skeleton>();
 
+            Debug.Log($"personToAdd: {personToAdd}");
+            Debug.Log($"skeleton: {skeleton}");
+            Debug.Log($"m_boneMap: {m_boneMap}");
 
             skeleton.color = visualColor;
             skeleton.JointToVideoQuad = m_jointToVideoQuad;

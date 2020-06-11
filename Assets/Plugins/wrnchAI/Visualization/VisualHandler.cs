@@ -221,7 +221,17 @@ namespace wrnchAI.Visualization
                 foreach (var bv in m_visualizers)
                 {
                     //// Add white color to all skeletons
-                    bv.AddNewPerson(p, Color.white);
+                    if (bv == null)
+                    {
+
+                       
+                        Debug.LogError("visualizer is null" + m_visualizers.Count);
+                    }
+                    else
+                    {
+                        bv.AddNewPerson(p, Color.white);
+                    }
+
                 }
                 m_knownPersons.Add(new Triple<Person, float, Color>(p, 0.0f, chosenColor));
             }

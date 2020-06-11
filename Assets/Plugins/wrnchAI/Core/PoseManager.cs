@@ -201,8 +201,8 @@ namespace wrnchAI.Core
 
             m_visualHandler = gameObject.AddComponent<VisualHandler>();
 
-            //onPoseReceived += m_visualHandler.UpdatePersons;
-            onPoseReceived += OnPersonFound;
+            onPoseReceived += m_visualHandler.UpdatePersons;
+            //onPoseReceived += OnPersonFound;
 
             m_fps = 0f;
             PoseEstimatorWorker.OnFPSUpdated += ReceiveFPS;
