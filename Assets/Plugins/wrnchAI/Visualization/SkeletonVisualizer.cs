@@ -87,10 +87,7 @@ namespace wrnchAI.Visualization
             else
                 skeleton = Instantiate(Resources.Load("PF_Skeleton") as GameObject).GetComponent<Skeleton>();
 
-            Debug.Log($"personToAdd: {personToAdd}");
-            Debug.Log($"skeleton: {skeleton}");
-            Debug.Log($"m_boneMap: {m_boneMap}");
-
+         
             skeleton.color = visualColor;
             skeleton.JointToVideoQuad = m_jointToVideoQuad;
 
@@ -102,12 +99,10 @@ namespace wrnchAI.Visualization
             try
             {
                 skeleton.JointScaleOffset = new Vector2(gameObject.transform.localScale.y, gameObject.transform.localScale.x);
-                Debug.Log("After Assigning JointScaleOffset");
             }
             catch (Exception e)
             {
-                Debug.Log("Error Caught");
-                Debug.Log(e);
+            
             }
 
 

@@ -74,35 +74,13 @@ using wrnchAI.wrAPI;
             "RHEEL", //23
             "LHEEL" //24
             };
-
-
-    private static readonly List<string> m_jointsToDisplay = new List<string> {
-            "RANKLE",
-            "RKNEE",
-            "RHIP",
-            "LHIP",
-            "LKNEE",
-            "LANKLE",
-            "PELV",
-            "NECK",
-            "RWRIST",
-            "RELBOW",
-            "RSHOULDER",
-            "LSHOULDER",
-            "LELBOW",
-            "LWRIST",
-            "RTOE",
-            "LTOE",
-            "RHEEL",
-            "LHEEL"
-        };
+            
 
     public void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(this.gameObject);
             }
             else
             {
@@ -112,7 +90,7 @@ using wrnchAI.wrAPI;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    private void OnEnable()
+    public void Init()
     {
         string exerciseName = PlayerPrefs.GetString("ExerciseName");
 
@@ -255,7 +233,7 @@ using wrnchAI.wrAPI;
         }
 
 
-        private void UpdateJointData()
+    private void UpdateJointData()
         {
             if (person!=null)
             {

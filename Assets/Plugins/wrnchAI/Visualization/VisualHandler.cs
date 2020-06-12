@@ -223,7 +223,6 @@ namespace wrnchAI.Visualization
                     //// Add white color to all skeletons
                     if (bv == null)
                     {
-
                        
                         Debug.LogError("visualizer is null" + m_visualizers.Count);
                     }

@@ -39,10 +39,12 @@ public class MobileAngleManager : MonoBehaviour
     private void OnEnable()
     {
         Invoke("PlayInstructionSound", 1);
+
     }
 
     void PlayInstructionSound()
     {
+        DataManager.instance.Init();
         float length = VoiceManager.instance.PlayInstructionSound(13, true); // index of instruction sound
         Invoke("StartAngleAdjustment", length);
     }
@@ -50,7 +52,6 @@ public class MobileAngleManager : MonoBehaviour
     void StartAngleAdjustment()
     {
         canCalculate = true;
-        Debug.Log("Testing This : "+canCalculate);
     }
 
     void Update()

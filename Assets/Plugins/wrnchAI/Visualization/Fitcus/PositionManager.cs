@@ -114,9 +114,7 @@ public class PositionManager : MonoBehaviour
     IEnumerator LoadNextScreen()
     {
         yield return new WaitForSeconds(3);
-        Debug.Log("Before Playing OK sound");
         DataManager.instance.GreatWorkTodayWeWillLearn();
-        Debug.Log("After Playing OK sound");
         Destroy(gameObject);
     }
 
