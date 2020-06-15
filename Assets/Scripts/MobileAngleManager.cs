@@ -32,7 +32,7 @@ public class MobileAngleManager : MonoBehaviour
         avgAngle = (targetAngleMin + targetAngleMax) / 2;
         slider.minValue = 0;
         slider.maxValue = avgAngle * 2;
-        canCalculate = false;
+        canCalculate = true;
 
 
     }
@@ -45,14 +45,9 @@ public class MobileAngleManager : MonoBehaviour
     void PlayInstructionSound()
     {
         DataManager.instance.Init();
-        float length = VoiceManager.instance.PlayInstructionSound(13, true); // index of instruction sound
-        Invoke("StartAngleAdjustment", length);
+        VoiceManager.instance.PlayInstructionSound(13); // index of instruction sound
     }
 
-    void StartAngleAdjustment()
-    {
-        canCalculate = true;
-    }
 
     void Update()
     {
@@ -125,7 +120,7 @@ public class MobileAngleManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         canCalculate = false;
         PositionManager.instance.Init();
-        VoiceManager.instance.PlayInstructionSound(14); // index of middle screen instructions
+        VoiceManager.instance.PlayInstructionSound(14,1); // index of middle screen instructions
         coachingTimer.enabled = true;
         Destroy(gameObject);
         message.text = "Next Screen Loaded!";
