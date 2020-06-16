@@ -136,16 +136,16 @@ public class PositionCalculator
         {
             case Exercise.Squat:
                  //values for squats
-                minX = 0.41f;
-                maxX = 0.51f;
+                minX = 0.40f;
+                maxX = 0.55f;
                 minY = 0.05f;
                 maxY = 0.95f;
                 break;
 
             case Exercise.Lunge:
                 //values for Lunges
-                minX = 0.28f;
-                maxX = 0.38f;
+                minX = 0.27f;
+                maxX = 0.42f;
                 minY = 0.05f;
                 maxY = 0.95f;
                 break;

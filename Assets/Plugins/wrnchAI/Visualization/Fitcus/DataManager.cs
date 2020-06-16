@@ -94,7 +94,7 @@ using wrnchAI.wrAPI;
     {
         string exerciseName = PlayerPrefs.GetString("ExerciseName");
 
-       
+        Debug.Log("come Here");
         switch (exerciseName) {
             case "Squat":
                 currentExercise = Exercise.Squat;
