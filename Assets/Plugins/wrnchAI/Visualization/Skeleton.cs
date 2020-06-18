@@ -14,7 +14,7 @@ namespace wrnchAI.Visualization
     /// <summary>
     /// Class representing a skeleton for visualization.
     /// </summary>
-    class Skeleton : MonoBehaviour
+   public class Skeleton : MonoBehaviour
     {
         //Id of the person tracked by this skeleton
         private int m_id;
@@ -36,6 +36,8 @@ namespace wrnchAI.Visualization
 
         private Joint[] m_debugJoints;
         private List<LineRenderer> m_debugBones;
+        private GlowColor[] bonesGlowInfo;
+
 
         private Vector2 m_jointScaleOffset = new Vector2(1f, 1f);
         public Vector2 JointScaleOffset
@@ -70,6 +72,11 @@ namespace wrnchAI.Visualization
         [SerializeField]
         private GameObject m_bonePrefab;
         public GameObject BonePrefab { get { return m_bonePrefab; } set { m_bonePrefab = value; } }
+
+        public Material blueGlow;
+        public Material redGlow;
+
+
 
         [SerializeField]
         private bool m_isUI;
@@ -130,6 +137,7 @@ namespace wrnchAI.Visualization
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
 
 
+
             //Spawn all joints 
 
             foreach (string name in m_jointsToDisplay)
@@ -146,9 +154,12 @@ namespace wrnchAI.Visualization
 
             }
 
-            Debug.Log("Total Bones: " + boneMap.Count);
+         
 
             //Spawn all bones
+            bonesGlowInfo = new GlowColor[boneMap.Count];
+            DataManager.currentSkeleton = this;
+            ResetGlowValues();
             for (int i = 0; i < boneMap.Count; i++)
             {
                 var bone = Instantiate(m_bonePrefab);
@@ -252,7 +263,43 @@ namespace wrnchAI.Visualization
 
         }
 
+        public void ResetGlowValues()
+        {
+            for (int i = 0; i < bonesGlowInfo.Length; i++)
+            {
+                bonesGlowInfo[i] = GlowColor.Blue;
+            }
+            UpdateGlowColors();
+        }
 
+        public void SetRedGlowValues(int[] redBonesIndex)
+        {
+            foreach(int index in redBonesIndex)
+            {
+                bonesGlowInfo[index] = GlowColor.Red;
+            }
+
+            UpdateGlowColors();
+            Invoke("ResetGlowValues", 2);
+        }
+        public void UpdateGlowColors()
+        {
+            for (int i = 0; i < m_debugBones.Count; i++)
+            {
+                if (m_debugBones[i]!=null)
+                {
+                    if (bonesGlowInfo[i] == GlowColor.Red)
+                    {
+                        m_debugBones[i].material = redGlow;
+                    }
+                    else
+                    {
+                        m_debugBones[i].material = blueGlow;
+                    }
+                }
+
+            }
+        }
 
         private void OnDestroy()
         {

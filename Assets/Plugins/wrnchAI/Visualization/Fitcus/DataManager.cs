@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using wrnchAI.Core;
+using wrnchAI.Visualization;
 using wrnchAI.wrAPI;
 
     public class DataManager : MonoBehaviour
@@ -10,6 +11,7 @@ using wrnchAI.wrAPI;
 
         public static DataManager instance;
         public static Exercise currentExercise;
+        public static Skeleton currentSkeleton;
 
         /// <summary>
         /// JointData Use to store Joint Data for individaul joint; name and position
@@ -326,4 +328,9 @@ public enum Exercise
     Squat,
     Lunge,
     Pushup
+}
+public enum GlowColor
+{
+    Red,
+    Blue
 }

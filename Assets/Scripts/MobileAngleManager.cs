@@ -22,7 +22,6 @@ public class MobileAngleManager : MonoBehaviour
 
     [Header("Reference Area")]
     public GameObject m_timerPrefab;
-    public Timer coachingTimer;
     private GameObject timerRef;
 
 
@@ -121,7 +120,6 @@ public class MobileAngleManager : MonoBehaviour
         canCalculate = false;
         PositionManager.instance.Init();
         VoiceManager.instance.PlayInstructionSound(14,true); // index of middle screen instructions
-        coachingTimer.enabled = true;
         Destroy(gameObject);
         message.text = "Next Screen Loaded!";
     }

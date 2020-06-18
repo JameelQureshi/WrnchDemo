@@ -120,6 +120,13 @@ public class Squat : Coaching
                 //Debug.Log("Sound on: Try to get a bit lower!");
                 VoiceManager.instance.PlayInstructionSound(7);
                 audioPlayed = true;
+
+                // Make Bodybone Red
+                if (DataManager.currentSkeleton != null)
+                {
+                    DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+                }
+
             }
 
             float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
@@ -140,6 +147,12 @@ public class Squat : Coaching
                     {
                         VoiceManager.instance.PlayInstructionSound(9);
                         audioPlayed = true;
+
+                        // Make Bodybone Red
+                        if (DataManager.currentSkeleton != null)
+                        {
+                            DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+                        }
                     }
 
                 }

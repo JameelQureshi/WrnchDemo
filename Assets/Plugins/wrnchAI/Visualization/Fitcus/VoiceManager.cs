@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VoiceManager : MonoBehaviour
 {
     public static VoiceManager instance;
+
+
     public void Awake()
     {
         if (instance == null)
@@ -27,7 +30,7 @@ public class VoiceManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
     }
-
+    
 
     public float PlayInstructionSound(int index , bool skipPrevious = false)
     {
