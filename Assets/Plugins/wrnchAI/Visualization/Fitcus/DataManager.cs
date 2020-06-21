@@ -23,7 +23,7 @@ using wrnchAI.wrAPI;
        
 
         public Text totalRepsText;
-
+        public Image repsFillImage;
 
         public Text All2DJointsValues;
         public Text All3DRawValues;
@@ -136,6 +136,25 @@ using wrnchAI.wrAPI;
 
     }
 
+    private void Start()
+    {
+        Coaching.reps = 0;
+        Coaching.OnRepsChange += OnRepsChange;
+    }
+    void OnRepsChange(int newReps)
+    {
+        totalRepsText.text = "" + Coaching.reps;
+        repsFillImage.fillAmount = (float) newReps / 15 ;
+        if (newReps ==15)
+        {
+            Debug.Log("Load Native App Again");
+        }
+    }
+
+    public void TestReps()
+    {
+        Coaching.reps +=1 ;
+    }
 
     public void GreatWorkTodayWeWillLearn()
     {
@@ -229,7 +248,7 @@ using wrnchAI.wrAPI;
                 coaching.AnalyseFrame(jointData);
             }
 
-            totalRepsText.text = "" + Coaching.reps;
+
             StartCoroutine(ShowJointdata());
             
         }
