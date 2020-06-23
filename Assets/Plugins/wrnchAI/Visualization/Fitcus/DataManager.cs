@@ -24,6 +24,7 @@ using wrnchAI.wrAPI;
 
         public Text totalRepsText;
         public Image repsFillImage;
+        
 
         public Text All2DJointsValues;
         public Text All3DRawValues;
@@ -148,12 +149,19 @@ using wrnchAI.wrAPI;
         if (newReps ==15)
         {
             Debug.Log("Load Native App Again");
+            NativeLoadAPI.UnloadUnity();
         }
     }
 
     public void TestReps()
     {
         Coaching.reps +=1 ;
+        Debug.Log(Coaching.reps);
+    }
+
+    private void OnDisable()
+    {
+        Coaching.OnRepsChange -= OnRepsChange;
     }
 
     public void GreatWorkTodayWeWillLearn()
