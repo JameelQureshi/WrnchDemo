@@ -114,7 +114,7 @@ public class PositionManager : MonoBehaviour
     IEnumerator LoadNextScreen()
     {
         yield return new WaitForSeconds(3);
-        DataManager.instance.GreatWorkTodayWeWillLearn();
+        DataManager.instance.PlayIntro();
         Destroy(gameObject);
     }
 

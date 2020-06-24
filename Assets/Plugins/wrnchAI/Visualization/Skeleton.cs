@@ -274,13 +274,24 @@ namespace wrnchAI.Visualization
 
         public void SetRedGlowValues(int[] redBonesIndex)
         {
+            // 0 - left shin 
+            // 1 - left thigh
+            // 2 - right shin
+            // 3 - right thigh
+            // 4 - pelv
+            // 6 - spine
+            // 7 - clavicle
+            // 8 - right bicep 
+            // 9 - right forearm
+            // 10 - left bicep
+            // 11 - left forearm
+            
             foreach(int index in redBonesIndex)
             {
                 bonesGlowInfo[index] = GlowColor.Red;
             }
 
             UpdateGlowColors();
-            Invoke("ResetGlowValues", 2);
         }
         public void UpdateGlowColors()
         {

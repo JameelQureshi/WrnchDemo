@@ -137,6 +137,12 @@ using wrnchAI.wrAPI;
 
     }
 
+    public void PlayIntro()
+    {
+        float length = VoiceManager.instance.PlayInstructionSound(18); 
+        StartCoroutine(AskForShoulderWidth(length));
+        
+    }
     private void Start()
     {
         Coaching.reps = 0;
@@ -151,6 +157,14 @@ using wrnchAI.wrAPI;
             Debug.Log("Load Native App Again");
             NativeLoadAPI.UnloadUnity();
         }
+    }
+
+    IEnumerator AskForShoulderWidth(float delay)
+    {
+        yield return new WaitForSeconds(delay + 1);
+        float length = VoiceManager.instance.PlayInstructionSound(19); 
+        canDoCoaching = true;
+        
     }
 
     public void TestReps()
