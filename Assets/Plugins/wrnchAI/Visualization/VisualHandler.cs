@@ -38,7 +38,7 @@ namespace wrnchAI.Visualization
         private List<Triple<Person, float, Color>> m_knownPersons = new List<Triple<Person, float, Color>>();
         private float m_visualTimeout = 0.1f;
 
-        public bool IsMultiPerson = true;
+        public bool IsMultiPerson = true; // try to turn off multiperson
 
         void Start()
         {
