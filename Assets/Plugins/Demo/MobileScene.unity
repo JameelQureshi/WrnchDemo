@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44940728, g: 0.49633723, b: 0.55877745, a: 1}
+  m_IndirectSpecularColor: {r: 0.44940758, g: 0.49633753, b: 0.5587779, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1206,6 +1206,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7b9011af6df3f4a028b1bc772249f7a2, type: 3}
   - {fileID: 8300000, guid: e0f736fe2617940c59548ab23a066709, type: 3}
   - {fileID: 8300000, guid: 537174a53b3494d9e847d8ddb3512ce2, type: 3}
+  - {fileID: 8300000, guid: 5e321c06b3a2547a0b864488a0bc97f6, type: 3}
+  - {fileID: 8300000, guid: 9dfb9786c57e245f0a928c4f626cda66, type: 3}
+  - {fileID: 8300000, guid: 22ea91835a4314d5d89f5d80cee8e940, type: 3}
+  - {fileID: 8300000, guid: 1507572265da644848465e0f18f70d5b, type: 3}
 --- !u!82 &950420670
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3824,7 +3828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -134.18}
+  m_AnchoredPosition: {x: 120, y: -134.17969}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137357182
