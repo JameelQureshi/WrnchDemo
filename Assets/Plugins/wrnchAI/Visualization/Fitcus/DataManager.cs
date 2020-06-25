@@ -13,6 +13,8 @@ using wrnchAI.wrAPI;
         public static Exercise currentExercise;
         public static Skeleton currentSkeleton;
 
+        public RenderTexture videoQuadTexture;    
+
         /// <summary>
         /// JointData Use to store Joint Data for individaul joint; name and position
         /// </summary>

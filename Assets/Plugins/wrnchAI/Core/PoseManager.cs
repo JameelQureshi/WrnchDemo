@@ -191,6 +191,9 @@ namespace wrnchAI.Core
                     break;
                 case VideoMode.MovieFile:
                     m_videoController = gameObject.AddComponent<MovieSource>();
+                    Debug.Log("Movie File Mode Selected");
+                    Debug.Log(m_videoControllerConfig.VideoURL);
+                   
                     break;
             }
 

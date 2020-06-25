@@ -431,7 +431,7 @@ namespace wrnchAI.Core
 
             m_player.source = UnityEngine.Video.VideoSource.Url;
             m_player.isLooping = true;
-            m_player.audioOutputMode = VideoAudioOutputMode.None;
+            m_player.audioOutputMode = VideoAudioOutputMode.Direct;
 
             m_player.url = url;
             m_player.Prepare();
@@ -447,6 +447,8 @@ namespace wrnchAI.Core
 
             m_player.Play();
 
+            StartCoroutine(SetVideoQuad(m_player));
+
             m_width = m_texture.width;
             m_height = m_texture.height;
 
@@ -460,6 +462,13 @@ namespace wrnchAI.Core
             {
                 yield return null;
             }
+        }
+
+        IEnumerator SetVideoQuad(VideoPlayer videoPlayer )
+        {
+            yield return new WaitForSeconds(2);
+            videoPlayer.targetTexture = DataManager.instance.videoQuadTexture;
+
         }
 
         protected override void UpdateConfig(VideoControllerConfig config)
