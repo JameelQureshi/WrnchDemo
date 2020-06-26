@@ -167,7 +167,7 @@ namespace wrnchAI.Visualization
                 bone.transform.SetParent(transform, false);
                 boneRenderer.startColor = boneRenderer.endColor = boneRenderer.material.color = m_color;
                 var ar = m_jointScaleOffset.y / m_jointScaleOffset.x;
-                boneRenderer.endWidth = boneRenderer.startWidth *= ar;
+                boneRenderer.endWidth = boneRenderer.startWidth *= ar * 0.5f; // Reduce Bone width to Half
                 m_debugBones.Add(boneRenderer);
             }
 
