@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -53,21 +53,25 @@ public class Squat : Coaching
     private float kneeAngleCutoff = 110f;
     private float torsoAngleCutoff = 115f;
     private bool feetAreShoulderWidth = false;
+    private bool turnedToSide = false;
     private System.DateTime wrongTimer1;
     private System.DateTime wrongTimer2;
     private System.DateTime rightTimer1;
-    private System.DateTime rightTimer2;
+    private System.DateTime rightTimer2;    
+    private System.DateTime sideTimer1;
+    private System.DateTime sideTimer2;
 
     /// Used for rep counting
     public bool trackingBegan = false;
     public bool thresholdReached = false;
-
     public CoachingOneEuroFilter one_euro_filter_r_heel ;
     public CoachingOneEuroFilter one_euro_filter_r_shoulder ;
     public CoachingOneEuroFilter one_euro_filter_l_heel ;
     public CoachingOneEuroFilter one_euro_filter_l_shoulder ;
+    public CoachingOneEuroFilter one_euro_filter_userRotation;
     public int frame_no = 0;
     public int frame_no_stance_check = 0;
+    public int frame_no_shoulder_check = 0;
     public int test = 0;
 
 
@@ -87,14 +91,103 @@ public class Squat : Coaching
 
     public override void AnalyseFrame( JointData[] frame)
     {
-
-        if (feetAreShoulderWidth == false) {
+         if (feetAreShoulderWidth == false) {
+            Debug.Log("---------- FEET -------------");
             GuideFeetToShoulderWidth(frame);
             frame_no_stance_check += 1;
+        } else if (feetAreShoulderWidth && turnedToSide == false) {
+            Debug.Log("---------- SHOULDER -------------");
+            GuideBodyToSidePosition(frame);
+            frame_no_shoulder_check += 1;
         } else {
+            Debug.Log("---------- COACHING -------------");
             DoCoaching(frame);
         }
 
+    }
+
+    public void GuideBodyToSidePosition( JointData[] frame) {
+        
+        Vector3 r_heel = frame[23].jointposition;
+        Vector3 r_ankle = frame[0].jointposition;
+        Vector3 r_knee = frame[1].jointposition;
+        Vector3 r_hip = frame[2].jointposition;
+        Vector3 r_shoulder = frame[12].jointposition;
+
+        Vector3 l_heel = frame[24].jointposition;
+        Vector3 l_ankle = frame[5].jointposition;
+        Vector3 l_knee = frame[4].jointposition;
+        Vector3 l_hip = frame[3].jointposition;
+        Vector3 l_shoulder = frame[13].jointposition;
+
+        int right = 0;
+        int left = 0;
+
+        float userRotation = MathHelper.instance.GetUserOrientation(r_shoulder, l_shoulder);
+
+        if(sideTimer1 == null ) {
+            // Init times
+            sideTimer1 = System.DateTime.Now;
+            sideTimer2 = System.DateTime.Now;
+        }
+
+        if (frame_no_shoulder_check == 0) {
+            // Init Euro Filters(
+            one_euro_filter_userRotation = new CoachingOneEuroFilter(frame_no_shoulder_check, userRotation);
+                      
+        } else {
+            l_shoulder.x = one_euro_filter_userRotation.ApplyFilter(frame_no_shoulder_check, userRotation);  
+        }
+
+        if (!float.IsNaN(userRotation)) {
+
+            if (r_heel.z > l_heel.z) { right += 1;  } else { left += 1; }
+            if (r_ankle.z > l_ankle.z) { right += 1;  } else { left += 1; }
+            if (r_knee.z > l_knee.z) { right += 1;  } else { left += 1; }
+            if (r_hip.z > l_hip.z) { right += 1;  } else { left += 1; }
+            if (r_shoulder.z > l_shoulder.z) { right += 1;  } else { left += 1; }
+
+
+            if ( right > left && Mathf.Abs(userRotation) >= 60 )  {
+                DataManager.currentSkeleton.ResetGlowValues();
+                Debug.Log("--------------- Correct ---------- " + userRotation);
+                double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
+                if (diffInSeconds >= 3) {
+
+                    VoiceManager.instance.PlayInstructionSound(22);  // Play rep sound
+                    turnedToSide = true;
+
+                    // Reset timers
+                    sideTimer1 = System.DateTime.Now;
+                    sideTimer2 = System.DateTime.Now;
+                } else {
+                    sideTimer2 = System.DateTime.Now;
+                }
+            } else {
+                DataManager.currentSkeleton.SetRedGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 });
+                // Reset timers
+                sideTimer1 = System.DateTime.Now;
+                sideTimer2 = System.DateTime.Now;
+                Debug.Log("--------------- Incorrect ---------- " + userRotation);
+            }
+            
+        } else {
+            // DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+        }
+
+    }
+
+    public void ShoulderWidthComplete()
+    {
+        float length = VoiceManager.instance.PlayInstructionSound(20); 
+        MoveToSidePosition(length);
+    }
+
+    IEnumerator MoveToSidePosition(float delay)
+    {
+        yield return new WaitForSeconds(delay + 1);
+        VoiceManager.instance.PlayInstructionSound(21);
+        feetAreShoulderWidth = true;
     }
 
     public void GuideFeetToShoulderWidth( JointData[] frame) {
@@ -106,7 +199,6 @@ public class Squat : Coaching
 
         if (frame_no_stance_check == 0) {
             // Init Euro Filters(
-            Debug.Log("-------------------- Im In ---------------------");
             one_euro_filter_r_heel = new CoachingOneEuroFilter(frame_no_stance_check, r_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
             one_euro_filter_r_shoulder = new CoachingOneEuroFilter(frame_no_stance_check, r_shoulder.x, 0.0f, 0.01f, 0.0f, 1.0f);
             one_euro_filter_l_heel = new CoachingOneEuroFilter(frame_no_stance_check, l_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
@@ -140,22 +232,21 @@ public class Squat : Coaching
                 double diffInSeconds = (rightTimer2 - rightTimer1).TotalSeconds;
                 double time = 5.0;
                 if (diffInSeconds > time) {
-                    // Great work, now put right shoulder forward
-                    // VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
-                    VoiceManager.instance.PlayInstructionSound(20);
-                    // feetAreShoulderWidth = true;
                     // Reset timer
                     rightTimer1 = System.DateTime.Now;
                     rightTimer2 = System.DateTime.Now;
+
+                    ShoulderWidthComplete();
+                    
                 } else {
                     // Update timer
                     rightTimer2 = System.DateTime.Now;
-                    Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------" + diffInSeconds);
+                    // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------" + diffInSeconds);
                 }
             }
 
             DataManager.currentSkeleton.ResetGlowValues();
-            Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
+            // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
 
         // If feet are NOT shoulder width
         } else {
@@ -186,7 +277,7 @@ public class Squat : Coaching
                     // Update timer
                     wrongTimer2 = System.DateTime.Now;
                     DataManager.currentSkeleton.SetRedGlowValues(new int[] { 0,2 });
-                    Debug.Log("-------------------------------------------------------" + diffInSeconds + (diffInSeconds > time) + diffInSeconds.GetType() + time.GetType());
+                    // Debug.Log("-------------------------------------------------------" + diffInSeconds + (diffInSeconds > time) + diffInSeconds.GetType() + time.GetType());
                 }
             }
 
