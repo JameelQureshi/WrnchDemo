@@ -75,7 +75,7 @@ namespace wrnchAI.Visualization
 
         public Material blueGlow;
         public Material redGlow;
-
+        public Material greenGlow;
 
 
         [SerializeField]
@@ -272,7 +272,7 @@ namespace wrnchAI.Visualization
             UpdateGlowColors();
         }
 
-        public void SetRedGlowValues(int[] redBonesIndex)
+        public void SetGlowValues(int[] bonesIndex , GlowColor glowColor)
         {
             // 0 - left shin 
             // 1 - left thigh
@@ -286,10 +286,12 @@ namespace wrnchAI.Visualization
             // 10 - left bicep
             // 11 - left forearm
             
-            foreach(int index in redBonesIndex)
+            foreach(int index in bonesIndex)
             {
-                bonesGlowInfo[index] = GlowColor.Red;
+                bonesGlowInfo[index] = glowColor;
             }
+
+            Invoke("ResetGlowValues", 2);
 
             UpdateGlowColors();
         }
@@ -302,6 +304,10 @@ namespace wrnchAI.Visualization
                     if (bonesGlowInfo[i] == GlowColor.Red)
                     {
                         m_debugBones[i].material = redGlow;
+                    }
+                    else if (bonesGlowInfo[i] == GlowColor.Green)
+                    {
+                        m_debugBones[i].material = greenGlow;
                     }
                     else
                     {

@@ -49,4 +49,5 @@ MonoBehaviour:
     type: 3}
   blueGlow: {fileID: 2100000, guid: 1489b48c07beafa45818fe355187f953, type: 2}
   redGlow: {fileID: 2100000, guid: 365bc8e70ffa44b0a9b07e568e25d25f, type: 2}
+  greenGlow: {fileID: 2100000, guid: 2ea33c6d19c8c4a3c8dff2de383c3380, type: 2}
   m_isUI: 0

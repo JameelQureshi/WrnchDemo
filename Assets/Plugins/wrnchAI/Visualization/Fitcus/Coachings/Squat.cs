@@ -164,7 +164,7 @@ public class Squat : Coaching
                     sideTimer2 = System.DateTime.Now;
                 }
             } else {
-                DataManager.currentSkeleton.SetRedGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 });
+                DataManager.currentSkeleton.SetGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 } , GlowColor.Red);
                 // Reset timers
                 sideTimer1 = System.DateTime.Now;
                 sideTimer2 = System.DateTime.Now;
@@ -276,7 +276,7 @@ public class Squat : Coaching
                 } else {
                     // Update timer
                     wrongTimer2 = System.DateTime.Now;
-                    DataManager.currentSkeleton.SetRedGlowValues(new int[] { 0,2 });
+                    DataManager.currentSkeleton.SetGlowValues(new int[] { 0,2 },GlowColor.Red);
                     // Debug.Log("-------------------------------------------------------" + diffInSeconds + (diffInSeconds > time) + diffInSeconds.GetType() + time.GetType());
                 }
             }
@@ -331,7 +331,7 @@ public class Squat : Coaching
                 // Make Bodybone Red
                 if (DataManager.currentSkeleton != null)
                 {
-                    DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+                    DataManager.currentSkeleton.SetGlowValues(new int[] { 6 },GlowColor.Red);
                 }
 
             }
@@ -358,7 +358,7 @@ public class Squat : Coaching
                         // Make Bodybone Red
                         if (DataManager.currentSkeleton != null)
                         {
-                            DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+                            DataManager.currentSkeleton.SetGlowValues(new int[] { 6 } , GlowColor.Red);
                         }
                     }
 

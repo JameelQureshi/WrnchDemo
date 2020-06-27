@@ -373,5 +373,6 @@ public enum Exercise
 public enum GlowColor
 {
     Red,
-    Blue
+    Blue,
+    Green
 }
