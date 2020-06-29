@@ -37,7 +37,7 @@ namespace wrnchAI.Visualization
         private Joint[] m_debugJoints;
         private List<LineRenderer> m_debugBones;
         private GlowColor[] bonesGlowInfo;
-
+        private GlowColor[] jointsGlowInfo;
 
         private Vector2 m_jointScaleOffset = new Vector2(1f, 1f);
         public Vector2 JointScaleOffset
@@ -135,7 +135,8 @@ namespace wrnchAI.Visualization
             m_debugBones = new List<LineRenderer>();
 
             m_debugJoints = new Joint[PoseManager.Instance.JointDefinition2D.NumJoints];
-
+            // Glow Information for each joint
+            jointsGlowInfo = new GlowColor[PoseManager.Instance.JointDefinition2D.NumJoints];
 
 
             //Spawn all joints 
@@ -269,10 +270,18 @@ namespace wrnchAI.Visualization
             {
                 bonesGlowInfo[i] = GlowColor.Blue;
             }
+
+            for (int i = 0; i < jointsGlowInfo.Length; i++)
+            {
+                jointsGlowInfo[i] = GlowColor.Blue;
+            }
+
             UpdateGlowColors();
         }
 
-        public void SetGlowValues(int[] bonesIndex , GlowColor glowColor)
+
+
+        public void SetBoneGlowValues(int[] bonesIndex , GlowColor glowColor)
         {
             // 0 - left shin 
             // 1 - left thigh
@@ -291,10 +300,22 @@ namespace wrnchAI.Visualization
                 bonesGlowInfo[index] = glowColor;
             }
 
-            Invoke("ResetGlowValues", 2);
 
             UpdateGlowColors();
         }
+        public void SetJointGlowValues(int[] bonesIndex, GlowColor glowColor)
+        {
+         
+
+            foreach (int index in bonesIndex)
+            {
+                jointsGlowInfo[index] = glowColor;
+            }
+
+            UpdateGlowColors();
+        }
+
+
         public void UpdateGlowColors()
         {
             for (int i = 0; i < m_debugBones.Count; i++)
@@ -316,6 +337,27 @@ namespace wrnchAI.Visualization
                 }
 
             }
+
+            for (int i = 0; i < m_debugJoints.Length; i++)
+            {
+                if (m_debugJoints[i] != null)
+                {
+                    if (jointsGlowInfo[i] == GlowColor.Red)
+                    {
+                        m_debugJoints[i].gameObject.GetComponent<SpriteRenderer>().material = redGlow;
+                    }
+                    else if (jointsGlowInfo[i] == GlowColor.Green)
+                    {
+                        m_debugJoints[i].gameObject.GetComponent<SpriteRenderer>().material = greenGlow;
+                    }
+                    else
+                    {
+                        m_debugJoints[i].gameObject.GetComponent<SpriteRenderer>().material = blueGlow;
+                    }
+                }
+
+            }
+
         }
 
         private void OnDestroy()
