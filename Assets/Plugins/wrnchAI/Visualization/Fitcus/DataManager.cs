@@ -47,10 +47,12 @@ using wrnchAI.wrAPI;
         public bool canDoCoaching = false;
         Coaching coaching;
 
-        /// <summary>
-        /// The name of joints to extract from raw position.
-        /// </summary>
-        private static readonly List<string> m_jointsToExtract = new List<string> {
+       
+
+    /// <summary>
+    /// The name of joints to extract from raw position.
+    /// </summary>
+    private static readonly List<string> m_jointsToExtract = new List<string> {
             "RANKLE", //0
             "RKNEE", //1
             "RHIP", //2
@@ -119,19 +121,20 @@ using wrnchAI.wrAPI;
                 silhouetteImage.sprite = silhouette[0];
                 avatarRef = Instantiate(avatar[0],rootAvatar.transform);
                 avatarRef.transform.localPosition = Vector3.zero;
-                coaching = new Squat();
+                coaching = gameObject.AddComponent<Squat>();
                 break;
             case Exercise.Lunge:
                 silhouetteImage.sprite = silhouette[1];
                 avatarRef = Instantiate(avatar[1], rootAvatar.transform);
                 avatarRef.transform.localPosition = Vector3.zero;
-                coaching = new Lunge();
+                coaching = gameObject.AddComponent<Lunge>();
                 break;
             case Exercise.Pushup:
                 silhouetteImage.sprite = silhouette[2];
                 avatarRef = Instantiate(avatar[2], rootAvatar.transform);
                 avatarRef.transform.localPosition = Vector3.zero;
-                coaching = new Pushup();
+                coaching = gameObject.AddComponent<Pushup>();
+
                 break;
         }
 

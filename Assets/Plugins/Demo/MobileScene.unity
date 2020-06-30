@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44940758, g: 0.49633753, b: 0.5587779, a: 1}
+  m_IndirectSpecularColor: {r: 0.44940728, g: 0.49633723, b: 0.55877745, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2109,6 +2109,10 @@ MonoBehaviour:
   - {fileID: 2256513592544478097, guid: fe380790622634f9aa2c63d0dbf931f2, type: 3}
   - {fileID: 3531131211407215453, guid: ff58176f63dd941beb1bb8410eb8d672, type: 3}
   canDoCoaching: 0
+  m_squat: {fileID: 6419530987832705923, guid: f3d9f790a76374e539d435763082aefe, type: 3}
+  m_lungs: {fileID: 6938526288040468417, guid: 4d863216298ee481ba3d573a5ece099d, type: 3}
+  m_pushup: {fileID: 8839466450643641959, guid: c17bd488bbe7d460f9dd20b924a8a166,
+    type: 3}
 --- !u!82 &1131420107
 AudioSource:
   m_ObjectHideFlags: 0

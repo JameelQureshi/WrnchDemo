@@ -54,12 +54,11 @@ public class Squat : Coaching
     private float torsoAngleCutoff = 115f;
     private bool feetAreShoulderWidth = false;
     private bool turnedToSide = false;
-    private System.DateTime wrongTimer1;
-    private System.DateTime wrongTimer2;
-    private System.DateTime rightTimer1;
-    private System.DateTime rightTimer2;    
+      
     private System.DateTime sideTimer1;
     private System.DateTime sideTimer2;
+
+    private bool isTimerRunning = false;
 
     /// Used for rep counting
     public bool trackingBegan = false;
@@ -92,15 +91,15 @@ public class Squat : Coaching
     public override void AnalyseFrame( JointData[] frame)
     {
          if (feetAreShoulderWidth == false) {
-            Debug.Log("---------- FEET -------------");
+             // Debug.Log("---------- FEET -------------");
             GuideFeetToShoulderWidth(frame);
             frame_no_stance_check += 1;
         } else if (feetAreShoulderWidth && turnedToSide == false) {
-            Debug.Log("---------- SHOULDER -------------");
+           // Debug.Log("---------- SHOULDER -------------");
             GuideBodyToSidePosition(frame);
             frame_no_shoulder_check += 1;
         } else {
-            Debug.Log("---------- COACHING -------------");
+            //Debug.Log("---------- COACHING -------------");
             DoCoaching(frame);
         }
 
@@ -177,18 +176,8 @@ public class Squat : Coaching
 
     }
 
-    public void ShoulderWidthComplete()
-    {
-        float length = VoiceManager.instance.PlayInstructionSound(20); 
-        MoveToSidePosition(length);
-    }
 
-    IEnumerator MoveToSidePosition(float delay)
-    {
-        yield return new WaitForSeconds(delay + 1);
-        VoiceManager.instance.PlayInstructionSound(21);
-        feetAreShoulderWidth = true;
-    }
+   
 
     public void GuideFeetToShoulderWidth( JointData[] frame) {
 
@@ -217,73 +206,48 @@ public class Squat : Coaching
         // If feet are shoulder width
         if (feetdata.state)
         {
-            
-            // Reset the wrong timer
-            if(wrongTimer1 != null && wrongTimer2 != null) {
-                wrongTimer1 = System.DateTime.Now;
-                wrongTimer2 = System.DateTime.Now;
+            if (!isTimerRunning)
+            {
+                StartCoroutine(ShoulderWidthCompleteTimer());
+                Debug.Log("Timer Started");
+                isTimerRunning = true;
             }
-
-            if(rightTimer1 == null) {
-                // Init times
-                rightTimer1 = System.DateTime.Now;
-                rightTimer2 = System.DateTime.Now;
-            } else {
-                double diffInSeconds = (rightTimer2 - rightTimer1).TotalSeconds;
-                double time = 5.0;
-                if (diffInSeconds > time) {
-                    // Reset timer
-                    rightTimer1 = System.DateTime.Now;
-                    rightTimer2 = System.DateTime.Now;
-
-                    ShoulderWidthComplete();
-                    
-                } else {
-                    // Update timer
-                    rightTimer2 = System.DateTime.Now;
-                    // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------" + diffInSeconds);
-                }
-            }
-
+            //ShoulderWidthComplete();
             DataManager.currentSkeleton.ResetGlowValues();
             // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
 
         // If feet are NOT shoulder width
-        } else {
-            
-            // Reset the right timer
-            if(rightTimer1 != null && rightTimer2 != null) {
-                rightTimer1 = System.DateTime.Now;
-                rightTimer2 = System.DateTime.Now;
-            }
+        }else 
+        {
 
-            if(wrongTimer1 == null ) {
-                // Init times
-                wrongTimer1 = System.DateTime.Now;
-                wrongTimer2 = System.DateTime.Now;
-            } else {
-                double diffInSeconds = (wrongTimer2 - wrongTimer1).TotalSeconds;
-                double time = 5;
-                if (diffInSeconds >= time) {
-                    // Please place your feet shoulder width apart
-                    VoiceManager.instance.PlayInstructionSound(19);
+            // Please place your feet shoulder width apart
+            isTimerRunning = false;
+            StopAllCoroutines();
+            Debug.Log("Timer Stoped");
 
-                    // Reset timer
-                    wrongTimer1 = System.DateTime.Now;
-                    wrongTimer2 = System.DateTime.Now;
-
-                    test += 1;
-                } else {
-                    // Update timer
-                    wrongTimer2 = System.DateTime.Now;
-                    DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 },GlowColor.Red);
-                    // Debug.Log("-------------------------------------------------------" + diffInSeconds + (diffInSeconds > time) + diffInSeconds.GetType() + time.GetType());
-                }
-            }
+            VoiceManager.instance.PlayInstructionSound(19);
+            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 },GlowColor.Red);
 
         }
 
     }
+
+    IEnumerator ShoulderWidthCompleteTimer()
+    {
+        yield return new WaitForSeconds(2);
+        float length = VoiceManager.instance.PlayInstructionSound(20);
+        Debug.Log("ShoulderWidthComplete");
+        StartCoroutine(MoveToSidePosition(length));
+    }
+
+    IEnumerator MoveToSidePosition(float delay)
+    {
+        yield return new WaitForSeconds(delay + 1);
+        VoiceManager.instance.PlayInstructionSound(21);
+        Debug.Log("ShoulderWidthComplete now  MoveToSidePosition");
+        feetAreShoulderWidth = true;
+    }
+
 
     public void DoCoaching( JointData[] frame) {
         
