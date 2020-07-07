@@ -217,24 +217,26 @@ public class Squat : Coaching
             // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
 
         // If feet are NOT shoulder width
-        }else 
+        } else 
         {
 
-            // Please place your feet shoulder width apart
             isTimerRunning = false;
             StopAllCoroutines();
             Debug.Log("Timer Stoped");
-
+            
+            // Please place your feet shoulder width apart
             VoiceManager.instance.PlayInstructionSound(19);
-            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 },GlowColor.Red);
+            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Red);
 
         }
 
     }
 
+
+
     IEnumerator ShoulderWidthCompleteTimer()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         float length = VoiceManager.instance.PlayInstructionSound(20);
         Debug.Log("ShoulderWidthComplete");
         StartCoroutine(MoveToSidePosition(length));
@@ -270,21 +272,33 @@ public class Squat : Coaching
        
 
         float torso_angle  = MathHelper.instance.GetTorsoAngleWithStraightLeg(r_shoulder, r_hip, r_ankle);
-        float knee_angle   = MathHelper.instance.GetKneeAngleWithStraightShin(r_hip, r_knee, r_ankle);
-        float userRotation = MathHelper.instance.GetUserOrientation(r_hip, l_hip);
+        float knee_angle   = MathHelper.instance.GetKneeAngleWithStraightShin(l_hip, l_knee, l_ankle); // This is for right side of body
+        // float userRotation = MathHelper.instance.GetUserOrientation(r_hip, l_hip);
 
         torso_angles_of_current_rep.Add(torso_angle);
         knee_angles_of_current_rep.Add(knee_angle);
-        user_rotations_of_current_rep.Add(userRotation);
+        // user_rotations_of_current_rep.Add(userRotation);
 
         bool audioPlayed = false;
-        if (RepCounter(knee_angle,depth1, depth2))
+        if (RepCounter(knee_angle, depth1, depth2))
         {
             Debug.Log("Rep on frame: " + frame_no);
+
+            // Check Torso angle
+            if ( torso_angles_of_current_rep.Min() < torsoAngleCutoff)
+            {
+                //Debug.Log("Sound on: Keep your chest up!");
+                if (!audioPlayed)
+                {
+                    VoiceManager.instance.PlayInstructionSound(10);
+                    audioPlayed = true;
+                }
             
-            reps += 1;
-
-
+            }
+            else
+            {
+                Debug.Log("Torso is correct");
+            }
 
             if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
@@ -300,57 +314,10 @@ public class Squat : Coaching
 
             }
 
-            float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
-            print("Depth: " + knee_angles_of_current_rep.Min() + " TorsoAngle: " + torso_angles_of_current_rep.Min());
-
-
-            if (Mathf.Abs(userRotation) <= 45) {
-                // If the user is facing the screen, check feet
-                Feetdata feetdata = MathHelper.instance.FeetAreShoulderWidth(r_shoulder, l_shoulder, r_heel, l_heel);
-                if (feetdata.state)
-                {
-                    Debug.Log("Feet are correct");
-                }
-                else
-                {
-                    //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
-                    if (!audioPlayed)
-                    {
-                        VoiceManager.instance.PlayInstructionSound(9);
-                        audioPlayed = true;
-
-                        // Make Bodybone Red
-                        if (DataManager.currentSkeleton != null)
-                        {
-                            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 6 } , GlowColor.Red);
-                        }
-                    }
-
-                }
-
-            } else {
-                // If the user is facing the side
-
-                // Check Torso angle
-                if ( torso_angles_of_current_rep.Min() <   torsoAngleCutoff)
-                {
-                    //Debug.Log("Sound on: Keep your chest up!");
-                    if (!audioPlayed)
-                    {
-                        VoiceManager.instance.PlayInstructionSound(10);
-                        audioPlayed = true;
-                    }
-                
-                }
-                else
-                {
-                    Debug.Log("Torso is correct");
-                }
-            }
-
             // Play Audio Count
             if (!audioPlayed)
             {
+                reps += 1;
                 VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
                 audioPlayed = true;
             }
