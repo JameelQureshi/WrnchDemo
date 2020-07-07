@@ -54,7 +54,9 @@ public class Squat : Coaching
     private float torsoAngleCutoff = 115f;
     private bool feetAreShoulderWidth = false;
     private bool turnedToSide = false;
-      
+    private bool isfeetAreShoulderWidthInstructionRunning = false;
+
+
     private System.DateTime sideTimer1;
     private System.DateTime sideTimer2;
 
@@ -223,15 +225,26 @@ public class Squat : Coaching
             isTimerRunning = false;
             StopAllCoroutines();
             Debug.Log("Timer Stoped");
-            
-            // Please place your feet shoulder width apart
-            VoiceManager.instance.PlayInstructionSound(19);
+
+            if (!isfeetAreShoulderWidthInstructionRunning)
+            {
+                // Please place your feet shoulder width apart
+                VoiceManager.instance.PlayInstructionSound(19);
+                isfeetAreShoulderWidthInstructionRunning = true;
+                Invoke("MakeFeetAreShoulderWidthInstructionRunningInstructionFalse", 5);
+            }
+
+
+
             DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Red);
 
         }
 
     }
-
+     void MakeFeetAreShoulderWidthInstructionRunningInstructionFalse()
+    {
+        isfeetAreShoulderWidthInstructionRunning = false;
+    }
 
 
     IEnumerator ShoulderWidthCompleteTimer()

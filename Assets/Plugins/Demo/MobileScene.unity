@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44940758, g: 0.49633753, b: 0.5587779, a: 1}
+  m_IndirectSpecularColor: {r: 0.44940728, g: 0.49633723, b: 0.55877745, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -533,7 +533,7 @@ MonoBehaviour:
     m_overrideModelPath: 
     m_deviceId: 0
     m_serializedModelPath: 
-    m_licenseString: 0708A9-2345BE-49B2BE-E5521D-0E58AA-EBF7EE
+    m_licenseString: F6D072-25FE9B-42B991-D9909F-29E959-B67110
     m_trackerKind: 1
     m_netRes: {x: 456, y: 256}
   m_visualizerConfig:
