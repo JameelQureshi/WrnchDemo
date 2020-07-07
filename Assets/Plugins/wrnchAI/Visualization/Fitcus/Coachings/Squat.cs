@@ -250,7 +250,7 @@ public class Squat : Coaching
     IEnumerator ShoulderWidthCompleteTimer()
     {
         yield return new WaitForSeconds(5);
-        float length = VoiceManager.instance.PlayInstructionSound(20);
+        float length = VoiceManager.instance.PlayInstructionSound(20,true);
         Debug.Log("ShoulderWidthComplete");
         StartCoroutine(MoveToSidePosition(length));
     }
