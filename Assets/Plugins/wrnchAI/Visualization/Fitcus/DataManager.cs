@@ -142,7 +142,7 @@ using wrnchAI.wrAPI;
 
     public void PlayIntro()
     {
-        float length = VoiceManager.instance.PlayInstructionSound(18); 
+        float length = VoiceManager.instance.PlayInstructionSound(18,true); 
         StartCoroutine(AskForShoulderWidth(length));
         
     }
