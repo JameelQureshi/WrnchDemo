@@ -155,7 +155,7 @@ public class Squat : Coaching
                 double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
                 if (diffInSeconds >= 3) {
 
-                    VoiceManager.instance.PlayInstructionSound(22);  // Play rep sound
+                    VoiceManager.instance.PlayInstructionSound(21);  
                     turnedToSide = true;
 
                     // Reset timers
@@ -252,16 +252,17 @@ public class Squat : Coaching
         yield return new WaitForSeconds(5);
         float length = VoiceManager.instance.PlayInstructionSound(20,true);
         Debug.Log("ShoulderWidthComplete");
-        StartCoroutine(MoveToSidePosition(length));
+        // StartCoroutine(MoveToSidePosition(length));
+        feetAreShoulderWidth = true;
+
     }
 
-    IEnumerator MoveToSidePosition(float delay)
-    {
-        yield return new WaitForSeconds(delay + 1);
-        VoiceManager.instance.PlayInstructionSound(21);
-        Debug.Log("ShoulderWidthComplete now  MoveToSidePosition");
-        feetAreShoulderWidth = true;
-    }
+    // IEnumerator MoveToSidePosition(float delay)
+    // {
+    //     yield return new WaitForSeconds(delay + 1);
+    //     VoiceManager.instance.PlayInstructionSound(21);
+    //     Debug.Log("ShoulderWidthComplete now  MoveToSidePosition");
+    // }
 
 
     public void DoCoaching( JointData[] frame) {
@@ -285,8 +286,9 @@ public class Squat : Coaching
        
 
         float torso_angle  = MathHelper.instance.GetTorsoAngleWithStraightLeg(r_shoulder, r_hip, r_ankle);
-        float knee_angle   = MathHelper.instance.GetKneeAngleWithStraightShin(l_hip, l_knee, l_ankle); // This is for right side of body
+        float knee_angle   = MathHelper.instance.GetKneeAngleWithStraightShin(r_hip, r_knee, r_ankle); // This is for right side of body
         // float userRotation = MathHelper.instance.GetUserOrientation(r_hip, l_hip);
+
 
         torso_angles_of_current_rep.Add(torso_angle);
         knee_angles_of_current_rep.Add(knee_angle);
@@ -305,7 +307,16 @@ public class Squat : Coaching
                 {
                     VoiceManager.instance.PlayInstructionSound(10);
                     audioPlayed = true;
+
+                    // Make Bodybone Red
+                    if (DataManager.currentSkeleton != null)
+                    {
+                        DataManager.currentSkeleton.ResetGlowValues();
+                        DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 6 } , GlowColor.Red);
+                    }
                 }
+
+                
             
             }
             else
@@ -315,14 +326,18 @@ public class Squat : Coaching
 
             if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
-                //Debug.Log("Sound on: Try to get a bit lower!");
-                VoiceManager.instance.PlayInstructionSound(7);
-                audioPlayed = true;
-
-                // Make Bodybone Red
-                if (DataManager.currentSkeleton != null)
+                if (!audioPlayed)
                 {
-                    DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 6 },GlowColor.Red);
+                    //Debug.Log("Sound on: Try to get a bit lower!");
+                    VoiceManager.instance.PlayInstructionSound(7);
+                    audioPlayed = true;
+
+                    // Make Thighs Red
+                    if (DataManager.currentSkeleton != null)
+                    {
+                        DataManager.currentSkeleton.ResetGlowValues();
+                        DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 1,3 } , GlowColor.Red);
+                    }
                 }
 
             }
@@ -333,6 +348,7 @@ public class Squat : Coaching
                 reps += 1;
                 VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
                 audioPlayed = true;
+                DataManager.currentSkeleton.ResetGlowValues();
             }
                 
             //Debug.Log("Rep " + reps);

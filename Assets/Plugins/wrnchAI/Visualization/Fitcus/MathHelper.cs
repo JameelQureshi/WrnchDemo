@@ -181,14 +181,17 @@ public class MathHelper : MonoBehaviour
 
     public Feetdata FeetAreShoulderWidth(Vector3 rightShoulder, Vector3 leftShoulder, Vector3 rightHeel, Vector3 leftHeel)
     {
-        // float rightUpperBoundary = rightShoulder.x * 1.05f;  // Increase by 5%
+        float rightUpperBoundary = rightShoulder.x * 1.03f;  // Increase by 3%
+        float leftLowerBoundary = leftShoulder.x * 0.97f;
         float rightLowerBoundary = rightShoulder.x * 0.8f;  // Decrease by 20%
-        // float leftUpperBoundary = leftShoulder.x * 1.2f;
-        // float leftLowerBoundary = leftShoulder.x * 0.95f;
+        float leftUpperBoundary = leftShoulder.x * 1.2f;
 
-        float rightUpperBoundary = rightShoulder.x * 1.20f;  // Increase by 20%
-        float leftUpperBoundary = leftShoulder.x * 1.20f;
-        float leftLowerBoundary = leftShoulder.x * 0.80f;
+        //  ----------------- FOR JAMEEL -------------------
+        // float rightUpperBoundary = rightShoulder.x * 1.20f;  // Increase by 20%
+        // float rightLowerBoundary = rightShoulder.x * 0.8f;  // Decrease by 20%
+        // float leftUpperBoundary = leftShoulder.x * 1.20f;
+        // float leftLowerBoundary = leftShoulder.x * 0.80f;
+        //  ----------------- FOR JAMEEL -------------------
 
         int rightFoot = 0;
         int leftFoot = 0;

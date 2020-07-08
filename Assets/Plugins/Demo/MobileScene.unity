@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44940728, g: 0.49633723, b: 0.55877745, a: 1}
+  m_IndirectSpecularColor: {r: 0.44940758, g: 0.49633753, b: 0.5587779, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1206,10 +1206,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7b9011af6df3f4a028b1bc772249f7a2, type: 3}
   - {fileID: 8300000, guid: e0f736fe2617940c59548ab23a066709, type: 3}
   - {fileID: 8300000, guid: 537174a53b3494d9e847d8ddb3512ce2, type: 3}
-  - {fileID: 8300000, guid: 5e321c06b3a2547a0b864488a0bc97f6, type: 3}
+  - {fileID: 8300000, guid: 8adb0fe76d6a147a7bda5a9e57809c44, type: 3}
   - {fileID: 8300000, guid: 9dfb9786c57e245f0a928c4f626cda66, type: 3}
-  - {fileID: 8300000, guid: 99393e0cd07394263b9137fc39e15c8a, type: 3}
-  - {fileID: 8300000, guid: 740bfc6e3d85d43ccbb1f33cbd4b98e0, type: 3}
+  - {fileID: 8300000, guid: b63be4e8f761542bcb4ba17ae146053c, type: 3}
   - {fileID: 8300000, guid: d3d82ae70fc5d4ee9a7b3db0864fecb2, type: 3}
 --- !u!82 &950420670
 AudioSource:
