@@ -71,10 +71,23 @@ public class Lunge : Coaching
     public CoachingOneEuroFilter one_euro_filter_right ;
     public CoachingOneEuroFilter one_euro_filter_left ;
     public CoachingOneEuroFilter one_euro_filter_torso ;
-
+    public CoachingOneEuroFilter one_euro_filter_r_heel ;
+    public CoachingOneEuroFilter one_euro_filter_r_shoulder ;
+    public CoachingOneEuroFilter one_euro_filter_l_heel ;
+    public CoachingOneEuroFilter one_euro_filter_l_shoulder ;
+    public CoachingOneEuroFilter one_euro_filter_userRotation;
     private bool stride_is_long = false;
     private int start_of_rep;
     private int end_of_rep;
+
+    private bool feetAreShoulderWidth = false;
+    private bool turnedToSide = false;
+    private bool isfeetAreShoulderWidthInstructionRunning = false;
+    private System.DateTime sideTimer1;
+    private System.DateTime sideTimer2;
+    private bool isTimerRunning = false;
+    public int frame_no_stance_check = 0;
+    public int frame_no_shoulder_check = 0;
     /*
         Analyses lunge mechanics given a single frame of joints.
 
@@ -86,8 +99,184 @@ public class Lunge : Coaching
            A list of 25 joints that have been extracted from a video frame.
            Joints are(x, y, z) coordinates */
 
+    public override void AnalyseFrame( JointData[] frame)
+    {
+         if (feetAreShoulderWidth == false) {
+             // Debug.Log("---------- FEET -------------");
+            GuideFeetToShoulderWidth(frame);
+            frame_no_stance_check += 1;
+        } else if (feetAreShoulderWidth && turnedToSide == false) {
+           // Debug.Log("---------- SHOULDER -------------");
+            GuideBodyToSidePosition(frame);
+            frame_no_shoulder_check += 1;
+        } else {
+            //Debug.Log("---------- COACHING -------------");
+            DoCoaching(frame);
+        }
 
-    public override void AnalyseFrame(JointData[] frame)
+    }
+
+    public void GuideBodyToSidePosition( JointData[] frame) {
+        
+        Vector3 r_heel = frame[23].jointposition;
+        Vector3 r_ankle = frame[0].jointposition;
+        Vector3 r_knee = frame[1].jointposition;
+        Vector3 r_hip = frame[2].jointposition;
+        Vector3 r_shoulder = frame[12].jointposition;
+
+        Vector3 l_heel = frame[24].jointposition;
+        Vector3 l_ankle = frame[5].jointposition;
+        Vector3 l_knee = frame[4].jointposition;
+        Vector3 l_hip = frame[3].jointposition;
+        Vector3 l_shoulder = frame[13].jointposition;
+
+        int right = 0;
+        int left = 0;
+
+        float userRotation = MathHelper.instance.GetUserOrientation(r_shoulder, l_shoulder);
+
+        if(sideTimer1 == null ) {
+            // Init times
+            sideTimer1 = System.DateTime.Now;
+            sideTimer2 = System.DateTime.Now;
+        }
+
+        if (frame_no_shoulder_check == 0) {
+            // Init Euro Filters(
+            one_euro_filter_userRotation = new CoachingOneEuroFilter(frame_no_shoulder_check, userRotation);
+                      
+        } else {
+            l_shoulder.x = one_euro_filter_userRotation.ApplyFilter(frame_no_shoulder_check, userRotation);  
+        }
+
+        if (!float.IsNaN(userRotation)) {
+
+            if (r_heel.z > l_heel.z) { right += 1;  } else { left += 1; }
+            if (r_ankle.z > l_ankle.z) { right += 1;  } else { left += 1; }
+            if (r_knee.z > l_knee.z) { right += 1;  } else { left += 1; }
+            if (r_hip.z > l_hip.z) { right += 1;  } else { left += 1; }
+            if (r_shoulder.z > l_shoulder.z) { right += 1;  } else { left += 1; }
+
+
+            if ( right > left && Mathf.Abs(userRotation) >= 60 )  {
+                DataManager.currentSkeleton.ResetGlowValues();
+                Debug.Log("--------------- Correct ---------- " + userRotation);
+                double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 } , GlowColor.Green);
+                if (diffInSeconds >= 3) {
+
+                    VoiceManager.instance.PlayInstructionSound(14);  
+                    turnedToSide = true;
+                    DataManager.currentSkeleton.ResetGlowValues();
+                    // Reset timers
+                    sideTimer1 = System.DateTime.Now;
+                    sideTimer2 = System.DateTime.Now;
+                } else {
+                    sideTimer2 = System.DateTime.Now;
+                }
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 } , GlowColor.Red);
+                // Reset timers
+                sideTimer1 = System.DateTime.Now;
+                sideTimer2 = System.DateTime.Now;
+                Debug.Log("--------------- Incorrect ---------- " + userRotation);
+            }
+            
+        } else {
+            // DataManager.currentSkeleton.SetRedGlowValues(new int[] { 6 });
+        }
+
+    }
+
+        public void GuideFeetToShoulderWidth( JointData[] frame) {
+
+        Vector3 r_heel = frame[23].jointposition;
+        Vector3 r_shoulder = frame[12].jointposition;
+        Vector3 l_heel = frame[24].jointposition;
+        Vector3 l_shoulder = frame[13].jointposition;
+
+        if (frame_no_stance_check == 0) {
+            // Init Euro Filters(
+            one_euro_filter_r_heel = new CoachingOneEuroFilter(frame_no_stance_check, r_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
+            one_euro_filter_r_shoulder = new CoachingOneEuroFilter(frame_no_stance_check, r_shoulder.x, 0.0f, 0.01f, 0.0f, 1.0f);
+            one_euro_filter_l_heel = new CoachingOneEuroFilter(frame_no_stance_check, l_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
+            one_euro_filter_l_shoulder = new CoachingOneEuroFilter(frame_no_stance_check, l_shoulder.x, 0.0f, 0.01f, 0.0f, 1.0f);
+                      
+        } else {
+            r_heel.x = one_euro_filter_r_heel.ApplyFilter(frame_no_stance_check, r_heel.x);
+            r_shoulder.x = one_euro_filter_r_shoulder.ApplyFilter(frame_no_stance_check, r_shoulder.x);
+            l_heel.x = one_euro_filter_l_heel.ApplyFilter(frame_no_stance_check, l_heel.x);
+            l_shoulder.x = one_euro_filter_l_shoulder.ApplyFilter(frame_no_stance_check, l_shoulder.x);  
+        }
+
+            
+
+        Feetdata feetdata = MathHelper.instance.FeetAreShoulderWidth(r_shoulder, l_shoulder, r_heel, l_heel);
+        // If feet are shoulder width
+        if (feetdata.state)
+        {
+            if (!isTimerRunning)
+            {
+                StartCoroutine(ShoulderWidthCompleteTimer());
+                Debug.Log("Timer Started");
+                isTimerRunning = true;
+            }
+            //ShoulderWidthComplete();
+            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Green);
+            // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
+
+        // If feet are NOT shoulder width
+        } else 
+        {
+
+            isTimerRunning = false;
+            StopAllCoroutines();
+            Debug.Log("Timer Stoped");
+
+            if (!isfeetAreShoulderWidthInstructionRunning)
+            {
+                // Please place your feet shoulder width apart
+                VoiceManager.instance.PlayInstructionSound(12);
+                isfeetAreShoulderWidthInstructionRunning = true;
+                Invoke("MakeFeetAreShoulderWidthInstructionRunningInstructionFalse", 5);
+            }
+
+
+            if (feetdata.leftFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
+            if (feetdata.rightFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
+
+        }
+
+    }
+     void MakeFeetAreShoulderWidthInstructionRunningInstructionFalse()
+    {
+        isfeetAreShoulderWidthInstructionRunning = false;
+    }
+
+    IEnumerator ShoulderWidthCompleteTimer()
+    {
+        yield return new WaitForSeconds(5);
+        float length = VoiceManager.instance.PlayInstructionSound(13,true);
+        Debug.Log("ShoulderWidthComplete");
+        // StartCoroutine(MoveToSidePosition(length));
+        DataManager.currentSkeleton.ResetGlowValues();
+        feetAreShoulderWidth = true;
+
+
+    }
+
+
+    public void DoCoaching(JointData[] frame)
     {
 
         Vector3 r_heel = frame[23].jointposition;
@@ -168,8 +357,6 @@ public class Lunge : Coaching
         if (stride_length > shin_length * 1.3) {
             stride_is_long = true;
         }
-        
-        
 
         bool audioPlayed = false;
 
@@ -210,7 +397,7 @@ public class Lunge : Coaching
                         // Debug.Log("Sound on: Try to get a bit lower!");
                         if (!audioPlayed)
                         {
-                            VoiceManager.instance.PlayInstructionSound(7);
+                            VoiceManager.instance.PlayInstructionSound(4);
                             audioPlayed = true;
                             // print("Right Knee angle: " + r_knee_angles_of_current_rep.Min() + "Left Knee angle: " + r_knee_angles_of_current_rep.Min() + "kneeAngleCutoff: " + kneeAngleCutoff + frame_no);
                         }
@@ -245,7 +432,7 @@ public class Lunge : Coaching
             // Play Audio Count
             if (!audioPlayed)
             {
-                VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
+                VoiceManager.instance.PlayInstructionSound(1); // index of rep sound 
                 audioPlayed = true;
             }
 
