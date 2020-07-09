@@ -153,11 +153,12 @@ public class Squat : Coaching
                 DataManager.currentSkeleton.ResetGlowValues();
                 Debug.Log("--------------- Correct ---------- " + userRotation);
                 double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 } , GlowColor.Green);
                 if (diffInSeconds >= 3) {
 
                     VoiceManager.instance.PlayInstructionSound(21);  
                     turnedToSide = true;
-
+                    DataManager.currentSkeleton.ResetGlowValues();
                     // Reset timers
                     sideTimer1 = System.DateTime.Now;
                     sideTimer2 = System.DateTime.Now;
@@ -215,7 +216,7 @@ public class Squat : Coaching
                 isTimerRunning = true;
             }
             //ShoulderWidthComplete();
-            DataManager.currentSkeleton.ResetGlowValues();
+            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Green);
             // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
 
         // If feet are NOT shoulder width
@@ -235,8 +236,18 @@ public class Squat : Coaching
             }
 
 
-
-            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Red);
+            if (feetdata.leftFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
+            if (feetdata.rightFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
 
         }
 
@@ -253,7 +264,9 @@ public class Squat : Coaching
         float length = VoiceManager.instance.PlayInstructionSound(20,true);
         Debug.Log("ShoulderWidthComplete");
         // StartCoroutine(MoveToSidePosition(length));
+        DataManager.currentSkeleton.ResetGlowValues();
         feetAreShoulderWidth = true;
+
 
     }
 
