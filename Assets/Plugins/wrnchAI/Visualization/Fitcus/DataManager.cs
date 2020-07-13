@@ -142,8 +142,19 @@ using wrnchAI.wrAPI;
 
     public void PlayIntro()
     {
-        float length = VoiceManager.instance.PlayInstructionSound(5,true); 
-        StartCoroutine(AskForShoulderWidth(length));
+
+
+        
+            if (currentExercise == Exercise.Squat) {
+                float length = VoiceManager.instance.PlayInstructionSound(5,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            } else if (currentExercise == Exercise.Lunge) {
+                float length = VoiceManager.instance.PlayInstructionSound(11,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            } else if (currentExercise == Exercise.Pushup) {
+                float length = VoiceManager.instance.PlayInstructionSound(5,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            }                
         
     }
     private void Start()
