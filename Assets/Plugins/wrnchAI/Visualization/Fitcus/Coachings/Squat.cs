@@ -259,7 +259,7 @@ public class Squat : Coaching
 
     IEnumerator ShoulderWidthCompleteTimer()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         float length = VoiceManager.instance.PlayInstructionSound(7,true);
         Debug.Log("ShoulderWidthComplete");
         // StartCoroutine(MoveToSidePosition(length));
@@ -320,7 +320,7 @@ public class Squat : Coaching
                     VoiceManager.instance.PlayInstructionSound(10);
                     audioPlayed = true;
 
-                    // Make Bodybone Red
+                    // Make Spine Red
                     if (DataManager.currentSkeleton != null)
                     {
                         DataManager.currentSkeleton.ResetGlowValues();
@@ -331,12 +331,8 @@ public class Squat : Coaching
                 
             
             }
-            else
-            {
-                Debug.Log("Torso is correct");
-            }
 
-            if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
+            else if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
                 if (!audioPlayed)
                 {
@@ -355,12 +351,15 @@ public class Squat : Coaching
             }
 
             // Play Audio Count
-            if (!audioPlayed)
+            else if (!audioPlayed)
             {
                 reps += 1;
                 VoiceManager.instance.PlayInstructionSound(1); // index of rep sound 
                 audioPlayed = true;
-                DataManager.currentSkeleton.ResetGlowValues();
+                if (DataManager.currentSkeleton != null)
+                {
+                    DataManager.currentSkeleton.ResetGlowValues();
+                }
             }
                 
             //Debug.Log("Rep " + reps);

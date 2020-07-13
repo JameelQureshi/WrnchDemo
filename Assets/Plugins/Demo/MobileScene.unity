@@ -533,7 +533,7 @@ MonoBehaviour:
     m_overrideModelPath: 
     m_deviceId: 0
     m_serializedModelPath: 
-    m_licenseString: F6D072-25FE9B-42B991-D9909F-29E959-B67110
+    m_licenseString: 0708A9-2345BE-49B2BE-E5521D-0E58AA-EBF7EE
     m_trackerKind: 1
     m_netRes: {x: 456, y: 256}
   m_visualizerConfig:
@@ -1203,6 +1203,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0881ac0a452fb43128214624fe6c8766, type: 3}
   - {fileID: 8300000, guid: dad3d8b7a38d746f9b14454f0f7285fa, type: 3}
   - {fileID: 8300000, guid: 34e2b208ebf574d49b45de384ede406f, type: 3}
+  - {fileID: 8300000, guid: 23247a39976b647be8c9861a2f92ef1b, type: 3}
 --- !u!82 &950420670
 AudioSource:
   m_ObjectHideFlags: 0

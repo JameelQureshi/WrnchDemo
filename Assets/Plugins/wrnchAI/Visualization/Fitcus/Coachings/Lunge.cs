@@ -72,9 +72,9 @@ public class Lunge : Coaching
     public CoachingOneEuroFilter one_euro_filter_left ;
     public CoachingOneEuroFilter one_euro_filter_torso ;
     public CoachingOneEuroFilter one_euro_filter_r_heel ;
-    public CoachingOneEuroFilter one_euro_filter_r_shoulder ;
+    public CoachingOneEuroFilter one_euro_filter_r_hip ;
     public CoachingOneEuroFilter one_euro_filter_l_heel ;
-    public CoachingOneEuroFilter one_euro_filter_l_shoulder ;
+    public CoachingOneEuroFilter one_euro_filter_l_hip ;
     public CoachingOneEuroFilter one_euro_filter_userRotation;
     private bool stride_is_long = false;
     private int start_of_rep;
@@ -158,7 +158,7 @@ public class Lunge : Coaching
             if (r_shoulder.z > l_shoulder.z) { right += 1;  } else { left += 1; }
 
 
-            if ( right > left && Mathf.Abs(userRotation) >= 60 )  {
+            if ( right < left && Mathf.Abs(userRotation) >= 60 )  {
                 DataManager.currentSkeleton.ResetGlowValues();
                 Debug.Log("--------------- Correct ---------- " + userRotation);
                 double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
@@ -191,28 +191,28 @@ public class Lunge : Coaching
         public void GuideFeetToShoulderWidth( JointData[] frame) {
 
         Vector3 r_heel = frame[23].jointposition;
-        Vector3 r_shoulder = frame[12].jointposition;
+        Vector3 r_hip = frame[2].jointposition;
         Vector3 l_heel = frame[24].jointposition;
-        Vector3 l_shoulder = frame[13].jointposition;
+        Vector3 l_hip = frame[3].jointposition;
 
         if (frame_no_stance_check == 0) {
             // Init Euro Filters(
             one_euro_filter_r_heel = new CoachingOneEuroFilter(frame_no_stance_check, r_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
-            one_euro_filter_r_shoulder = new CoachingOneEuroFilter(frame_no_stance_check, r_shoulder.x, 0.0f, 0.01f, 0.0f, 1.0f);
+            one_euro_filter_r_hip = new CoachingOneEuroFilter(frame_no_stance_check, r_hip.x, 0.0f, 0.01f, 0.0f, 1.0f);
             one_euro_filter_l_heel = new CoachingOneEuroFilter(frame_no_stance_check, l_heel.x, 0.0f, 0.01f, 0.0f, 1.0f);
-            one_euro_filter_l_shoulder = new CoachingOneEuroFilter(frame_no_stance_check, l_shoulder.x, 0.0f, 0.01f, 0.0f, 1.0f);
+            one_euro_filter_l_hip = new CoachingOneEuroFilter(frame_no_stance_check, l_hip.x, 0.0f, 0.01f, 0.0f, 1.0f);
                       
         } else {
             r_heel.x = one_euro_filter_r_heel.ApplyFilter(frame_no_stance_check, r_heel.x);
-            r_shoulder.x = one_euro_filter_r_shoulder.ApplyFilter(frame_no_stance_check, r_shoulder.x);
+            r_hip.x = one_euro_filter_r_hip.ApplyFilter(frame_no_stance_check, r_hip.x);
             l_heel.x = one_euro_filter_l_heel.ApplyFilter(frame_no_stance_check, l_heel.x);
-            l_shoulder.x = one_euro_filter_l_shoulder.ApplyFilter(frame_no_stance_check, l_shoulder.x);  
+            l_hip.x = one_euro_filter_l_hip.ApplyFilter(frame_no_stance_check, l_hip.x);  
         }
 
             
 
-        Feetdata feetdata = MathHelper.instance.FeetAreShoulderWidth(r_shoulder, l_shoulder, r_heel, l_heel);
-        // If feet are shoulder width
+        Feetdata feetdata = MathHelper.instance.FeetAreShoulderWidth(r_hip, l_hip, r_heel, l_heel); // Actually Hip width
+        // If feet are hip width
         if (feetdata.state)
         {
             if (!isTimerRunning)
@@ -265,7 +265,7 @@ public class Lunge : Coaching
 
     IEnumerator ShoulderWidthCompleteTimer()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         float length = VoiceManager.instance.PlayInstructionSound(13,true);
         Debug.Log("ShoulderWidthComplete");
         // StartCoroutine(MoveToSidePosition(length));
@@ -350,7 +350,7 @@ public class Lunge : Coaching
 
         float left_shin_length = MathHelper.instance.GetEuclideanDistance2D(l_ankle, l_knee);
         float right_shin_length = MathHelper.instance.GetEuclideanDistance2D(r_ankle, r_knee);
-        float shin_length = (left_shin_length + right_shin_length) / 2;
+        float shin_length = (left_shin_length + right_shin_length) / 2; // Avg 
 
         float stride_length = MathHelper.instance.GetEuclideanDistance2D(l_ankle, r_ankle);
 
@@ -363,77 +363,68 @@ public class Lunge : Coaching
         if (RepCounter(knee_angle, depth1, depth2))
         {
 
-            Debug.Log("Rep on frame: " + frame_no);
-            reps += 1;
-            Debug.Log("Rep " + reps);
-
             float avgUserRoation = MathHelper.instance.GetPositiveMean(user_rotations_of_current_rep);
-
-
-
-            if (Mathf.Abs(userRotation) <= 45) {
-                // // If the user is facing the screen, check feet
-                Feetdata feetdata = MathHelper.instance.FeetAreHipWidth(r_hip, l_hip, r_heel, l_heel);
-
-                if (feetdata.state)
+            if (!stride_is_long) {
+                //Debug.Log("Sound On: Try to take a longer step forward");
+                if (!audioPlayed)
                 {
-                    Debug.Log("Feet are correct");
-                }
-                else
-                {
-                    //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
-                    if (!audioPlayed)
+                    Debug.Log("Step Forward");
+                    VoiceManager.instance.PlayInstructionSound(15);
+                    audioPlayed = true;
+
+                    // Make Shins Red
+                    if (DataManager.currentSkeleton != null)
                     {
-                        Debug.Log("Feet are incorrect -------- ");
-                        VoiceManager.instance.PlayInstructionSound(9);
-                        audioPlayed = true;
+                        DataManager.currentSkeleton.ResetGlowValues();
+                        DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 } , GlowColor.Red);
                     }
                 }
-
-            } else {
-                    if( r_knee_angles_of_current_rep.Min() > kneeAngleCutoff && l_knee_angles_of_current_rep.Min() > kneeAngleCutoff)
-                    {
-                        Debug.Log(r_knee_angles_of_current_rep.Min() + l_knee_angles_of_current_rep.Min());
-                        // Debug.Log("Sound on: Try to get a bit lower!");
-                        if (!audioPlayed)
-                        {
-                            VoiceManager.instance.PlayInstructionSound(4);
-                            audioPlayed = true;
-                            // print("Right Knee angle: " + r_knee_angles_of_current_rep.Min() + "Left Knee angle: " + r_knee_angles_of_current_rep.Min() + "kneeAngleCutoff: " + kneeAngleCutoff + frame_no);
-                        }
-                        
-                    }
-                    if (!stride_is_long) {
-                        //Debug.Log("Sound On: Make sure your feet are shoulder width apart");
-                        if (!audioPlayed)
-                        {
-                            Debug.Log("Step Forward");
-                            VoiceManager.instance.PlayInstructionSound(9);
-                            audioPlayed = true;
-                        }
-                    }
             }
-
-            if (torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
+            else if (torso_angles_of_current_rep.Min() <  torsoAngleCutoff)
             {
                 //Debug.Log("Sound on: Keep your chest up!");
                 if (!audioPlayed)
                 {
                     VoiceManager.instance.PlayInstructionSound(10);
                     audioPlayed = true;
+
+                    // Make Spine Red
+                    if (DataManager.currentSkeleton != null)
+                    {
+                        DataManager.currentSkeleton.ResetGlowValues();
+                        DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 6 } , GlowColor.Red);
+                    }
                 }
             }
 
-            else
+            else if( r_knee_angles_of_current_rep.Min() > kneeAngleCutoff && l_knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
-                Debug.Log("Torso is correct");
+                // Debug.Log("Sound on: Try to get a bit lower!");
+                if (!audioPlayed)
+                {
+                    VoiceManager.instance.PlayInstructionSound(4);
+                    audioPlayed = true;
+
+                    // Make Thighs Red
+                    if (DataManager.currentSkeleton != null)
+                    {
+                        DataManager.currentSkeleton.ResetGlowValues();
+                        DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 1,3 } , GlowColor.Red);
+                    }
+                }
+                
             }
 
             // Play Audio Count
-            if (!audioPlayed)
+            else if (!audioPlayed)
             {
+                reps += 1;
                 VoiceManager.instance.PlayInstructionSound(1); // index of rep sound 
                 audioPlayed = true;
+                if (DataManager.currentSkeleton != null)
+                {
+                    DataManager.currentSkeleton.ResetGlowValues();
+                }
             }
 
             stride_is_long = false;
