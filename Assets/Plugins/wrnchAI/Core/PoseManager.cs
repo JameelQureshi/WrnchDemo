@@ -202,7 +202,7 @@ namespace wrnchAI.Core
             m_visualHandler = gameObject.AddComponent<VisualHandler>();
 
             onPoseReceived += m_visualHandler.UpdatePersons;
-            //onPoseReceived += OnPersonFound;
+            onPoseReceived += OnPersonFound;
 
             m_fps = 0f;
             PoseEstimatorWorker.OnFPSUpdated += ReceiveFPS;
@@ -227,12 +227,13 @@ namespace wrnchAI.Core
 
         public void OnPersonFound(List<Person> persons)
         {
-            foreach (Person p in persons)
-            {
-                // Send The Person to JointDataDisplay So we can use it for further calculations ;
-                DataManager.instance.person = p;
-                return;
-            }
+            Debug.Log("Total Persons: "+persons.Count);
+            //foreach (Person p in persons)
+            //{
+            //    // Send The Person to JointDataDisplay So we can use it for further calculations ;
+            //    DataManager.instance.person = p;
+            //    return;
+            //}
         }
 
             /// <summary>

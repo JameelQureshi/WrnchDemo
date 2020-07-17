@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Avatar
   - jointsText
+  - Skeleton
   layers:
   - Default
   - TransparentFX
