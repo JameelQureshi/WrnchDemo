@@ -97,8 +97,8 @@ using wrnchAI.wrAPI;
 
     public void Init()
     {
-        string exerciseName = PlayerPrefs.GetString("ExerciseName");
-
+        // string exerciseName = PlayerPrefs.GetString("ExerciseName");
+        string exerciseName = "Lunge"; 
         Debug.Log("come Here");
         switch (exerciseName) {
             case "Squat":
@@ -142,8 +142,19 @@ using wrnchAI.wrAPI;
 
     public void PlayIntro()
     {
-        float length = VoiceManager.instance.PlayInstructionSound(18,true); 
-        StartCoroutine(AskForShoulderWidth(length));
+
+
+        
+            if (currentExercise == Exercise.Squat) {
+                float length = VoiceManager.instance.PlayInstructionSound(5,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            } else if (currentExercise == Exercise.Lunge) {
+                float length = VoiceManager.instance.PlayInstructionSound(11,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            } else if (currentExercise == Exercise.Pushup) {
+                float length = VoiceManager.instance.PlayInstructionSound(5,true); 
+                StartCoroutine(AskForShoulderWidth(length));
+            }                
         
     }
     private void Start()
@@ -165,7 +176,7 @@ using wrnchAI.wrAPI;
     IEnumerator AskForShoulderWidth(float delay)
     {
         yield return new WaitForSeconds(delay + 1);
-        float length = VoiceManager.instance.PlayInstructionSound(19); 
+        float length = VoiceManager.instance.PlayInstructionSound(6); 
         canDoCoaching = true;
         
     }
@@ -181,38 +192,38 @@ using wrnchAI.wrAPI;
         Coaching.OnRepsChange -= OnRepsChange;
     }
 
-    public void GreatWorkTodayWeWillLearn()
-    {
-        float length = VoiceManager.instance.PlayInstructionSound(17); // index of GreatWorkTodayWeWillLearn sound 17
-        StartCoroutine(PlaySoundOK(length));
-    }
+    // public void GreatWorkTodayWeWillLearn()
+    // {
+    //     float length = VoiceManager.instance.PlayInstructionSound(17); // index of GreatWorkTodayWeWillLearn sound 17
+    //     StartCoroutine(PlaySoundOK(length));
+    // }
 
-    IEnumerator PlaySoundOK(float delay)
-    {
-        yield return new WaitForSeconds(delay + 1);
-        float length = VoiceManager.instance.PlayInstructionSound(11); // index of ok sound 11   
-        StartCoroutine(PlaySoundAreYouReady(length));
-    }
+    // IEnumerator PlaySoundOK(float delay)
+    // {
+    //     yield return new WaitForSeconds(delay + 1);
+    //     float length = VoiceManager.instance.PlayInstructionSound(11); // index of ok sound 11   
+    //     StartCoroutine(PlaySoundAreYouReady(length));
+    // }
 
-    IEnumerator PlaySoundAreYouReady(float delay)
-    {
-        yield return new WaitForSeconds(delay+1);
-        float length = VoiceManager.instance.PlayInstructionSound(15); // index of are you ready sound 15   
-        StartCoroutine(PlaySoundThreeTwoOne(length));
-    }
+    // IEnumerator PlaySoundAreYouReady(float delay)
+    // {
+    //     yield return new WaitForSeconds(delay+1);
+    //     float length = VoiceManager.instance.PlayInstructionSound(15); // index of are you ready sound 15   
+    //     StartCoroutine(PlaySoundThreeTwoOne(length));
+    // }
 
-    IEnumerator PlaySoundThreeTwoOne(float delay)
-    {
-        yield return new WaitForSeconds(delay+1);
-        float length = VoiceManager.instance.PlayInstructionSound(16); // index of three two one sound 16   
-        StartCoroutine(PlaySoundLetsGo(length));
-    }
-    IEnumerator PlaySoundLetsGo(float delay)
-    {
-        yield return new WaitForSeconds(delay+1);
-        float length = VoiceManager.instance.PlayInstructionSound(4); // index of three two one sound 4   
-        StartCoroutine(StartCoaching(length));
-    }
+    // IEnumerator PlaySoundThreeTwoOne(float delay)
+    // {
+    //     yield return new WaitForSeconds(delay+1);
+    //     float length = VoiceManager.instance.PlayInstructionSound(16); // index of three two one sound 16   
+    //     StartCoroutine(PlaySoundLetsGo(length));
+    // }
+    // IEnumerator PlaySoundLetsGo(float delay)
+    // {
+    //     yield return new WaitForSeconds(delay+1);
+    //     float length = VoiceManager.instance.PlayInstructionSound(4); // index of three two one sound 4   
+    //     StartCoroutine(StartCoaching(length));
+    // }
     IEnumerator StartCoaching(float delay)
     {
         yield return new WaitForSeconds(delay);

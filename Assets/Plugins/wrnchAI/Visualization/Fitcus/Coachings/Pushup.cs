@@ -180,7 +180,7 @@ public class Pushup : Coaching
 
             if (elbow_angles_of_current_rep.Min() > elbowAngleCutoff) {
                 print("Sound on: Try to get a bit lower!");
-                VoiceManager.instance.PlayInstructionSound(7);
+                VoiceManager.instance.PlayInstructionSound(4);
                 audioPlayed = true;
 
             }
@@ -203,7 +203,7 @@ public class Pushup : Coaching
             // Play Audio Count
             if (!audioPlayed)
             {
-                VoiceManager.instance.PlayInstructionSound(12); // index of rep sound
+                VoiceManager.instance.PlayInstructionSound(1); // index of rep sound
                 audioPlayed = true;
             }
 

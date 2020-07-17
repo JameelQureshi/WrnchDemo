@@ -73,7 +73,6 @@ public class Squat : Coaching
     public int frame_no = 0;
     public int frame_no_stance_check = 0;
     public int frame_no_shoulder_check = 0;
-    public int test = 0;
 
 
 
@@ -153,11 +152,12 @@ public class Squat : Coaching
                 DataManager.currentSkeleton.ResetGlowValues();
                 Debug.Log("--------------- Correct ---------- " + userRotation);
                 double diffInSeconds = (sideTimer2 - sideTimer1).TotalSeconds;
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,1,2,3,4,6,7,8,9,10,11 } , GlowColor.Green);
                 if (diffInSeconds >= 3) {
 
-                    VoiceManager.instance.PlayInstructionSound(21);  
+                    VoiceManager.instance.PlayInstructionSound(8);  
                     turnedToSide = true;
-
+                    DataManager.currentSkeleton.ResetGlowValues();
                     // Reset timers
                     sideTimer1 = System.DateTime.Now;
                     sideTimer2 = System.DateTime.Now;
@@ -215,7 +215,7 @@ public class Squat : Coaching
                 isTimerRunning = true;
             }
             //ShoulderWidthComplete();
-            DataManager.currentSkeleton.ResetGlowValues();
+            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Green);
             // Debug.Log("--------------- FEET ARE SHOULDER WIDTH ---------");
 
         // If feet are NOT shoulder width
@@ -229,14 +229,24 @@ public class Squat : Coaching
             if (!isfeetAreShoulderWidthInstructionRunning)
             {
                 // Please place your feet shoulder width apart
-                VoiceManager.instance.PlayInstructionSound(19);
+                VoiceManager.instance.PlayInstructionSound(6);
                 isfeetAreShoulderWidthInstructionRunning = true;
                 Invoke("MakeFeetAreShoulderWidthInstructionRunningInstructionFalse", 5);
             }
 
 
-
-            DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0,2 }, GlowColor.Red);
+            if (feetdata.leftFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 0 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
+            if (feetdata.rightFoot != 1) {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Red);
+            } else {
+                DataManager.currentSkeleton.SetBoneGlowValues(new int[] { 2 }, GlowColor.Green);
+            }
+            
 
         }
 
@@ -249,11 +259,13 @@ public class Squat : Coaching
 
     IEnumerator ShoulderWidthCompleteTimer()
     {
-        yield return new WaitForSeconds(5);
-        float length = VoiceManager.instance.PlayInstructionSound(20,true);
+        yield return new WaitForSeconds(3);
+        float length = VoiceManager.instance.PlayInstructionSound(7,true);
         Debug.Log("ShoulderWidthComplete");
         // StartCoroutine(MoveToSidePosition(length));
+        DataManager.currentSkeleton.ResetGlowValues();
         feetAreShoulderWidth = true;
+
 
     }
 
@@ -308,7 +320,7 @@ public class Squat : Coaching
                     VoiceManager.instance.PlayInstructionSound(10);
                     audioPlayed = true;
 
-                    // Make Bodybone Red
+                    // Make Spine Red
                     if (DataManager.currentSkeleton != null)
                     {
                         DataManager.currentSkeleton.ResetGlowValues();
@@ -319,17 +331,13 @@ public class Squat : Coaching
                 
             
             }
-            else
-            {
-                Debug.Log("Torso is correct");
-            }
 
-            if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
+            else if ( knee_angles_of_current_rep.Min() > kneeAngleCutoff)
             {
                 if (!audioPlayed)
                 {
                     //Debug.Log("Sound on: Try to get a bit lower!");
-                    VoiceManager.instance.PlayInstructionSound(7);
+                    VoiceManager.instance.PlayInstructionSound(4);
                     audioPlayed = true;
 
                     // Make Thighs Red
@@ -343,12 +351,15 @@ public class Squat : Coaching
             }
 
             // Play Audio Count
-            if (!audioPlayed)
+            else if (!audioPlayed)
             {
                 reps += 1;
-                VoiceManager.instance.PlayInstructionSound(12); // index of rep sound 
+                VoiceManager.instance.PlayInstructionSound(1); // index of rep sound 
                 audioPlayed = true;
-                DataManager.currentSkeleton.ResetGlowValues();
+                if (DataManager.currentSkeleton != null)
+                {
+                    DataManager.currentSkeleton.ResetGlowValues();
+                }
             }
                 
             //Debug.Log("Rep " + reps);

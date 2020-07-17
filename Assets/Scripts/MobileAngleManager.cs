@@ -44,7 +44,7 @@ public class MobileAngleManager : MonoBehaviour
     void PlayInstructionSound()
     {
         DataManager.instance.Init();
-        VoiceManager.instance.PlayInstructionSound(13 , true); // index of instruction sound
+        VoiceManager.instance.PlayInstructionSound(0 , true); // index of instruction sound
     }
 
 
@@ -119,7 +119,7 @@ public class MobileAngleManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         canCalculate = false;
         PositionManager.instance.Init();
-        VoiceManager.instance.PlayInstructionSound(14,true); // index of middle screen instructions
+        VoiceManager.instance.PlayInstructionSound(2,true); // index of middle screen instructions
         Destroy(gameObject);
         message.text = "Next Screen Loaded!";
     }
